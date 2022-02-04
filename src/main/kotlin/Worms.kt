@@ -1,3 +1,9 @@
+import hm.binkley.math.fixed.FixedBigRational
+import hm.binkley.math.fixed.over
+import hm.binkley.math.fixed.FixedBigRational.Companion.ZERO
+import hm.binkley.math.fixed.FixedBigRational.Companion.ONE
+import hm.binkley.math.times
+
 class Worms {
     private val expectedValueMemo: MutableMap<Key, ValueWithSuccessProbability> = mutableMapOf()
     private val resultProbabilityMemo: MutableMap<Key, Map<Int, ProbabilityWithWormProbability>> = mutableMapOf()
@@ -106,13 +112,10 @@ class Worms {
             return memo.getValue(key)
         }
         val wormSoFar = usedSides.isUsed(Side.WORM)
-        if (dyeCount == 0) return ValueWithSuccessProbability(
-            Rational.ZERO,
-            if (wormSoFar) Rational.ONE else Rational.ZERO
-        )
+        if (dyeCount == 0) return ValueWithSuccessProbability(ZERO, if (wormSoFar) ONE else ZERO)
         val combinationProbability = 1 over sixPow[dyeCount]
-        var expectedValue = Rational.ZERO
-        var successProbability = Rational.ZERO
+        var expectedValue = ZERO
+        var successProbability = ZERO
         for (combination in combinations(dyeCount)) {
             val (combinationBestValue, combinationBestSuccessProbability) =
                 getExpectedValueForBestMove(combination, usedSides, dyeCount, valueSoFar, memo)
@@ -124,7 +127,7 @@ class Worms {
             if (valueSoFarRational * successProbability + expectedValue > valueSoFarRational) {
                 ValueWithSuccessProbability(expectedValue, successProbability)
             } else {
-                ValueWithSuccessProbability(Rational.ZERO, Rational.ONE)
+                ValueWithSuccessProbability(ZERO, ONE)
             }
         } else {
             ValueWithSuccessProbability(expectedValue, successProbability)
@@ -139,10 +142,10 @@ class Worms {
         dyeCount: Int,
         valueSoFar: Int,
         memo: MutableMap<Key, ValueWithSuccessProbability>
-    ): Pair<Rational, Rational> {
+    ): Pair<FixedBigRational, FixedBigRational> {
         val symbols = combination.toSet()
-        var combinationBestValue = Rational.ZERO
-        var combinationBestSuccessProbability = Rational.ZERO
+        var combinationBestValue = ZERO
+        var combinationBestSuccessProbability = ZERO
         for (symbol in symbols) {
             if (usedSides.isUsed(symbol)) continue
             val symbolCount = combination.count { it == symbol }
