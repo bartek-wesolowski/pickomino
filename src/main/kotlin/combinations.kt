@@ -5,7 +5,7 @@ fun combinations(length: Int): Sequence<List<Side>> = sequence {
 
 private fun combinations(length: Int, combination: MutableList<Side>): Sequence<List<Side>> = sequence {
     if (length == 0) {
-        yield(combination.toList())
+        yield(combination)
     } else {
         for (side in Side.values()) {
             combination[combination.size - length] = side
