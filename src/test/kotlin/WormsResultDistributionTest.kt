@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import java.util.*
 import java.util.stream.Stream
 
 internal class WormsResultDistributionTest {
@@ -14,7 +15,7 @@ internal class WormsResultDistributionTest {
     @MethodSource("getParameters")
     fun test(
         dyeCount: Int,
-        usedSides: UsedSides,
+        usedSides: EnumSet<Side>,
         valueSoFar: Int,
         resultProbabilities: Map<Int, FixedBigRational>
     ) {
@@ -34,7 +35,7 @@ internal class WormsResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 1,
-                    usedSides = UsedSides().withUsed(Side.WORM),
+                    usedSides = EnumSet.of(Side.WORM),
                     valueSoFar = 5,
                     resultProbabilities = mapOf(
                         0 to (1 over 6),
@@ -58,7 +59,7 @@ internal class WormsResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 2,
-                    usedSides = UsedSides().withUsed(Side.WORM),
+                    usedSides = EnumSet.of(Side.WORM),
                     valueSoFar = 5,
                     resultProbabilities = mapOf(
                         0 to (10 over 216),
@@ -76,7 +77,7 @@ internal class WormsResultDistributionTest {
 
         private fun argumentsOf(
             dyeCount: Int,
-            usedSides: UsedSides = UsedSides(),
+            usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
             valueSoFar: Int = 0,
             resultProbabilities: Map<Int, FixedBigRational>
         ): Arguments = Arguments.of(dyeCount, usedSides, valueSoFar, resultProbabilities)

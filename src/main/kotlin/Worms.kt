@@ -3,6 +3,7 @@ import hm.binkley.math.fixed.over
 import hm.binkley.math.fixed.FixedBigRational.Companion.ZERO
 import hm.binkley.math.fixed.FixedBigRational.Companion.ONE
 import hm.binkley.math.times
+import java.util.*
 
 class Worms {
     private val expectedValueMemo: MutableMap<Key, ValueWithSuccessProbability> = mutableMapOf()
@@ -10,7 +11,7 @@ class Worms {
 
     fun getResultDistribution(
         dyeCount: Int,
-        usedSides: UsedSides = UsedSides(),
+        usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
         valueSoFar: Int = 0
     ): Map<Int, FixedBigRational> {
         return getResultDistribution(dyeCount, usedSides, valueSoFar, resultProbabilityMemo)
@@ -18,7 +19,7 @@ class Worms {
 
     private fun getResultDistribution(
         dyeCount: Int,
-        usedSides: UsedSides,
+        usedSides: EnumSet<Side>,
         valueSoFar: Int,
         memo: MutableMap<Key, Map<Int, FixedBigRational>>
     ): Map<Int, FixedBigRational> {
@@ -61,12 +62,12 @@ class Worms {
     }
 
     private fun getResultDistributionForOneDye(
-        usedSides: UsedSides,
+        usedSides: EnumSet<Side>,
         valueSoFar: Int
     ): Map<Int, FixedBigRational> {
-        return if (usedSides.isUsed(Side.WORM)) {
+        return if (Side.WORM in usedSides) {
             buildMap {
-                put(0, oneSixth * usedSides.size())
+                put(0, oneSixth * usedSides.size)
                 if (Side.ONE !in usedSides) put(valueSoFar + 1, oneSixth)
                 if (Side.TWO !in usedSides) put(valueSoFar + 2, oneSixth)
                 if (Side.THREE !in usedSides) put(valueSoFar + 3, oneSixth)
@@ -83,7 +84,7 @@ class Worms {
 
     internal fun getResultDistributionForCombination(
         combination: List<Side>,
-        usedSides: UsedSides,
+        usedSides: EnumSet<Side>,
         valueSoFar: Int,
         memo: MutableMap<Key, Map<Int, FixedBigRational>>
     ): Map<Int, FixedBigRational> {
@@ -91,7 +92,7 @@ class Worms {
         var combinationBestValue = ZERO
         var combinationBestResultDistribution = emptyMap<Int, FixedBigRational>()
         for (symbol in symbols) {
-            if (usedSides.isUsed(symbol)) continue
+            if (symbol in usedSides) continue
             val symbolCount = combination.count { it == symbol }
             val symbolsValue = symbolCount * symbol.value
             val symbolResultDistribution = if (symbolCount == combination.size) {
@@ -164,7 +165,10 @@ class Worms {
         }
     }
 
-    fun getAdvice(roll: List<Side>, usedSides: UsedSides = UsedSides()): Map<Side, ValueWithSuccessProbability> {
+    fun getAdvice(
+        roll: List<Side>,
+        usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java)
+    ): Map<Side, ValueWithSuccessProbability> {
         val advice = mutableMapOf<Side, ValueWithSuccessProbability>()
         for (side in roll) {
             if (side in advice) continue
@@ -178,7 +182,7 @@ class Worms {
 
     fun getExpectedValue(
         dyeCount: Int,
-        usedSides: UsedSides = UsedSides(),
+        usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
         valueSoFar: Int = 0
     ): ValueWithSuccessProbability {
         return getExpectedValue(dyeCount, usedSides, valueSoFar, expectedValueMemo)
@@ -186,7 +190,7 @@ class Worms {
 
     private fun getExpectedValue(
         dyeCount: Int,
-        usedSides: UsedSides,
+        usedSides: EnumSet<Side>,
         valueSoFar: Int,
         memo: MutableMap<Key, ValueWithSuccessProbability>
     ): ValueWithSuccessProbability {
@@ -194,7 +198,7 @@ class Worms {
         if (memo.containsKey(key)) {
             return memo.getValue(key)
         }
-        val wormSoFar = usedSides.isUsed(Side.WORM)
+        val wormSoFar = Side.WORM in usedSides
         if (dyeCount == 0) return ValueWithSuccessProbability(ZERO, if (wormSoFar) ONE else ZERO)
         val combinationProbability = sixth[dyeCount]
         var expectedValue = ZERO
@@ -221,7 +225,7 @@ class Worms {
 
     private fun getExpectedValueForBestMove(
         combination: List<Side>,
-        usedSides: UsedSides,
+        usedSides: EnumSet<Side>,
         dyeCount: Int,
         valueSoFar: Int,
         memo: MutableMap<Key, ValueWithSuccessProbability>
@@ -230,7 +234,7 @@ class Worms {
         var combinationBestValue = ZERO
         var combinationBestSuccessProbability = ZERO
         for (symbol in symbols) {
-            if (usedSides.isUsed(symbol)) continue
+            if (symbol in usedSides) continue
             val symbolCount = combination.count { it == symbol }
             val (symbolExpectedValue, symbolSuccessProbability) = getExpectedValue(
                 dyeCount - symbolCount,
@@ -249,9 +253,15 @@ class Worms {
         return combinationBestValue to combinationBestSuccessProbability
     }
 
+    private fun EnumSet<Side>.withUsed(side: Side): EnumSet<Side> {
+        return EnumSet.copyOf(this).apply {
+            add(side)
+        }
+    }
+
     internal data class Key(
         val dyeCount: Int,
-        val usedSides: UsedSides,
+        val usedSides: EnumSet<Side>,
         val valueSoFar: Int
     )
 }

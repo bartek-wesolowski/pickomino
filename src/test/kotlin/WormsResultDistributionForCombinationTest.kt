@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import java.util.*
 import java.util.stream.Stream
 
 internal class WormsResultDistributionForCombinationTest {
@@ -14,7 +15,7 @@ internal class WormsResultDistributionForCombinationTest {
     @MethodSource("getParameters")
     fun test(
         combination: List<Side>,
-        usedSides: UsedSides,
+        usedSides: EnumSet<Side>,
         valueSoFar: Int,
         expected: Map<Int, FixedBigRational>
     ) {
@@ -65,19 +66,19 @@ internal class WormsResultDistributionForCombinationTest {
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.ONE),
-                    usedSides = UsedSides().withUsed(Side.WORM),
+                    usedSides = EnumSet.of(Side.WORM),
                     valueSoFar = 5,
                     expected = successful(7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
-                    usedSides = UsedSides().withUsed(Side.WORM),
+                    usedSides = EnumSet.of(Side.WORM),
                     valueSoFar = 5,
                     expected = successful(7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.THREE),
-                    usedSides = UsedSides().withUsed(Side.WORM),
+                    usedSides = EnumSet.of(Side.WORM),
                     valueSoFar = 5,
                     expected = successful(8)
                 ),
@@ -86,7 +87,7 @@ internal class WormsResultDistributionForCombinationTest {
 
         private fun argumentsOf(
             combination: List<Side>,
-            usedSides: UsedSides = UsedSides(),
+            usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
             valueSoFar: Int = 0,
             expected: Map<Int, FixedBigRational>
         ): Arguments = Arguments.of(
