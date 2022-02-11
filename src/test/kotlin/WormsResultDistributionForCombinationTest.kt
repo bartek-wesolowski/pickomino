@@ -1,6 +1,5 @@
-import hm.binkley.math.fixed.FixedBigRational
-import hm.binkley.math.fixed.over
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -10,6 +9,7 @@ import java.util.stream.Stream
 internal class WormsResultDistributionForCombinationTest {
 
     private val worms = Worms()
+    private val epsilon = 0.000000000000001
 
     @ParameterizedTest(name = "result distribution for combinaiton: {0}, dye count: {1}, used sides: {2}, value so far {3}")
     @MethodSource("getParameters")
@@ -17,17 +17,18 @@ internal class WormsResultDistributionForCombinationTest {
         combination: List<Side>,
         usedSides: EnumSet<Side>,
         valueSoFar: Int,
-        expected: Map<Int, FixedBigRational>
+        resultProbabilities: Map<Int, Double>
     ) {
-        assertEquals(
-            expected,
-            worms.getResultDistributionForCombination(
-                combination,
-                usedSides,
-                valueSoFar,
-                mutableMapOf()
-            )
+        val actual = worms.getResultDistributionForCombination(
+            combination,
+            usedSides,
+            valueSoFar,
+            mutableMapOf()
         )
+        for (value in resultProbabilities.keys) {
+            assertTrue(actual.containsKey(value))
+            assertEquals(resultProbabilities.getValue(value), actual.getValue(value), epsilon)
+        }
     }
 
     companion object {
@@ -45,8 +46,8 @@ internal class WormsResultDistributionForCombinationTest {
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
                     expected = mapOf(
-                        0 to (5 over 6),
-                        7 to (1 over 6)
+                        0 to (5.0 / 6),
+                        7 to (1.0 / 6)
                     )
                 ),
                 argumentsOf(
@@ -56,12 +57,12 @@ internal class WormsResultDistributionForCombinationTest {
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.WORM),
                     expected = mapOf(
-                        0 to (1 over 6),
-                        6 to (1 over 6),
-                        7 to (1 over 6),
-                        8 to (1 over 6),
-                        9 to (1 over 6),
-                        10 to (1 over 6)
+                        0 to (1.0 / 6),
+                        6 to (1.0 / 6),
+                        7 to (1.0 / 6),
+                        8 to (1.0 / 6),
+                        9 to (1.0 / 6),
+                        10 to (1.0 / 6)
                     )
                 ),
                 argumentsOf(
@@ -89,7 +90,7 @@ internal class WormsResultDistributionForCombinationTest {
             combination: List<Side>,
             usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
             valueSoFar: Int = 0,
-            expected: Map<Int, FixedBigRational>
+            expected: Map<Int, Double>
         ): Arguments = Arguments.of(
             combination, usedSides, valueSoFar, expected
         )

@@ -1,19 +1,21 @@
-import hm.binkley.math.fixed.over
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.util.*
+import java.util.EnumSet
 import java.util.stream.Stream
 
 internal class WormsExpectedValueTest {
 
     private val worms = Worms()
+    private val epsilon = 0.000000000000001
 
     @ParameterizedTest(name = "expected value for dye count: {1}, used sides: {2}, value so far {3}")
     @MethodSource("provideExpectedValueParameters")
     fun test(expected: ValueWithSuccessProbability, dyeCount: Int, usedSides: EnumSet<Side>, valueSoFar: Int) {
-        assertEquals(expected, worms.getExpectedValue(dyeCount, usedSides, valueSoFar))
+        val actual = worms.getExpectedValue(dyeCount, usedSides, valueSoFar)
+        assertEquals(expected.value, actual.value, epsilon)
+        assertEquals(expected.successProbability, actual.successProbability, epsilon)
     }
 
     companion object {
@@ -21,28 +23,28 @@ internal class WormsExpectedValueTest {
         fun provideExpectedValueParameters(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of(
-                    ValueWithSuccessProbability(5 over 6, 1 over 6),
+                    ValueWithSuccessProbability(5.0 / 6, 1.0 / 6),
                     1,
                     EnumSet.noneOf(Side::class.java),
                     0
                 ),
                 Arguments.of(
                     ValueWithSuccessProbability(
-                        15 over 6,
-                        5 over 6
+                        15.0 / 6,
+                        5.0 / 6
                     ),
                     1,
                     EnumSet.of(Side.WORM),
                     5
                 ),
                 Arguments.of(
-                    ValueWithSuccessProbability(640 over 216, 76 over 216),
+                    ValueWithSuccessProbability(640.0 / 216, 76.0 / 216),
                     2,
                     EnumSet.noneOf(Side::class.java),
                     0
                 ),
                 Arguments.of(
-                    ValueWithSuccessProbability(4 over 1, 103 over 108),
+                    ValueWithSuccessProbability(4.0 / 1, 103.0 / 108),
                     2,
                     EnumSet.of(Side.WORM),
                     5

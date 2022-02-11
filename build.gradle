@@ -15,7 +15,5 @@ test {
 }
 
 dependencies {
-    implementation 'com.github.binkley:kotlin-rational:kotlin-rational-2.1.1'
-
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 }

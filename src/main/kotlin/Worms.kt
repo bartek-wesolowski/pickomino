@@ -1,19 +1,14 @@
-import hm.binkley.math.fixed.FixedBigRational
-import hm.binkley.math.fixed.over
-import hm.binkley.math.fixed.FixedBigRational.Companion.ZERO
-import hm.binkley.math.fixed.FixedBigRational.Companion.ONE
-import hm.binkley.math.times
 import java.util.*
 
 class Worms {
     private val expectedValueMemo: MutableMap<Key, ValueWithSuccessProbability> = mutableMapOf()
-    private val resultProbabilityMemo: MutableMap<Key, Map<Int, FixedBigRational>> = mutableMapOf()
+    private val resultProbabilityMemo: MutableMap<Key, Map<Int, Double>> = mutableMapOf()
 
     fun getResultDistribution(
         dyeCount: Int,
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
         valueSoFar: Int = 0
-    ): Map<Int, FixedBigRational> {
+    ): Map<Int, Double> {
         return getResultDistribution(dyeCount, usedSides, valueSoFar, resultProbabilityMemo)
     }
 
@@ -21,9 +16,9 @@ class Worms {
         dyeCount: Int,
         usedSides: EnumSet<Side>,
         valueSoFar: Int,
-        memo: MutableMap<Key, Map<Int, FixedBigRational>>
-    ): Map<Int, FixedBigRational> {
-        require(dyeCount > 0) { "dyeCount has to be greater than zero" }
+        memo: MutableMap<Key, Map<Int, Double>>
+    ): Map<Int, Double> {
+        require(dyeCount > 0) { "dyeCount has to be greater than 0.0" }
         val key = Key(dyeCount, usedSides, valueSoFar)
         if (memo.containsKey(key)) {
             return memo.getValue(key)
@@ -31,9 +26,9 @@ class Worms {
         if (dyeCount == 1) {
             return getResultDistributionForOneDye(usedSides, valueSoFar)
         }
-        var expectedValue = ZERO
-        var successProbability = ZERO
-        val resultDistribution = mutableMapOf<Int, FixedBigRational>()
+        var expectedValue = 0.0
+        var successProbability = 0.0
+        val resultDistribution = mutableMapOf<Int, Double>()
         val combinationProbability = sixth[dyeCount]
         for (combination in combinations(dyeCount)) {
             val combinationResultDistribution =
@@ -48,8 +43,7 @@ class Worms {
             resultDistribution.combine(combinationResultDistribution, combinationProbability)
         }
         val result = if (Side.WORM in usedSides) {
-            val valueSoFarRational = valueSoFar over 1
-            if (valueSoFarRational * successProbability + expectedValue > valueSoFarRational) {
+            if (valueSoFar * successProbability + expectedValue > valueSoFar) {
                 resultDistribution.emptyToFailed()
             } else {
                 successful(valueSoFar)
@@ -64,7 +58,7 @@ class Worms {
     private fun getResultDistributionForOneDye(
         usedSides: EnumSet<Side>,
         valueSoFar: Int
-    ): Map<Int, FixedBigRational> {
+    ): Map<Int, Double> {
         return if (Side.WORM in usedSides) {
             buildMap {
                 put(0, oneSixth * usedSides.size)
@@ -76,7 +70,7 @@ class Worms {
             }
         } else {
             mapOf(
-                0 to (5 over 6),
+                0 to 5.0 / 6,
                 valueSoFar + Side.WORM.value to oneSixth
             )
         }
@@ -86,11 +80,11 @@ class Worms {
         combination: List<Side>,
         usedSides: EnumSet<Side>,
         valueSoFar: Int,
-        memo: MutableMap<Key, Map<Int, FixedBigRational>>
-    ): Map<Int, FixedBigRational> {
+        memo: MutableMap<Key, Map<Int, Double>>
+    ): Map<Int, Double> {
         val symbols = combination.toSet()
-        var combinationBestValue = ZERO
-        var combinationBestResultDistribution = emptyMap<Int, FixedBigRational>()
+        var combinationBestValue = 0.0
+        var combinationBestResultDistribution = emptyMap<Int, Double>()
         for (symbol in symbols) {
             if (symbol in usedSides) continue
             val symbolCount = combination.count { it == symbol }
@@ -112,7 +106,7 @@ class Worms {
             val symbolExpectedValue = symbolResultDistribution.expectedValue()
             val canTakeDecision = Side.WORM in usedSides || symbol == Side.WORM
             val symbolResultDistributionAfterDecision =
-                if (!canTakeDecision || symbolExpectedValue > (valueSoFar + symbolsValue over 1)) {
+                if (!canTakeDecision || symbolExpectedValue > (valueSoFar + symbolsValue)) {
                     symbolResultDistribution
                 } else {
                     successful(valueSoFar + symbolsValue)
@@ -126,15 +120,15 @@ class Worms {
         return combinationBestResultDistribution.emptyToFailed()
     }
 
-    private fun Map<Int, FixedBigRational>.expectedValue(): FixedBigRational {
-        return entries.fold(ZERO) { acc, entry ->
+    private fun Map<Int, Double>.expectedValue(): Double {
+        return entries.fold(0.0) { acc, entry ->
             val (value, probability) = entry
             acc + value * probability
         }
     }
 
-    private fun Map<Int, FixedBigRational>.successProbability(): FixedBigRational {
-        return entries.fold(ZERO) { acc, entry ->
+    private fun Map<Int, Double>.successProbability(): Double {
+        return entries.fold(0.0) { acc, entry ->
             val (value, probability) = entry
             if (value != 0) {
                 acc + probability
@@ -144,9 +138,9 @@ class Worms {
         }
     }
 
-    private fun MutableMap<Int, FixedBigRational>.combine(
-        other: Map<Int, FixedBigRational>,
-        combinationProbability: FixedBigRational
+    private fun MutableMap<Int, Double>.combine(
+        other: Map<Int, Double>,
+        combinationProbability: Double
     ) {
         for ((value, probability) in other) {
             if (value in this) {
@@ -157,7 +151,7 @@ class Worms {
         }
     }
 
-    private fun Map<Int, FixedBigRational>.emptyToFailed(): Map<Int, FixedBigRational> {
+    private fun Map<Int, Double>.emptyToFailed(): Map<Int, Double> {
         return if (isEmpty()) {
             failed
         } else {
@@ -199,10 +193,10 @@ class Worms {
             return memo.getValue(key)
         }
         val wormSoFar = Side.WORM in usedSides
-        if (dyeCount == 0) return ValueWithSuccessProbability(ZERO, if (wormSoFar) ONE else ZERO)
+        if (dyeCount == 0) return ValueWithSuccessProbability(0.0, if (wormSoFar) 1.0 else 0.0)
         val combinationProbability = sixth[dyeCount]
-        var expectedValue = ZERO
-        var successProbability = ZERO
+        var expectedValue = 0.0
+        var successProbability = 0.0
         for (combination in combinations(dyeCount)) {
             val (combinationBestValue, combinationBestSuccessProbability) =
                 getExpectedValueForBestMove(combination, usedSides, dyeCount, valueSoFar, memo)
@@ -210,11 +204,10 @@ class Worms {
             successProbability += combinationProbability * combinationBestSuccessProbability
         }
         val result = if (wormSoFar) {
-            val valueSoFarRational = valueSoFar over 1
-            if (valueSoFarRational * successProbability + expectedValue > valueSoFarRational) {
+            if (valueSoFar * successProbability + expectedValue > valueSoFar) {
                 ValueWithSuccessProbability(expectedValue, successProbability)
             } else {
-                ValueWithSuccessProbability(ZERO, ONE)
+                ValueWithSuccessProbability(0.0, 1.0)
             }
         } else {
             ValueWithSuccessProbability(expectedValue, successProbability)
@@ -229,10 +222,10 @@ class Worms {
         dyeCount: Int,
         valueSoFar: Int,
         memo: MutableMap<Key, ValueWithSuccessProbability>
-    ): Pair<FixedBigRational, FixedBigRational> {
+    ): Pair<Double, Double> {
         val symbols = combination.toSet()
-        var combinationBestValue = ZERO
-        var combinationBestSuccessProbability = ZERO
+        var combinationBestValue = 0.0
+        var combinationBestSuccessProbability = 0.0
         for (symbol in symbols) {
             if (symbol in usedSides) continue
             val symbolCount = combination.count { it == symbol }
@@ -266,9 +259,9 @@ class Worms {
     )
 }
 
-internal val failed = mapOf(0 to ONE)
+internal val failed = mapOf(0 to 1.0)
 
 internal fun successful(value: Int) = mapOf(
-    0 to ZERO,
-    value to ONE
+    0 to 0.0,
+    value to 1.0
 )
