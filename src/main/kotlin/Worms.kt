@@ -62,7 +62,7 @@ class Worms {
         valueSoFar: Int,
         memo: MutableMap<Key, ResultDistribution>
     ): ResultDistribution {
-        val symbols = combination.toSet()
+        val symbols = EnumSet.copyOf(combination)
         var combinationBestValue = 0.0
         var combinationBestResultDistribution = ResultDistribution()
         for (symbol in symbols) {
