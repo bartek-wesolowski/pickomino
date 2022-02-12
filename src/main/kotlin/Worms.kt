@@ -197,10 +197,3 @@ class Worms {
         val valueSoFar: Int
     )
 }
-
-internal val failed = mapOf(0 to 1.0)
-
-internal fun successful(value: Int) = mapOf(
-    0 to 0.0,
-    value to 1.0
-)
