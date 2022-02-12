@@ -5,12 +5,18 @@ class ResultDistribution {
 
     fun getExpectedValue(): Double {
         var expectedValue = 0.0
-        probability.forEachIndexed { v, p -> expectedValue += v * p }
+        for (value in 0..40) {
+            expectedValue += value * probability[value]
+        }
         return expectedValue
     }
 
     fun getSuccessProbability(): Double {
-        return probability.fold(0.0) { acc, p -> acc + p }
+        var successProbability = 0.0
+        for (value in 0..40) {
+            successProbability += probability[value]
+        }
+        return successProbability
     }
 
     fun setFailedIfEmpty() {

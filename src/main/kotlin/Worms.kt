@@ -26,8 +26,6 @@ class Worms {
         if (dyeCount == 1) {
             return ResultDistribution.createForOneDye(usedSides, valueSoFar)
         }
-        var expectedValue = 0.0
-        var successProbability = 0.0
         val resultDistribution = ResultDistribution()
         val combinationProbability = sixth[dyeCount]
         for (combination in combinations(dyeCount)) {
@@ -38,12 +36,12 @@ class Worms {
                     valueSoFar,
                     memo
                 )
-            expectedValue += combinationResultDistribution.getExpectedValue() * combinationProbability
-            successProbability += combinationResultDistribution.getSuccessProbability() * combinationProbability
             resultDistribution.merge(combinationResultDistribution, combinationProbability)
         }
         resultDistribution.setFailedIfEmpty()
         val result = if (Side.WORM in usedSides) {
+            val expectedValue = resultDistribution.getExpectedValue()
+            val successProbability = resultDistribution.getSuccessProbability()
             if (valueSoFar * successProbability + expectedValue > valueSoFar) {
                 resultDistribution
             } else {
@@ -83,10 +81,9 @@ class Worms {
                     memo
                 )
             }
-            val symbolExpectedValue = symbolResultDistribution.getExpectedValue()
             val canTakeDecision = Side.WORM in usedSides || symbol == Side.WORM
             val symbolResultDistributionAfterDecision =
-                if (!canTakeDecision || symbolExpectedValue > (valueSoFar + symbolsValue)) {
+                if (!canTakeDecision || symbolResultDistribution.getExpectedValue() > (valueSoFar + symbolsValue)) {
                     symbolResultDistribution
                 } else {
                     ResultDistribution.successful(valueSoFar + symbolsValue)
