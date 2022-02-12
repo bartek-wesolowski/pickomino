@@ -1,9 +1,8 @@
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.util.*
+import java.util.EnumSet
 import java.util.stream.Stream
 
 internal class WormsResultDistributionForCombinationTest {
@@ -17,7 +16,7 @@ internal class WormsResultDistributionForCombinationTest {
         combination: List<Side>,
         usedSides: EnumSet<Side>,
         valueSoFar: Int,
-        resultProbabilities: Map<Int, Double>
+        resultDistribution: ResultDistribution
     ) {
         val actual = worms.getResultDistributionForCombination(
             combination,
@@ -25,9 +24,8 @@ internal class WormsResultDistributionForCombinationTest {
             valueSoFar,
             mutableMapOf()
         )
-        for (value in resultProbabilities.keys) {
-            assertTrue(actual.containsKey(value))
-            assertEquals(resultProbabilities.getValue(value), actual.getValue(value), epsilon)
+        for (value in 0..40) {
+            assertEquals(resultDistribution[value], actual[value], epsilon)
         }
     }
 
@@ -37,51 +35,51 @@ internal class WormsResultDistributionForCombinationTest {
             return Stream.of(
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.ONE),
-                    expected = failed
+                    resultDistribution = ResultDistribution.failed()
                 ),
                 argumentsOf(
                     combination = listOf(Side.TWO, Side.TWO),
-                    expected = failed
+                    resultDistribution = ResultDistribution.failed()
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
-                    expected = mapOf(
-                        0 to (5.0 / 6),
-                        7 to (1.0 / 6)
-                    )
+                    resultDistribution = ResultDistribution().apply {
+                        this[0] = 5.0 / 6
+                        this[7] = 1.0 / 6
+                    }
                 ),
                 argumentsOf(
                     combination = listOf(Side.WORM, Side.WORM),
-                    expected = successful(10)
+                    resultDistribution = ResultDistribution.successful(10)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.WORM),
-                    expected = mapOf(
-                        0 to (1.0 / 6),
-                        6 to (1.0 / 6),
-                        7 to (1.0 / 6),
-                        8 to (1.0 / 6),
-                        9 to (1.0 / 6),
-                        10 to (1.0 / 6)
-                    )
+                    resultDistribution = ResultDistribution().apply {
+                        this[0] = 1.0 / 6
+                        this[6] = 1.0 / 6
+                        this[7] = 1.0 / 6
+                        this[8] = 1.0 / 6
+                        this[9] = 1.0 / 6
+                        this[10] = 1.0 / 6
+                    }
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.ONE),
                     usedSides = EnumSet.of(Side.WORM),
                     valueSoFar = 5,
-                    expected = successful(7)
+                    resultDistribution = ResultDistribution.successful(7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
                     usedSides = EnumSet.of(Side.WORM),
                     valueSoFar = 5,
-                    expected = successful(7)
+                    resultDistribution = ResultDistribution.successful(7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.THREE),
                     usedSides = EnumSet.of(Side.WORM),
                     valueSoFar = 5,
-                    expected = successful(8)
+                    resultDistribution = ResultDistribution.successful(8)
                 ),
             )
         }
@@ -90,9 +88,9 @@ internal class WormsResultDistributionForCombinationTest {
             combination: List<Side>,
             usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
             valueSoFar: Int = 0,
-            expected: Map<Int, Double>
+            resultDistribution: ResultDistribution
         ): Arguments = Arguments.of(
-            combination, usedSides, valueSoFar, expected
+            combination, usedSides, valueSoFar, resultDistribution
         )
     }
 }

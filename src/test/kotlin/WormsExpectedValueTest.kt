@@ -10,9 +10,9 @@ internal class WormsExpectedValueTest {
     private val worms = Worms()
     private val epsilon = 0.000000000000001
 
-    @ParameterizedTest(name = "expected value for dye count: {1}, used sides: {2}, value so far {3}")
+    @ParameterizedTest(name = "expected value for dye count: {0}, used sides: {1}, value so far {2}")
     @MethodSource("provideExpectedValueParameters")
-    fun test(expected: ValueWithSuccessProbability, dyeCount: Int, usedSides: EnumSet<Side>, valueSoFar: Int) {
+    fun test(dyeCount: Int, usedSides: EnumSet<Side>, valueSoFar: Int, expected: ValueWithSuccessProbability) {
         val actual = worms.getExpectedValue(dyeCount, usedSides, valueSoFar)
         assertEquals(expected.value, actual.value, epsilon)
         assertEquals(expected.successProbability, actual.successProbability, epsilon)
@@ -22,34 +22,46 @@ internal class WormsExpectedValueTest {
         @JvmStatic
         fun provideExpectedValueParameters(): Stream<Arguments> {
             return Stream.of(
-                Arguments.of(
-                    ValueWithSuccessProbability(5.0 / 6, 1.0 / 6),
-                    1,
-                    EnumSet.noneOf(Side::class.java),
-                    0
+                argumentsOf(
+                    valueSoFar = 0,
+                    dyeCount = 1,
+                    usedSides = EnumSet.noneOf(Side::class.java),
+                    valueWithSuccessProbability = ValueWithSuccessProbability(5.0 / 6, 1.0 / 6)
                 ),
-                Arguments.of(
-                    ValueWithSuccessProbability(
+                argumentsOf(
+                    valueSoFar = 5,
+                    dyeCount = 1,
+                    usedSides = EnumSet.of(Side.WORM),
+                    valueWithSuccessProbability = ValueWithSuccessProbability(
                         15.0 / 6,
                         5.0 / 6
-                    ),
-                    1,
-                    EnumSet.of(Side.WORM),
-                    5
+                    )
                 ),
-                Arguments.of(
-                    ValueWithSuccessProbability(640.0 / 216, 76.0 / 216),
-                    2,
-                    EnumSet.noneOf(Side::class.java),
-                    0
+                argumentsOf(
+                    valueSoFar = 0,
+                    dyeCount = 2,
+                    usedSides = EnumSet.noneOf(Side::class.java),
+                    valueWithSuccessProbability = ValueWithSuccessProbability(640.0 / 216, 76.0 / 216)
                 ),
-                Arguments.of(
-                    ValueWithSuccessProbability(4.0 / 1, 103.0 / 108),
-                    2,
-                    EnumSet.of(Side.WORM),
-                    5
+                argumentsOf(
+                    valueSoFar = 5,
+                    dyeCount = 2,
+                    usedSides = EnumSet.of(Side.WORM),
+                    valueWithSuccessProbability = ValueWithSuccessProbability(4.0 / 1, 103.0 / 108)
                 ),
             )
         }
+
+        private fun argumentsOf(
+            valueSoFar: Int,
+            dyeCount: Int,
+            usedSides: EnumSet<Side>,
+            valueWithSuccessProbability: ValueWithSuccessProbability,
+        ) = Arguments.of(
+            dyeCount,
+            usedSides,
+            valueSoFar,
+            valueWithSuccessProbability
+        )
     }
 }

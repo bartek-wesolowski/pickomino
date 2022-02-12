@@ -1,34 +1,34 @@
-import java.util.*
+import java.util.EnumSet
 
 class Worms {
     private val expectedValueMemo: MutableMap<Key, ValueWithSuccessProbability> = mutableMapOf()
-    private val resultProbabilityMemo: MutableMap<Key, Map<Int, Double>> = mutableMapOf()
+    private val resultDistributionMemo: MutableMap<Key, ResultDistribution> = mutableMapOf()
 
     fun getResultDistribution(
         dyeCount: Int,
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
         valueSoFar: Int = 0
-    ): Map<Int, Double> {
-        return getResultDistribution(dyeCount, usedSides, valueSoFar, resultProbabilityMemo)
+    ): ResultDistribution {
+        return getResultDistribution(dyeCount, usedSides, valueSoFar, resultDistributionMemo)
     }
 
     private fun getResultDistribution(
         dyeCount: Int,
         usedSides: EnumSet<Side>,
         valueSoFar: Int,
-        memo: MutableMap<Key, Map<Int, Double>>
-    ): Map<Int, Double> {
+        memo: MutableMap<Key, ResultDistribution>
+    ): ResultDistribution {
         require(dyeCount > 0) { "dyeCount has to be greater than 0.0" }
         val key = Key(dyeCount, usedSides, valueSoFar)
         if (memo.containsKey(key)) {
             return memo.getValue(key)
         }
         if (dyeCount == 1) {
-            return getResultDistributionForOneDye(usedSides, valueSoFar)
+            return ResultDistribution.createForOneDye(usedSides, valueSoFar)
         }
         var expectedValue = 0.0
         var successProbability = 0.0
-        val resultDistribution = mutableMapOf<Int, Double>()
+        val resultDistribution = ResultDistribution()
         val combinationProbability = sixth[dyeCount]
         for (combination in combinations(dyeCount)) {
             val combinationResultDistribution =
@@ -38,62 +38,42 @@ class Worms {
                     valueSoFar,
                     memo
                 )
-            expectedValue += combinationResultDistribution.expectedValue() * combinationProbability
-            successProbability += combinationResultDistribution.successProbability() * combinationProbability
-            resultDistribution.combine(combinationResultDistribution, combinationProbability)
+            expectedValue += combinationResultDistribution.getExpectedValue() * combinationProbability
+            successProbability += combinationResultDistribution.getSuccessProbability() * combinationProbability
+            resultDistribution.merge(combinationResultDistribution, combinationProbability)
         }
+        resultDistribution.setFailedIfEmpty()
         val result = if (Side.WORM in usedSides) {
             if (valueSoFar * successProbability + expectedValue > valueSoFar) {
-                resultDistribution.emptyToFailed()
+                resultDistribution
             } else {
-                successful(valueSoFar)
+                ResultDistribution.successful(valueSoFar)
             }
         } else {
-            resultDistribution.emptyToFailed()
+            resultDistribution
         }
         memo[key] = result
         return result
-    }
-
-    private fun getResultDistributionForOneDye(
-        usedSides: EnumSet<Side>,
-        valueSoFar: Int
-    ): Map<Int, Double> {
-        return if (Side.WORM in usedSides) {
-            buildMap {
-                put(0, oneSixth * usedSides.size)
-                if (Side.ONE !in usedSides) put(valueSoFar + 1, oneSixth)
-                if (Side.TWO !in usedSides) put(valueSoFar + 2, oneSixth)
-                if (Side.THREE !in usedSides) put(valueSoFar + 3, oneSixth)
-                if (Side.FOUR !in usedSides) put(valueSoFar + 4, oneSixth)
-                if (Side.FIVE !in usedSides) put(valueSoFar + 5, oneSixth)
-            }
-        } else {
-            mapOf(
-                0 to 5.0 / 6,
-                valueSoFar + Side.WORM.value to oneSixth
-            )
-        }
     }
 
     internal fun getResultDistributionForCombination(
         combination: List<Side>,
         usedSides: EnumSet<Side>,
         valueSoFar: Int,
-        memo: MutableMap<Key, Map<Int, Double>>
-    ): Map<Int, Double> {
+        memo: MutableMap<Key, ResultDistribution>
+    ): ResultDistribution {
         val symbols = combination.toSet()
         var combinationBestValue = 0.0
-        var combinationBestResultDistribution = emptyMap<Int, Double>()
+        var combinationBestResultDistribution = ResultDistribution()
         for (symbol in symbols) {
             if (symbol in usedSides) continue
             val symbolCount = combination.count { it == symbol }
             val symbolsValue = symbolCount * symbol.value
             val symbolResultDistribution = if (symbolCount == combination.size) {
                 if (Side.WORM in usedSides || symbol == Side.WORM) {
-                    successful(valueSoFar + symbolsValue)
+                    ResultDistribution.successful(valueSoFar + symbolsValue)
                 } else {
-                    return failed
+                    return ResultDistribution.failed()
                 }
             } else {
                 getResultDistribution(
@@ -103,60 +83,22 @@ class Worms {
                     memo
                 )
             }
-            val symbolExpectedValue = symbolResultDistribution.expectedValue()
+            val symbolExpectedValue = symbolResultDistribution.getExpectedValue()
             val canTakeDecision = Side.WORM in usedSides || symbol == Side.WORM
             val symbolResultDistributionAfterDecision =
                 if (!canTakeDecision || symbolExpectedValue > (valueSoFar + symbolsValue)) {
                     symbolResultDistribution
                 } else {
-                    successful(valueSoFar + symbolsValue)
+                    ResultDistribution.successful(valueSoFar + symbolsValue)
                 }
-            val symbolExpectedValueAfterDecision = symbolResultDistributionAfterDecision.expectedValue()
+            val symbolExpectedValueAfterDecision = symbolResultDistributionAfterDecision.getExpectedValue()
             if (symbolExpectedValueAfterDecision > combinationBestValue) {
                 combinationBestValue = symbolExpectedValueAfterDecision
                 combinationBestResultDistribution = symbolResultDistributionAfterDecision
             }
         }
-        return combinationBestResultDistribution.emptyToFailed()
-    }
-
-    private fun Map<Int, Double>.expectedValue(): Double {
-        return entries.fold(0.0) { acc, entry ->
-            val (value, probability) = entry
-            acc + value * probability
-        }
-    }
-
-    private fun Map<Int, Double>.successProbability(): Double {
-        return entries.fold(0.0) { acc, entry ->
-            val (value, probability) = entry
-            if (value != 0) {
-                acc + probability
-            } else {
-                acc
-            }
-        }
-    }
-
-    private fun MutableMap<Int, Double>.combine(
-        other: Map<Int, Double>,
-        combinationProbability: Double
-    ) {
-        for ((value, probability) in other) {
-            if (value in this) {
-                put(value, getValue(value) + probability * combinationProbability)
-            } else {
-                put(value, probability * combinationProbability)
-            }
-        }
-    }
-
-    private fun Map<Int, Double>.emptyToFailed(): Map<Int, Double> {
-        return if (isEmpty()) {
-            failed
-        } else {
-            return this
-        }
+        combinationBestResultDistribution.setFailedIfEmpty()
+        return combinationBestResultDistribution
     }
 
     fun getAdvice(

@@ -4,8 +4,8 @@ fun main() {
     val worms = Worms()
     for (i in 1..8) {
         println(i.toString())
-        println(worms.getResultDistribution(i))
-        println(worms.getResultDistribution(i, EnumSet.of(Side.WORM)))
+        println(worms.getResultDistribution(i).toPrettyString())
+        println(worms.getResultDistribution(i, EnumSet.of(Side.WORM)).toPrettyString())
     }
 //    worms.getAdvice(rollOf(1, 2, 2, 2, 2, 2)).prettyPrint()
 //    println()
