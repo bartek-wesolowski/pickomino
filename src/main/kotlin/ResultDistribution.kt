@@ -1,11 +1,11 @@
 import java.util.EnumSet
 
-class ResultDistribution {
-    private val probability: DoubleArray = DoubleArray(41)
+class ResultDistribution(private val maxValue: Int) {
+    private val probability: DoubleArray = DoubleArray(maxValue + 1)
 
     fun getExpectedValue(): Double {
         var expectedValue = 0.0
-        for (value in 0..40) {
+        for (value in 0..maxValue) {
             expectedValue += value * probability[value]
         }
         return expectedValue
@@ -13,7 +13,7 @@ class ResultDistribution {
 
     fun getSuccessProbability(): Double {
         var successProbability = 0.0
-        for (value in 0..40) {
+        for (value in 0..maxValue) {
             successProbability += probability[value]
         }
         return successProbability
@@ -46,22 +46,20 @@ class ResultDistribution {
     }
 
     companion object {
-        fun successful(value: Int) = ResultDistribution().apply {
+        fun successful(maxValue: Int, value: Int) = ResultDistribution(maxValue).apply {
             probability[value] = 1.0
         }
 
-        private val failed = ResultDistribution().apply {
+        fun failed(maxValue: Int) = ResultDistribution(maxValue).apply {
             probability[0] = 1.0
         }
-
-        fun failed() = failed
 
         fun createForOneDye(
             valueFunction: ValueFunction,
             usedSides: EnumSet<Side>,
             pointsSoFar: Int
         ): ResultDistribution {
-            return ResultDistribution().apply {
+            return ResultDistribution(valueFunction.maxValue).apply {
                 if (Side.WORM in usedSides) {
                     probability[0] = oneSixth * usedSides.size
                     if (Side.ONE !in usedSides) probability[valueFunction.getValue(pointsSoFar + 1)] += oneSixth

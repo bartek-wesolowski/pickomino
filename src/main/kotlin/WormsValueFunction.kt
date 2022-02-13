@@ -1,4 +1,5 @@
 object WormsValueFunction : ValueFunction {
+    override val maxValue: Int = 4
     override fun getValue(points: Int): Int {
         return when (points) {
             21, 22, 23, 24 -> 1

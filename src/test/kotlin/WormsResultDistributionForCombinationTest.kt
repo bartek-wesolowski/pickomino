@@ -38,17 +38,17 @@ internal class WormsResultDistributionForCombinationTest {
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.ONE),
                     valueFunction = PointsValueFunction,
-                    resultDistribution = ResultDistribution.failed()
+                    resultDistribution = ResultDistribution.failed(PointsValueFunction.maxValue)
                 ),
                 argumentsOf(
                     combination = listOf(Side.TWO, Side.TWO),
                     valueFunction = PointsValueFunction,
-                    resultDistribution = ResultDistribution.failed()
+                    resultDistribution = ResultDistribution.failed(PointsValueFunction.maxValue)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
                     valueFunction = PointsValueFunction,
-                    resultDistribution = ResultDistribution().apply {
+                    resultDistribution = ResultDistribution(PointsValueFunction.maxValue).apply {
                         this[0] = 5.0 / 6
                         this[7] = 1.0 / 6
                     }
@@ -56,12 +56,12 @@ internal class WormsResultDistributionForCombinationTest {
                 argumentsOf(
                     combination = listOf(Side.WORM, Side.WORM),
                     valueFunction = PointsValueFunction,
-                    resultDistribution = ResultDistribution.successful(10)
+                    resultDistribution = ResultDistribution.successful(PointsValueFunction.maxValue, 10)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.WORM),
                     valueFunction = PointsValueFunction,
-                    resultDistribution = ResultDistribution().apply {
+                    resultDistribution = ResultDistribution(PointsValueFunction.maxValue).apply {
                         this[0] = 1.0 / 6
                         this[6] = 1.0 / 6
                         this[7] = 1.0 / 6
@@ -75,21 +75,21 @@ internal class WormsResultDistributionForCombinationTest {
                     valueFunction = PointsValueFunction,
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution.successful(7)
+                    resultDistribution = ResultDistribution.successful(PointsValueFunction.maxValue, 7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
                     valueFunction = PointsValueFunction,
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution.successful(7)
+                    resultDistribution = ResultDistribution.successful(PointsValueFunction.maxValue, 7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.THREE),
                     valueFunction = PointsValueFunction,
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution.successful(8)
+                    resultDistribution = ResultDistribution.successful(PointsValueFunction.maxValue, 8)
                 ),
             )
         }

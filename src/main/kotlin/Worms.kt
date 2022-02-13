@@ -17,7 +17,7 @@ class Worms {
         if (dyeCount == 1) {
             return ResultDistribution.createForOneDye(valueFunction, usedSides, pointsSoFar)
         }
-        val resultDistribution = ResultDistribution()
+        val resultDistribution = ResultDistribution(valueFunction.maxValue)
         val combinationProbability = sixth[dyeCount]
         for (combination in combinations(dyeCount)) {
             val combinationResultDistribution =
@@ -31,7 +31,7 @@ class Worms {
             if (pointsSoFar * successProbability + expectedValue > pointsSoFar) {
                 resultDistribution
             } else {
-                ResultDistribution.successful(valueFunction.getValue(pointsSoFar))
+                ResultDistribution.successful(valueFunction.maxValue, valueFunction.getValue(pointsSoFar))
             }
         } else {
             resultDistribution
@@ -49,16 +49,16 @@ class Worms {
     ): ResultDistribution {
         val symbols = EnumSet.copyOf(combination)
         var combinationBestValue = 0.0
-        var combinationBestResultDistribution = ResultDistribution()
+        var combinationBestResultDistribution = ResultDistribution(valueFunction.maxValue)
         for (symbol in symbols) {
             if (symbol in usedSides) continue
             val symbolCount = combination.count { it == symbol }
             val symbolsValue = symbolCount * symbol.value
             val symbolResultDistribution = if (symbolCount == combination.size) {
                 if (Side.WORM in usedSides || symbol == Side.WORM) {
-                    ResultDistribution.successful(valueFunction.getValue(pointsSoFar + symbolsValue))
+                    ResultDistribution.successful(valueFunction.maxValue, valueFunction.getValue(pointsSoFar + symbolsValue))
                 } else {
-                    return ResultDistribution.failed()
+                    return ResultDistribution.failed(valueFunction.maxValue)
                 }
             } else {
                 getResultDistribution(
@@ -74,7 +74,7 @@ class Worms {
                 if (!canTakeDecision || symbolResultDistribution.getExpectedValue() > (pointsSoFar + symbolsValue)) {
                     symbolResultDistribution
                 } else {
-                    ResultDistribution.successful(valueFunction.getValue(pointsSoFar + symbolsValue))
+                    ResultDistribution.successful(valueFunction.maxValue, valueFunction.getValue(pointsSoFar + symbolsValue))
                 }
             val symbolExpectedValueAfterDecision = symbolResultDistributionAfterDecision.getExpectedValue()
             if (symbolExpectedValueAfterDecision > combinationBestValue) {
