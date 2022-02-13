@@ -1,55 +1,28 @@
-import java.util.*
-
 fun main() {
     val worms = Worms()
-    val resultDistributionMemo: MutableMap<Worms.Key, ResultDistribution> = mutableMapOf()
-    for (dyeCount in 1..8) {
-        println(dyeCount.toString())
-        println(
-            worms.getResultDistribution(
-                dyeCount = dyeCount,
-                memo = resultDistributionMemo
-            )
-                .toPrettyString()
+    println(
+        worms.getResultDistribution(
+            dyeCount = 8,
+            valueFunction = WormsValueFunction
         )
-        println(
-            worms.getResultDistribution(
-                dyeCount = dyeCount,
-                usedSides = EnumSet.of(Side.WORM),
-                memo = resultDistributionMemo
-            )
-                .toPrettyString()
-        )
-    }
-//    worms.getAdvice(rollOf(1, 2, 2, 2, 2, 2)).prettyPrint()
-//    println()
-//    val resultProbabilities = worms.getResultProbabilities(2).toSortedMap()
-//    resultProbabilities.forEach { (value, probabilityWithWormProbability) ->
-//        println(
-//            "$value -> ${probabilityWithWormProbability.probability}, ${probabilityWithWormProbability.wormProbability}"
-//        )
-//    }
-//
-//    val totalProbability = resultProbabilities.values.fold(0f) { total, probabilityWithWormProbability ->
-//        total + probabilityWithWormProbability.probability
-//    }
-//    println("totalProbability: $totalProbability")
-//
-//    val totalWormProbability = resultProbabilities.values.fold(0f) { total, probabilityWithWormProbability ->
-//        total + probabilityWithWormProbability.wormProbability
-//    }
-//    println("totalWormProbability: $totalWormProbability")
+            .toPrettyString()
+    )
+    worms.getAdvice(
+        roll = rollOf(1, 2, 2, 2, 2, 2, 4, 5),
+        valueFunction = WormsValueFunction
+    ).prettyPrint()
 }
 
 fun rollOf(vararg values: Int): List<Side> {
+    require(values.size <= 8) { "There can't be more then 8 dice" }
     return values.map { Side.values()[it - 1] }
 }
 
-fun Map<Side, ValueWithSuccessProbability>.prettyPrint() {
+fun Map<Side, ValueWithSuccessProbability>.prettyPrint(precision: Int = 4) {
     for (side in keys) {
         val valueWithWormProbability = getValue(side)
         print("${side.toString().padStart(5)} ")
-        print("value: ${valueWithWormProbability.value.toFloat()} ${valueWithWormProbability.value}".padEnd(36))
-        println("worm: ${valueWithWormProbability.successProbability.toFloat()} ${valueWithWormProbability.successProbability}")
+        print("value: " + "%.${precision}f".format(valueWithWormProbability.value) + " ")
+        println("worm: " + "%.${precision}f".format(valueWithWormProbability.successProbability))
     }
 }

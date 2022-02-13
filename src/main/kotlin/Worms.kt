@@ -4,38 +4,34 @@ class Worms {
 
     fun getResultDistribution(
         dyeCount: Int,
+        valueFunction: ValueFunction,
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
-        valueSoFar: Int = 0,
+        pointsSoFar: Int = 0,
         memo: MutableMap<Key, ResultDistribution> = mutableMapOf()
     ): ResultDistribution {
-        require(dyeCount > 0) { "dyeCount has to be greater than 0.0" }
-        val key = Key(dyeCount, usedSides, valueSoFar)
+        require(dyeCount > 0) { "dyeCount has to be greater than 0" }
+        val key = Key(dyeCount, valueFunction, usedSides, pointsSoFar)
         if (memo.containsKey(key)) {
             return memo.getValue(key)
         }
         if (dyeCount == 1) {
-            return ResultDistribution.createForOneDye(usedSides, valueSoFar)
+            return ResultDistribution.createForOneDye(valueFunction, usedSides, pointsSoFar)
         }
         val resultDistribution = ResultDistribution()
         val combinationProbability = sixth[dyeCount]
         for (combination in combinations(dyeCount)) {
             val combinationResultDistribution =
-                getResultDistributionForCombination(
-                    combination,
-                    usedSides,
-                    valueSoFar,
-                    memo
-                )
+                getResultDistributionForCombination(combination, valueFunction, usedSides, pointsSoFar, memo)
             resultDistribution.merge(combinationResultDistribution, combinationProbability)
         }
         resultDistribution.setFailedIfEmpty()
         val result = if (Side.WORM in usedSides) {
             val expectedValue = resultDistribution.getExpectedValue()
             val successProbability = resultDistribution.getSuccessProbability()
-            if (valueSoFar * successProbability + expectedValue > valueSoFar) {
+            if (pointsSoFar * successProbability + expectedValue > pointsSoFar) {
                 resultDistribution
             } else {
-                ResultDistribution.successful(valueSoFar)
+                ResultDistribution.successful(valueFunction.getValue(pointsSoFar))
             }
         } else {
             resultDistribution
@@ -46,8 +42,9 @@ class Worms {
 
     internal fun getResultDistributionForCombination(
         combination: List<Side>,
+        valueFunction: ValueFunction,
         usedSides: EnumSet<Side>,
-        valueSoFar: Int,
+        pointsSoFar: Int,
         memo: MutableMap<Key, ResultDistribution>
     ): ResultDistribution {
         val symbols = EnumSet.copyOf(combination)
@@ -59,24 +56,25 @@ class Worms {
             val symbolsValue = symbolCount * symbol.value
             val symbolResultDistribution = if (symbolCount == combination.size) {
                 if (Side.WORM in usedSides || symbol == Side.WORM) {
-                    ResultDistribution.successful(valueSoFar + symbolsValue)
+                    ResultDistribution.successful(valueFunction.getValue(pointsSoFar + symbolsValue))
                 } else {
                     return ResultDistribution.failed()
                 }
             } else {
                 getResultDistribution(
-                    combination.size - symbolCount,
-                    usedSides.withUsed(symbol),
-                    valueSoFar + symbolsValue,
-                    memo
+                    dyeCount = combination.size - symbolCount,
+                    valueFunction = valueFunction,
+                    usedSides = usedSides.withUsed(symbol),
+                    pointsSoFar = pointsSoFar + symbolsValue,
+                    memo = memo
                 )
             }
             val canTakeDecision = Side.WORM in usedSides || symbol == Side.WORM
             val symbolResultDistributionAfterDecision =
-                if (!canTakeDecision || symbolResultDistribution.getExpectedValue() > (valueSoFar + symbolsValue)) {
+                if (!canTakeDecision || symbolResultDistribution.getExpectedValue() > (pointsSoFar + symbolsValue)) {
                     symbolResultDistribution
                 } else {
-                    ResultDistribution.successful(valueSoFar + symbolsValue)
+                    ResultDistribution.successful(valueFunction.getValue(pointsSoFar + symbolsValue))
                 }
             val symbolExpectedValueAfterDecision = symbolResultDistributionAfterDecision.getExpectedValue()
             if (symbolExpectedValueAfterDecision > combinationBestValue) {
@@ -90,6 +88,7 @@ class Worms {
 
     fun getAdvice(
         roll: List<Side>,
+        valueFunction: ValueFunction,
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
         memo: MutableMap<Key, ValueWithSuccessProbability> = mutableMapOf()
     ): Map<Side, ValueWithSuccessProbability> {
@@ -99,6 +98,7 @@ class Worms {
             val count = roll.count { it == side }
             val (expectedValue, wormProbability) = getExpectedValue(
                 dyeCount = roll.size - count,
+                valueFunction = valueFunction,
                 usedSides = usedSides.withUsed(side),
                 memo = memo
             )
@@ -110,11 +110,12 @@ class Worms {
 
     fun getExpectedValue(
         dyeCount: Int,
+        valueFunction: ValueFunction,
         usedSides: EnumSet<Side>,
-        valueSoFar: Int = 0,
+        pointsSoFar: Int = 0,
         memo: MutableMap<Key, ValueWithSuccessProbability> = mutableMapOf()
     ): ValueWithSuccessProbability {
-        val key = Key(dyeCount, usedSides, valueSoFar)
+        val key = Key(dyeCount, valueFunction, usedSides, pointsSoFar)
         if (memo.containsKey(key)) {
             return memo.getValue(key)
         }
@@ -125,12 +126,12 @@ class Worms {
         var successProbability = 0.0
         for (combination in combinations(dyeCount)) {
             val (combinationBestValue, combinationBestSuccessProbability) =
-                getExpectedValueForBestMove(combination, usedSides, dyeCount, valueSoFar, memo)
+                getExpectedValueForBestMove(combination, valueFunction, usedSides, dyeCount, pointsSoFar, memo)
             expectedValue += combinationProbability * combinationBestValue
             successProbability += combinationProbability * combinationBestSuccessProbability
         }
         val result = if (wormSoFar) {
-            if (valueSoFar * successProbability + expectedValue > valueSoFar) {
+            if (pointsSoFar * successProbability + expectedValue > pointsSoFar) {
                 ValueWithSuccessProbability(expectedValue, successProbability)
             } else {
                 ValueWithSuccessProbability(0.0, 1.0)
@@ -144,9 +145,10 @@ class Worms {
 
     private fun getExpectedValueForBestMove(
         combination: List<Side>,
+        valueFunction: ValueFunction,
         usedSides: EnumSet<Side>,
         dyeCount: Int,
-        valueSoFar: Int,
+        pointsSoFar: Int,
         memo: MutableMap<Key, ValueWithSuccessProbability>
     ): Pair<Double, Double> {
         val symbols = combination.toSet()
@@ -157,13 +159,14 @@ class Worms {
             val symbolCount = combination.count { it == symbol }
             val (symbolExpectedValue, symbolSuccessProbability) = getExpectedValue(
                 dyeCount - symbolCount,
+                valueFunction,
                 usedSides.withUsed(symbol),
-                valueSoFar + symbolCount * symbol.value,
+                pointsSoFar + symbolCount * symbol.value,
                 memo
             )
             val symbolValue = symbolExpectedValue + symbolSuccessProbability * symbolCount * symbol.value
-            val symbolTotalValue = symbolSuccessProbability * valueSoFar + symbolValue
-            val bestTotalValue = combinationBestSuccessProbability * valueSoFar + combinationBestValue
+            val symbolTotalValue = symbolSuccessProbability * pointsSoFar + symbolValue
+            val bestTotalValue = combinationBestSuccessProbability * pointsSoFar + combinationBestValue
             if (symbolTotalValue > bestTotalValue) {
                 combinationBestValue = symbolValue
                 combinationBestSuccessProbability = symbolSuccessProbability
@@ -180,7 +183,8 @@ class Worms {
 
     data class Key(
         val dyeCount: Int,
+        val valueFunction: ValueFunction,
         val usedSides: EnumSet<Side>,
-        val valueSoFar: Int
+        val pointsSoFar: Int
     )
 }

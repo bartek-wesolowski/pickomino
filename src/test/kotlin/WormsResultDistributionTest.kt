@@ -10,15 +10,16 @@ internal class WormsResultDistributionTest {
     private val worms = Worms()
     private val epsilon = 0.000000000000001
 
-    @ParameterizedTest(name = "result distribution for dye count: {0}, used sides: {1}, value so far {2}")
+    @ParameterizedTest(name = "result distribution for dye count: {0}, value function: {1}, used sides: {2}, points so far {3}")
     @MethodSource("getParameters")
     fun test(
         dyeCount: Int,
+        valueFunction: ValueFunction,
         usedSides: EnumSet<Side>,
-        valueSoFar: Int,
+        pointsSoFar: Int,
         resultDistribution: ResultDistribution
     ) {
-        val actual = worms.getResultDistribution(dyeCount, usedSides, valueSoFar)
+        val actual = worms.getResultDistribution(dyeCount, valueFunction, usedSides, pointsSoFar)
         for (value in 0..40) {
             assertEquals(resultDistribution[value], actual[value], epsilon)
         }
@@ -30,6 +31,7 @@ internal class WormsResultDistributionTest {
             return Stream.of(
                 argumentsOf(
                     dyeCount = 1,
+                    valueFunction = PointsValueFunction,
                     resultDistribution = ResultDistribution().apply {
                         this[0] = 5.0 / 6
                         this[5] = 1.0 / 6
@@ -37,8 +39,9 @@ internal class WormsResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 1,
+                    valueFunction = PointsValueFunction,
                     usedSides = EnumSet.of(Side.WORM),
-                    valueSoFar = 5,
+                    pointsSoFar = 5,
                     resultDistribution = ResultDistribution().apply {
                         this[0] = 1.0 / 6
                         this[6] = 1.0 / 6
@@ -50,6 +53,7 @@ internal class WormsResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 2,
+                    valueFunction = PointsValueFunction,
                     resultDistribution = ResultDistribution().apply {
                         this[0] = 140.0 / 216
                         this[6] = 10.0 / 216
@@ -61,8 +65,9 @@ internal class WormsResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 2,
+                    valueFunction = PointsValueFunction,
                     usedSides = EnumSet.of(Side.WORM),
-                    valueSoFar = 5,
+                    pointsSoFar = 5,
                     resultDistribution = ResultDistribution().apply {
                         this[0] = 10.0 / 216
                         this[7] = 30.0 / 216
@@ -79,9 +84,10 @@ internal class WormsResultDistributionTest {
 
         private fun argumentsOf(
             dyeCount: Int,
+            valueFunction: ValueFunction,
             usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
-            valueSoFar: Int = 0,
+            pointsSoFar: Int = 0,
             resultDistribution: ResultDistribution
-        ): Arguments = Arguments.of(dyeCount, usedSides, valueSoFar, resultDistribution)
+        ): Arguments = Arguments.of(dyeCount, valueFunction, usedSides, pointsSoFar, resultDistribution)
     }
 }

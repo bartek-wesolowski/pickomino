@@ -41,8 +41,8 @@ class ResultDistribution {
         val items = probability
             .mapIndexed { index, value -> index to value }
             .filter { it.second != 0.0 }
-            .joinToString { it.first.toString().padStart(2) + ": " + "%.${precision}f".format(it.second) }
-        return "{$items }"
+            .joinToString { it.first.toString() + ": " + "%.${precision}f".format(it.second) }
+        return "{ $items }"
     }
 
     companion object {
@@ -57,20 +57,21 @@ class ResultDistribution {
         fun failed() = failed
 
         fun createForOneDye(
+            valueFunction: ValueFunction,
             usedSides: EnumSet<Side>,
-            valueSoFar: Int
+            pointsSoFar: Int
         ): ResultDistribution {
             return ResultDistribution().apply {
                 if (Side.WORM in usedSides) {
                     probability[0] = oneSixth * usedSides.size
-                    if (Side.ONE !in usedSides) probability[valueSoFar + 1] = oneSixth
-                    if (Side.TWO !in usedSides) probability[valueSoFar + 2] = oneSixth
-                    if (Side.THREE !in usedSides) probability[valueSoFar + 3] = oneSixth
-                    if (Side.FOUR !in usedSides) probability[valueSoFar + 4] = oneSixth
-                    if (Side.FIVE !in usedSides) probability[valueSoFar + 5] = oneSixth
+                    if (Side.ONE !in usedSides) probability[valueFunction.getValue(pointsSoFar + 1)] += oneSixth
+                    if (Side.TWO !in usedSides) probability[valueFunction.getValue(pointsSoFar + 2)] += oneSixth
+                    if (Side.THREE !in usedSides) probability[valueFunction.getValue(pointsSoFar + 3)] += oneSixth
+                    if (Side.FOUR !in usedSides) probability[valueFunction.getValue(pointsSoFar + 4)] += oneSixth
+                    if (Side.FIVE !in usedSides) probability[valueFunction.getValue(pointsSoFar + 5)] += oneSixth
                 } else {
                     probability[0] = 5.0 / 6
-                    probability[valueSoFar + Side.WORM.value] = oneSixth
+                    probability[valueFunction.getValue(pointsSoFar + Side.WORM.value)] += oneSixth
                 }
             }
         }

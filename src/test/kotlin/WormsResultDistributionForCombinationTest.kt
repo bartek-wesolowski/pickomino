@@ -10,18 +10,20 @@ internal class WormsResultDistributionForCombinationTest {
     private val worms = Worms()
     private val epsilon = 0.000000000000001
 
-    @ParameterizedTest(name = "result distribution for combinaiton: {0}, dye count: {1}, used sides: {2}, value so far {3}")
+    @ParameterizedTest(name = "result distribution for combinaiton: {0}, value function: {1}, dye count: {2}, used sides: {3}, points so far {4}")
     @MethodSource("getParameters")
     fun test(
         combination: List<Side>,
+        valueFunction: ValueFunction,
         usedSides: EnumSet<Side>,
-        valueSoFar: Int,
+        pointsSoFar: Int,
         resultDistribution: ResultDistribution
     ) {
         val actual = worms.getResultDistributionForCombination(
             combination,
+            valueFunction,
             usedSides,
-            valueSoFar,
+            pointsSoFar,
             mutableMapOf()
         )
         for (value in 0..40) {
@@ -35,14 +37,17 @@ internal class WormsResultDistributionForCombinationTest {
             return Stream.of(
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.ONE),
+                    valueFunction = PointsValueFunction,
                     resultDistribution = ResultDistribution.failed()
                 ),
                 argumentsOf(
                     combination = listOf(Side.TWO, Side.TWO),
+                    valueFunction = PointsValueFunction,
                     resultDistribution = ResultDistribution.failed()
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
+                    valueFunction = PointsValueFunction,
                     resultDistribution = ResultDistribution().apply {
                         this[0] = 5.0 / 6
                         this[7] = 1.0 / 6
@@ -50,10 +55,12 @@ internal class WormsResultDistributionForCombinationTest {
                 ),
                 argumentsOf(
                     combination = listOf(Side.WORM, Side.WORM),
+                    valueFunction = PointsValueFunction,
                     resultDistribution = ResultDistribution.successful(10)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.WORM),
+                    valueFunction = PointsValueFunction,
                     resultDistribution = ResultDistribution().apply {
                         this[0] = 1.0 / 6
                         this[6] = 1.0 / 6
@@ -65,20 +72,23 @@ internal class WormsResultDistributionForCombinationTest {
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.ONE),
+                    valueFunction = PointsValueFunction,
                     usedSides = EnumSet.of(Side.WORM),
-                    valueSoFar = 5,
+                    pointsSoFar = 5,
                     resultDistribution = ResultDistribution.successful(7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
+                    valueFunction = PointsValueFunction,
                     usedSides = EnumSet.of(Side.WORM),
-                    valueSoFar = 5,
+                    pointsSoFar = 5,
                     resultDistribution = ResultDistribution.successful(7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.THREE),
+                    valueFunction = PointsValueFunction,
                     usedSides = EnumSet.of(Side.WORM),
-                    valueSoFar = 5,
+                    pointsSoFar = 5,
                     resultDistribution = ResultDistribution.successful(8)
                 ),
             )
@@ -86,11 +96,12 @@ internal class WormsResultDistributionForCombinationTest {
 
         private fun argumentsOf(
             combination: List<Side>,
+            valueFunction: ValueFunction,
             usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
-            valueSoFar: Int = 0,
+            pointsSoFar: Int = 0,
             resultDistribution: ResultDistribution
         ): Arguments = Arguments.of(
-            combination, usedSides, valueSoFar, resultDistribution
+            combination, valueFunction, usedSides, pointsSoFar, resultDistribution
         )
     }
 }
