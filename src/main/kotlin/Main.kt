@@ -2,10 +2,24 @@ import java.util.*
 
 fun main() {
     val worms = Worms()
-    for (i in 1..8) {
-        println(i.toString())
-        println(worms.getResultDistribution(i).toPrettyString())
-        println(worms.getResultDistribution(i, EnumSet.of(Side.WORM)).toPrettyString())
+    val resultDistributionMemo: MutableMap<Worms.Key, ResultDistribution> = mutableMapOf()
+    for (dyeCount in 1..8) {
+        println(dyeCount.toString())
+        println(
+            worms.getResultDistribution(
+                dyeCount = dyeCount,
+                memo = resultDistributionMemo
+            )
+                .toPrettyString()
+        )
+        println(
+            worms.getResultDistribution(
+                dyeCount = dyeCount,
+                usedSides = EnumSet.of(Side.WORM),
+                memo = resultDistributionMemo
+            )
+                .toPrettyString()
+        )
     }
 //    worms.getAdvice(rollOf(1, 2, 2, 2, 2, 2)).prettyPrint()
 //    println()

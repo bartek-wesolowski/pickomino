@@ -1,22 +1,12 @@
 import java.util.EnumSet
 
 class Worms {
-    private val expectedValueMemo: MutableMap<Key, ValueWithSuccessProbability> = mutableMapOf()
-    private val resultDistributionMemo: MutableMap<Key, ResultDistribution> = mutableMapOf()
 
     fun getResultDistribution(
         dyeCount: Int,
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
-        valueSoFar: Int = 0
-    ): ResultDistribution {
-        return getResultDistribution(dyeCount, usedSides, valueSoFar, resultDistributionMemo)
-    }
-
-    private fun getResultDistribution(
-        dyeCount: Int,
-        usedSides: EnumSet<Side>,
-        valueSoFar: Int,
-        memo: MutableMap<Key, ResultDistribution>
+        valueSoFar: Int = 0,
+        memo: MutableMap<Key, ResultDistribution> = mutableMapOf()
     ): ResultDistribution {
         require(dyeCount > 0) { "dyeCount has to be greater than 0.0" }
         val key = Key(dyeCount, usedSides, valueSoFar)
@@ -100,13 +90,18 @@ class Worms {
 
     fun getAdvice(
         roll: List<Side>,
-        usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java)
+        usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
+        memo: MutableMap<Key, ValueWithSuccessProbability> = mutableMapOf()
     ): Map<Side, ValueWithSuccessProbability> {
         val advice = mutableMapOf<Side, ValueWithSuccessProbability>()
         for (side in roll) {
             if (side in advice) continue
             val count = roll.count { it == side }
-            val (expectedValue, wormProbability) = getExpectedValue(roll.size - count, usedSides.withUsed(side))
+            val (expectedValue, wormProbability) = getExpectedValue(
+                dyeCount = roll.size - count,
+                usedSides = usedSides.withUsed(side),
+                memo = memo
+            )
             val value = side.value * count * wormProbability + expectedValue
             advice[side] = ValueWithSuccessProbability(value, wormProbability)
         }
@@ -115,17 +110,9 @@ class Worms {
 
     fun getExpectedValue(
         dyeCount: Int,
-        usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
-        valueSoFar: Int = 0
-    ): ValueWithSuccessProbability {
-        return getExpectedValue(dyeCount, usedSides, valueSoFar, expectedValueMemo)
-    }
-
-    private fun getExpectedValue(
-        dyeCount: Int,
         usedSides: EnumSet<Side>,
-        valueSoFar: Int,
-        memo: MutableMap<Key, ValueWithSuccessProbability>
+        valueSoFar: Int = 0,
+        memo: MutableMap<Key, ValueWithSuccessProbability> = mutableMapOf()
     ): ValueWithSuccessProbability {
         val key = Key(dyeCount, usedSides, valueSoFar)
         if (memo.containsKey(key)) {
@@ -191,7 +178,7 @@ class Worms {
         }
     }
 
-    internal data class Key(
+    data class Key(
         val dyeCount: Int,
         val usedSides: EnumSet<Side>,
         val valueSoFar: Int
