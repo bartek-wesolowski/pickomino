@@ -1,28 +1,28 @@
 fun main() {
     val pickomino = Pickomino()
+    val memo = mutableMapOf<Pickomino.Key, ResultDistribution>()
     println(
         pickomino.getResultDistribution(
             dyeCount = 8,
-            valueFunction = WormsValueFunction
+            valueFunction = WormsValueFunction,
+            memo = memo
         )
             .toPrettyString()
     )
-    pickomino.getAdvice(
+    val advice = pickomino.getAdvice(
         roll = rollOf(1, 2, 2, 2, 2, 2, 4, 5),
-        valueFunction = WormsValueFunction
-    ).prettyPrint()
+        valueFunction = WormsValueFunction,
+        memo = memo
+    )
+    for ((symbol, resultDistribution) in advice) {
+        print("$symbol worms: ")
+        print("%.3f".format(resultDistribution.getExpectedValue()))
+        print(" ")
+        println(resultDistribution.toPrettyString())
+    }
 }
 
 fun rollOf(vararg values: Int): List<Side> {
     require(values.size <= 8) { "There can't be more then 8 dice" }
     return values.map { Side.values()[it - 1] }
-}
-
-fun Map<Side, ValueWithSuccessProbability>.prettyPrint(precision: Int = 4) {
-    for (side in keys) {
-        val valueWithWormProbability = getValue(side)
-        print("${side.toString().padStart(5)} ")
-        print("value: " + "%.${precision}f".format(valueWithWormProbability.value) + " ")
-        println("worm: " + "%.${precision}f".format(valueWithWormProbability.successProbability))
-    }
 }

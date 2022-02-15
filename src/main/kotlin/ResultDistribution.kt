@@ -1,7 +1,9 @@
+import java.text.DecimalFormat
 import java.util.EnumSet
 
 class ResultDistribution(private val maxValue: Int) {
     private val probability: DoubleArray = DoubleArray(maxValue + 1)
+    private val percentageFormat by lazy { DecimalFormat("#,##0.00'%'") }
 
     fun getExpectedValue(): Double {
         var expectedValue = 0.0
@@ -37,11 +39,11 @@ class ResultDistribution(private val maxValue: Int) {
         probability[value] = p
     }
 
-    fun toPrettyString(precision: Int = 4): String {
+    fun toPrettyString(precision: Int = 3): String {
         val items = probability
             .mapIndexed { index, value -> index to value }
             .filter { it.second != 0.0 }
-            .joinToString { it.first.toString() + ": " + "%.${precision}f".format(it.second) }
+            .joinToString { it.first.toString() + ": " + percentageFormat.format(it.second * 100) }
         return "{ $items }"
     }
 

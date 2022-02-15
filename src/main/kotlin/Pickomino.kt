@@ -90,89 +90,22 @@ class Pickomino {
         roll: List<Side>,
         valueFunction: ValueFunction,
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
-        memo: MutableMap<Key, ValueWithSuccessProbability> = mutableMapOf()
-    ): Map<Side, ValueWithSuccessProbability> {
-        val advice = mutableMapOf<Side, ValueWithSuccessProbability>()
+        memo: MutableMap<Key, ResultDistribution> = mutableMapOf()
+    ): Map<Side, ResultDistribution> {
+        val advice = mutableMapOf<Side, ResultDistribution>()
         for (side in roll) {
             if (side in advice) continue
             val count = roll.count { it == side }
-            val (expectedValue, wormProbability) = getExpectedValue(
+            val resultDistribution = getResultDistribution(
                 dyeCount = roll.size - count,
                 valueFunction = valueFunction,
                 usedSides = usedSides.withUsed(side),
+                pointsSoFar = side.value * count,
                 memo = memo
             )
-            val value = side.value * count * wormProbability + expectedValue
-            advice[side] = ValueWithSuccessProbability(value, wormProbability)
+            advice[side] = resultDistribution
         }
         return advice
-    }
-
-    fun getExpectedValue(
-        dyeCount: Int,
-        valueFunction: ValueFunction,
-        usedSides: EnumSet<Side>,
-        pointsSoFar: Int = 0,
-        memo: MutableMap<Key, ValueWithSuccessProbability> = mutableMapOf()
-    ): ValueWithSuccessProbability {
-        val key = Key(dyeCount, valueFunction, usedSides, pointsSoFar)
-        if (memo.containsKey(key)) {
-            return memo.getValue(key)
-        }
-        val wormSoFar = Side.WORM in usedSides
-        if (dyeCount == 0) return ValueWithSuccessProbability(0.0, if (wormSoFar) 1.0 else 0.0)
-        val combinationProbability = sixth[dyeCount]
-        var expectedValue = 0.0
-        var successProbability = 0.0
-        for (combination in combinations(dyeCount)) {
-            val (combinationBestValue, combinationBestSuccessProbability) =
-                getExpectedValueForBestMove(combination, valueFunction, usedSides, dyeCount, pointsSoFar, memo)
-            expectedValue += combinationProbability * combinationBestValue
-            successProbability += combinationProbability * combinationBestSuccessProbability
-        }
-        val result = if (wormSoFar) {
-            if (pointsSoFar * successProbability + expectedValue > pointsSoFar) {
-                ValueWithSuccessProbability(expectedValue, successProbability)
-            } else {
-                ValueWithSuccessProbability(0.0, 1.0)
-            }
-        } else {
-            ValueWithSuccessProbability(expectedValue, successProbability)
-        }
-        memo[key] = result
-        return result
-    }
-
-    private fun getExpectedValueForBestMove(
-        combination: List<Side>,
-        valueFunction: ValueFunction,
-        usedSides: EnumSet<Side>,
-        dyeCount: Int,
-        pointsSoFar: Int,
-        memo: MutableMap<Key, ValueWithSuccessProbability>
-    ): Pair<Double, Double> {
-        val symbols = combination.toSet()
-        var combinationBestValue = 0.0
-        var combinationBestSuccessProbability = 0.0
-        for (symbol in symbols) {
-            if (symbol in usedSides) continue
-            val symbolCount = combination.count { it == symbol }
-            val (symbolExpectedValue, symbolSuccessProbability) = getExpectedValue(
-                dyeCount - symbolCount,
-                valueFunction,
-                usedSides.withUsed(symbol),
-                pointsSoFar + symbolCount * symbol.value,
-                memo
-            )
-            val symbolValue = symbolExpectedValue + symbolSuccessProbability * symbolCount * symbol.value
-            val symbolTotalValue = symbolSuccessProbability * pointsSoFar + symbolValue
-            val bestTotalValue = combinationBestSuccessProbability * pointsSoFar + combinationBestValue
-            if (symbolTotalValue > bestTotalValue) {
-                combinationBestValue = symbolValue
-                combinationBestSuccessProbability = symbolSuccessProbability
-            }
-        }
-        return combinationBestValue to combinationBestSuccessProbability
     }
 
     private fun EnumSet<Side>.withUsed(side: Side): EnumSet<Side> {
