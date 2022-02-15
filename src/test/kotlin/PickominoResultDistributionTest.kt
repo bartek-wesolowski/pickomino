@@ -5,9 +5,9 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.EnumSet
 import java.util.stream.Stream
 
-internal class WormsResultDistributionTest {
+internal class PickominoResultDistributionTest {
 
-    private val worms = Worms()
+    private val pickomino = Pickomino()
     private val epsilon = 0.000000000000001
 
     @ParameterizedTest(name = "result distribution for dye count: {0}, value function: {1}, used sides: {2}, points so far {3}")
@@ -19,7 +19,7 @@ internal class WormsResultDistributionTest {
         pointsSoFar: Int,
         resultDistribution: ResultDistribution
     ) {
-        val actual = worms.getResultDistribution(dyeCount, valueFunction, usedSides, pointsSoFar)
+        val actual = pickomino.getResultDistribution(dyeCount, valueFunction, usedSides, pointsSoFar)
         for (value in 0..40) {
             assertEquals(resultDistribution[value], actual[value], epsilon)
         }

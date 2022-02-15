@@ -1,6 +1,6 @@
 import java.util.EnumSet
 
-class Worms {
+class Pickomino {
 
     fun getResultDistribution(
         dyeCount: Int,

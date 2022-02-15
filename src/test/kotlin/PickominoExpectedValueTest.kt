@@ -5,9 +5,9 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.EnumSet
 import java.util.stream.Stream
 
-internal class WormsExpectedValueTest {
+internal class PickominoExpectedValueTest {
 
-    private val worms = Worms()
+    private val pickomino = Pickomino()
     private val epsilon = 0.000000000000001
 
     @ParameterizedTest(name = "expected value for dye count: {0}, value function: {1}, used sides: {2}, points so far {3}")
@@ -19,7 +19,7 @@ internal class WormsExpectedValueTest {
         valueSoFar: Int,
         expected: ValueWithSuccessProbability
     ) {
-        val actual = worms.getExpectedValue(dyeCount, valueFunction, usedSides, valueSoFar)
+        val actual = pickomino.getExpectedValue(dyeCount, valueFunction, usedSides, valueSoFar)
         assertEquals(expected.value, actual.value, epsilon)
         assertEquals(expected.successProbability, actual.successProbability, epsilon)
     }

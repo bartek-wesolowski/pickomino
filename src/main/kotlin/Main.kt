@@ -1,13 +1,13 @@
 fun main() {
-    val worms = Worms()
+    val pickomino = Pickomino()
     println(
-        worms.getResultDistribution(
+        pickomino.getResultDistribution(
             dyeCount = 8,
             valueFunction = WormsValueFunction
         )
             .toPrettyString()
     )
-    worms.getAdvice(
+    pickomino.getAdvice(
         roll = rollOf(1, 2, 2, 2, 2, 2, 4, 5),
         valueFunction = WormsValueFunction
     ).prettyPrint()
