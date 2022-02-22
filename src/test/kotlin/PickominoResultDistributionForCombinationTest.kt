@@ -23,8 +23,7 @@ internal class PickominoResultDistributionForCombinationTest {
             combination,
             valueFunction,
             usedSides,
-            pointsSoFar,
-            mutableMapOf()
+            pointsSoFar
         )
         for (value in 0..40) {
             assertEquals(resultDistribution[value], actual[value], epsilon)
@@ -37,31 +36,31 @@ internal class PickominoResultDistributionForCombinationTest {
             return Stream.of(
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.ONE),
-                    valueFunction = PointsValueFunction,
-                    resultDistribution = ResultDistribution.failed(PointsValueFunction.maxValue)
+                    valueFunction = ValueFunction.Points,
+                    resultDistribution = ResultDistribution.failed(ValueFunction.Points.maxValue)
                 ),
                 argumentsOf(
                     combination = listOf(Side.TWO, Side.TWO),
-                    valueFunction = PointsValueFunction,
-                    resultDistribution = ResultDistribution.failed(PointsValueFunction.maxValue)
+                    valueFunction = ValueFunction.Points,
+                    resultDistribution = ResultDistribution.failed(ValueFunction.Points.maxValue)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
-                    valueFunction = PointsValueFunction,
-                    resultDistribution = ResultDistribution(PointsValueFunction.maxValue).apply {
+                    valueFunction = ValueFunction.Points,
+                    resultDistribution = ResultDistribution(ValueFunction.Points.maxValue).apply {
                         this[0] = 5.0 / 6
                         this[7] = 1.0 / 6
                     }
                 ),
                 argumentsOf(
                     combination = listOf(Side.WORM, Side.WORM),
-                    valueFunction = PointsValueFunction,
-                    resultDistribution = ResultDistribution.successful(PointsValueFunction.maxValue, 10)
+                    valueFunction = ValueFunction.Points,
+                    resultDistribution = ResultDistribution.successful(ValueFunction.Points.maxValue, 10)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.WORM),
-                    valueFunction = PointsValueFunction,
-                    resultDistribution = ResultDistribution(PointsValueFunction.maxValue).apply {
+                    valueFunction = ValueFunction.Points,
+                    resultDistribution = ResultDistribution(ValueFunction.Points.maxValue).apply {
                         this[0] = 1.0 / 6
                         this[6] = 1.0 / 6
                         this[7] = 1.0 / 6
@@ -72,24 +71,24 @@ internal class PickominoResultDistributionForCombinationTest {
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.ONE),
-                    valueFunction = PointsValueFunction,
+                    valueFunction = ValueFunction.Points,
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution.successful(PointsValueFunction.maxValue, 7)
+                    resultDistribution = ResultDistribution.successful(ValueFunction.Points.maxValue, 7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
-                    valueFunction = PointsValueFunction,
+                    valueFunction = ValueFunction.Points,
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution.successful(PointsValueFunction.maxValue, 7)
+                    resultDistribution = ResultDistribution.successful(ValueFunction.Points.maxValue, 7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.THREE),
-                    valueFunction = PointsValueFunction,
+                    valueFunction = ValueFunction.Points,
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution.successful(PointsValueFunction.maxValue, 8)
+                    resultDistribution = ResultDistribution.successful(ValueFunction.Points.maxValue, 8)
                 ),
             )
         }

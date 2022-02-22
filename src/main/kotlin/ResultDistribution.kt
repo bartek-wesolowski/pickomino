@@ -1,5 +1,4 @@
 import java.text.DecimalFormat
-import java.util.EnumSet
 
 class ResultDistribution(private val maxValue: Int) {
     private val probability: DoubleArray = DoubleArray(maxValue + 1)
@@ -15,7 +14,7 @@ class ResultDistribution(private val maxValue: Int) {
 
     fun getSuccessProbability(): Double {
         var successProbability = 0.0
-        for (value in 0..maxValue) {
+        for (value in 1..maxValue) {
             successProbability += probability[value]
         }
         return successProbability
@@ -54,26 +53,6 @@ class ResultDistribution(private val maxValue: Int) {
 
         fun failed(maxValue: Int) = ResultDistribution(maxValue).apply {
             probability[0] = 1.0
-        }
-
-        fun createForOneDye(
-            valueFunction: ValueFunction,
-            usedSides: EnumSet<Side>,
-            pointsSoFar: Int
-        ): ResultDistribution {
-            return ResultDistribution(valueFunction.maxValue).apply {
-                if (Side.WORM in usedSides) {
-                    probability[0] = oneSixth * usedSides.size
-                    if (Side.ONE !in usedSides) probability[valueFunction.getValue(pointsSoFar + 1)] += oneSixth
-                    if (Side.TWO !in usedSides) probability[valueFunction.getValue(pointsSoFar + 2)] += oneSixth
-                    if (Side.THREE !in usedSides) probability[valueFunction.getValue(pointsSoFar + 3)] += oneSixth
-                    if (Side.FOUR !in usedSides) probability[valueFunction.getValue(pointsSoFar + 4)] += oneSixth
-                    if (Side.FIVE !in usedSides) probability[valueFunction.getValue(pointsSoFar + 5)] += oneSixth
-                } else {
-                    probability[0] = 5.0 / 6
-                    probability[valueFunction.getValue(pointsSoFar + Side.WORM.value)] += oneSixth
-                }
-            }
         }
     }
 }

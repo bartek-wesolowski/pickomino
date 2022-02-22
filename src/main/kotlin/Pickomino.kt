@@ -1,37 +1,43 @@
 import java.util.EnumSet
 
-class Pickomino {
+class Pickomino(private val memo: MutableMap<Key, ResultDistribution> = mutableMapOf()) {
 
     fun getResultDistribution(
         dyeCount: Int,
         valueFunction: ValueFunction,
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
-        pointsSoFar: Int = 0,
-        memo: MutableMap<Key, ResultDistribution> = mutableMapOf()
+        pointsSoFar: Int = 0
     ): ResultDistribution {
-        require(dyeCount > 0) { "dyeCount has to be greater than 0" }
+        require(dyeCount >= 0) { "dyeCount cannot be negative" }
         val key = Key(dyeCount, valueFunction, usedSides, pointsSoFar)
         if (memo.containsKey(key)) {
             return memo.getValue(key)
         }
-        if (dyeCount == 1) {
-            return ResultDistribution.createForOneDye(valueFunction, usedSides, pointsSoFar)
+        val valueSoFar = valueFunction.getValue(pointsSoFar)
+        if (dyeCount == 0) {
+            val result = if (Side.WORM in usedSides) {
+                ResultDistribution.successful(valueFunction.maxValue, valueSoFar)
+            } else {
+                ResultDistribution.failed(valueFunction.maxValue)
+            }
+            memo[key] = result
+            return result
         }
         val resultDistribution = ResultDistribution(valueFunction.maxValue)
         val combinationProbability = sixth[dyeCount]
         for (combination in combinations(dyeCount)) {
             val combinationResultDistribution =
-                getResultDistributionForCombination(combination, valueFunction, usedSides, pointsSoFar, memo)
+                getResultDistributionForCombination(combination, valueFunction, usedSides, pointsSoFar)
             resultDistribution.merge(combinationResultDistribution, combinationProbability)
         }
         resultDistribution.setFailedIfEmpty()
         val result = if (Side.WORM in usedSides) {
             val expectedValue = resultDistribution.getExpectedValue()
             val successProbability = resultDistribution.getSuccessProbability()
-            if (pointsSoFar * successProbability + expectedValue > pointsSoFar) {
+            if (valueSoFar * successProbability + expectedValue > valueSoFar) {
                 resultDistribution
             } else {
-                ResultDistribution.successful(valueFunction.maxValue, valueFunction.getValue(pointsSoFar))
+                ResultDistribution.successful(valueFunction.maxValue, valueSoFar)
             }
         } else {
             resultDistribution
@@ -44,8 +50,7 @@ class Pickomino {
         combination: List<Side>,
         valueFunction: ValueFunction,
         usedSides: EnumSet<Side>,
-        pointsSoFar: Int,
-        memo: MutableMap<Key, ResultDistribution>
+        pointsSoFar: Int
     ): ResultDistribution {
         val symbols = EnumSet.copyOf(combination)
         var combinationBestValue = 0.0
@@ -65,13 +70,12 @@ class Pickomino {
                     dyeCount = combination.size - symbolCount,
                     valueFunction = valueFunction,
                     usedSides = usedSides.withUsed(symbol),
-                    pointsSoFar = pointsSoFar + symbolsValue,
-                    memo = memo
+                    pointsSoFar = pointsSoFar + symbolsValue
                 )
             }
             val canTakeDecision = Side.WORM in usedSides || symbol == Side.WORM
             val symbolResultDistributionAfterDecision =
-                if (!canTakeDecision || symbolResultDistribution.getExpectedValue() > (pointsSoFar + symbolsValue)) {
+                if (!canTakeDecision || symbolResultDistribution.getExpectedValue() > valueFunction.getValue(pointsSoFar + symbolsValue)) {
                     symbolResultDistribution
                 } else {
                     ResultDistribution.successful(valueFunction.maxValue, valueFunction.getValue(pointsSoFar + symbolsValue))
@@ -90,28 +94,22 @@ class Pickomino {
         roll: List<Side>,
         valueFunction: ValueFunction,
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
-        memo: MutableMap<Key, ResultDistribution> = mutableMapOf()
+        pointsSoFar: Int
     ): Map<Side, ResultDistribution> {
         val advice = mutableMapOf<Side, ResultDistribution>()
         for (side in roll) {
+            if (side in usedSides) continue
             if (side in advice) continue
             val count = roll.count { it == side }
             val resultDistribution = getResultDistribution(
                 dyeCount = roll.size - count,
                 valueFunction = valueFunction,
                 usedSides = usedSides.withUsed(side),
-                pointsSoFar = side.value * count,
-                memo = memo
+                pointsSoFar = pointsSoFar + side.value * count
             )
             advice[side] = resultDistribution
         }
         return advice
-    }
-
-    private fun EnumSet<Side>.withUsed(side: Side): EnumSet<Side> {
-        return EnumSet.copyOf(this).apply {
-            add(side)
-        }
     }
 
     data class Key(

@@ -1,25 +1,52 @@
+import java.util.EnumSet
+
 fun main() {
-    val pickomino = Pickomino()
     val memo = mutableMapOf<Pickomino.Key, ResultDistribution>()
-    println(
-        pickomino.getResultDistribution(
-            dyeCount = 8,
-            valueFunction = WormsValueFunction,
-            memo = memo
-        )
-            .toPrettyString()
-    )
-    val advice = pickomino.getAdvice(
-        roll = rollOf(1, 2, 2, 2, 2, 2, 4, 5),
-        valueFunction = WormsValueFunction,
-        memo = memo
-    )
-    for ((symbol, resultDistribution) in advice) {
-        print("$symbol worms: ")
-        print("%.3f".format(resultDistribution.getExpectedValue()))
-        print(" ")
-        println(resultDistribution.toPrettyString())
-    }
+    val pickomino = Pickomino(memo)
+//    println(
+//        pickomino.getResultDistribution(
+//            dyeCount = 8,
+//            valueFunction = ValueFunction.Worms
+//        )
+//            .toPrettyString()
+//    )
+
+//    val advice = pickomino.getAdvice(
+//        roll = rollOf(2, 6),
+//        valueFunction = ValueFunction.WormsFromAvailableHelpings(
+//            Helpings(),
+//            Helpings(listOf())
+//        ),
+//        usedSides = EnumSet.of(Side.FOUR, Side.FIVE, Side.THREE, Side.ONE),
+//        pointsSoFar = 17
+//    )
+//    for ((symbol, resultDistribution) in advice) {
+//        print("$symbol worms: ")
+//        print("%.3f".format(resultDistribution.getExpectedValue()))
+//        print(" ")
+//        println(resultDistribution.toPrettyString())
+//    }
+//
+//    val resultDistribution = pickomino.getResultDistribution(
+//        1,
+//        valueFunction = ValueFunction.WormsFromAvailableHelpings(Helpings(), Helpings(listOf())),
+//        usedSides = EnumSet.of(Side.FOUR, Side.FIVE, Side.THREE, Side.ONE, Side.TWO),
+//        pointsSoFar = 19
+//    )
+//    println(resultDistribution.toPrettyString())
+//
+//    val strategy = OptimalStrategy()
+//    println(
+//        strategy.chooseSymbol(
+//            rollOf(2, 6),
+//            usedSides = EnumSet.of(Side.THREE, Side.FIVE, Side.FOUR, Side.ONE),
+//            pointsSoFar = 17,
+//            availableHelpings = Helpings(),
+//            opponentTopHelpings = Helpings(listOf())
+//        )
+//    )
+
+    println(Game(listOf(SimpleStrategy(), OptimalStrategy(memo))).simulate())
 }
 
 fun rollOf(vararg values: Int): List<Side> {

@@ -31,18 +31,18 @@ internal class PickominoResultDistributionTest {
             return Stream.of(
                 argumentsOf(
                     dyeCount = 1,
-                    valueFunction = PointsValueFunction,
-                    resultDistribution = ResultDistribution(PointsValueFunction.maxValue).apply {
+                    valueFunction = ValueFunction.Points,
+                    resultDistribution = ResultDistribution(ValueFunction.Points.maxValue).apply {
                         this[0] = 5.0 / 6
                         this[5] = 1.0 / 6
                     }
                 ),
                 argumentsOf(
                     dyeCount = 1,
-                    valueFunction = PointsValueFunction,
+                    valueFunction = ValueFunction.Points,
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution(PointsValueFunction.maxValue).apply {
+                    resultDistribution = ResultDistribution(ValueFunction.Points.maxValue).apply {
                         this[0] = 1.0 / 6
                         this[6] = 1.0 / 6
                         this[7] = 1.0 / 6
@@ -53,8 +53,8 @@ internal class PickominoResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 2,
-                    valueFunction = PointsValueFunction,
-                    resultDistribution = ResultDistribution(PointsValueFunction.maxValue).apply {
+                    valueFunction = ValueFunction.Points,
+                    resultDistribution = ResultDistribution(ValueFunction.Points.maxValue).apply {
                         this[0] = 140.0 / 216
                         this[6] = 10.0 / 216
                         this[7] = 12.0 / 216
@@ -65,10 +65,10 @@ internal class PickominoResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 2,
-                    valueFunction = PointsValueFunction,
+                    valueFunction = ValueFunction.Points,
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution(PointsValueFunction.maxValue).apply {
+                    resultDistribution = ResultDistribution(ValueFunction.Points.maxValue).apply {
                         this[0] = 10.0 / 216
                         this[7] = 30.0 / 216
                         this[8] = 38.0 / 216
