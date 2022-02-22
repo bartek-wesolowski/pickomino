@@ -37,12 +37,12 @@ internal class PickominoResultDistributionForCombinationTest {
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.ONE),
                     valueFunction = ValueFunction.Points,
-                    resultDistribution = ResultDistribution.failed(ValueFunction.Points.maxValue)
+                    resultDistribution = ResultDistribution.single(ValueFunction.Points.maxValue, 0)
                 ),
                 argumentsOf(
                     combination = listOf(Side.TWO, Side.TWO),
                     valueFunction = ValueFunction.Points,
-                    resultDistribution = ResultDistribution.failed(ValueFunction.Points.maxValue)
+                    resultDistribution = ResultDistribution.single(ValueFunction.Points.maxValue, 0)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
@@ -55,7 +55,7 @@ internal class PickominoResultDistributionForCombinationTest {
                 argumentsOf(
                     combination = listOf(Side.WORM, Side.WORM),
                     valueFunction = ValueFunction.Points,
-                    resultDistribution = ResultDistribution.successful(ValueFunction.Points.maxValue, 10)
+                    resultDistribution = ResultDistribution.single(ValueFunction.Points.maxValue, 10)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.WORM),
@@ -74,21 +74,21 @@ internal class PickominoResultDistributionForCombinationTest {
                     valueFunction = ValueFunction.Points,
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution.successful(ValueFunction.Points.maxValue, 7)
+                    resultDistribution = ResultDistribution.single(ValueFunction.Points.maxValue, 7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
                     valueFunction = ValueFunction.Points,
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution.successful(ValueFunction.Points.maxValue, 7)
+                    resultDistribution = ResultDistribution.single(ValueFunction.Points.maxValue, 7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.THREE),
                     valueFunction = ValueFunction.Points,
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution.successful(ValueFunction.Points.maxValue, 8)
+                    resultDistribution = ResultDistribution.single(ValueFunction.Points.maxValue, 8)
                 ),
             )
         }

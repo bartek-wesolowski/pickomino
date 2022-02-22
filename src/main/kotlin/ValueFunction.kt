@@ -11,10 +11,20 @@ sealed class ValueFunction(val maxValue: Int) {
 
     class WormsFromAvailableHelpings(
         private val availableHelpings: Helpings,
+        private val topHelping: Int?,
         private val opponentTopHelpings: Helpings
     ) : ValueFunction(maxValue = 4) {
         override fun getValue(points: Int): Int {
-            return max(availableHelpings.getWorms(points), opponentTopHelpings.getWormsExact(points))
+            val worms = max(availableHelpings.getWorms(points), opponentTopHelpings.getWormsExact(points))
+            return if (worms > 0) {
+                worms
+            } else {
+                if (topHelping != null) {
+                    -Helping.getWorms(points)
+                } else {
+                    0
+                }
+            }
         }
     }
 

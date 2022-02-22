@@ -16,9 +16,9 @@ class Pickomino(private val memo: MutableMap<Key, ResultDistribution> = mutableM
         val valueSoFar = valueFunction.getValue(pointsSoFar)
         if (dyeCount == 0) {
             val result = if (Side.WORM in usedSides) {
-                ResultDistribution.successful(valueFunction.maxValue, valueSoFar)
+                ResultDistribution.single(valueFunction.maxValue, valueSoFar)
             } else {
-                ResultDistribution.failed(valueFunction.maxValue)
+                ResultDistribution.single(valueFunction.maxValue, valueFunction.getValue(0))
             }
             memo[key] = result
             return result
@@ -30,14 +30,14 @@ class Pickomino(private val memo: MutableMap<Key, ResultDistribution> = mutableM
                 getResultDistributionForCombination(combination, valueFunction, usedSides, pointsSoFar)
             resultDistribution.merge(combinationResultDistribution, combinationProbability)
         }
-        resultDistribution.setFailedIfEmpty()
+        resultDistribution.setFailedIfEmpty(valueFunction.getValue(0))
         val result = if (Side.WORM in usedSides) {
             val expectedValue = resultDistribution.getExpectedValue()
             val successProbability = resultDistribution.getSuccessProbability()
             if (valueSoFar * successProbability + expectedValue > valueSoFar) {
                 resultDistribution
             } else {
-                ResultDistribution.successful(valueFunction.maxValue, valueSoFar)
+                ResultDistribution.single(valueFunction.maxValue, valueSoFar)
             }
         } else {
             resultDistribution
@@ -61,9 +61,9 @@ class Pickomino(private val memo: MutableMap<Key, ResultDistribution> = mutableM
             val symbolsValue = symbolCount * symbol.value
             val symbolResultDistribution = if (symbolCount == combination.size) {
                 if (Side.WORM in usedSides || symbol == Side.WORM) {
-                    ResultDistribution.successful(valueFunction.maxValue, valueFunction.getValue(pointsSoFar + symbolsValue))
+                    ResultDistribution.single(valueFunction.maxValue, valueFunction.getValue(pointsSoFar + symbolsValue))
                 } else {
-                    return ResultDistribution.failed(valueFunction.maxValue)
+                    return ResultDistribution.single(valueFunction.maxValue, valueFunction.getValue(0))
                 }
             } else {
                 getResultDistribution(
@@ -78,7 +78,7 @@ class Pickomino(private val memo: MutableMap<Key, ResultDistribution> = mutableM
                 if (!canTakeDecision || symbolResultDistribution.getExpectedValue() > valueFunction.getValue(pointsSoFar + symbolsValue)) {
                     symbolResultDistribution
                 } else {
-                    ResultDistribution.successful(valueFunction.maxValue, valueFunction.getValue(pointsSoFar + symbolsValue))
+                    ResultDistribution.single(valueFunction.maxValue, valueFunction.getValue(pointsSoFar + symbolsValue))
                 }
             val symbolExpectedValueAfterDecision = symbolResultDistributionAfterDecision.getExpectedValue()
             if (symbolExpectedValueAfterDecision > combinationBestValue) {
@@ -86,7 +86,7 @@ class Pickomino(private val memo: MutableMap<Key, ResultDistribution> = mutableM
                 combinationBestResultDistribution = symbolResultDistributionAfterDecision
             }
         }
-        combinationBestResultDistribution.setFailedIfEmpty()
+        combinationBestResultDistribution.setFailedIfEmpty(valueFunction.getValue(0))
         return combinationBestResultDistribution
     }
 

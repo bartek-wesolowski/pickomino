@@ -6,6 +6,7 @@ class SimpleStrategy : Strategy {
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
         availableHelpings: Helpings,
+        topHelping: Int?,
         opponentTopHelpings: Helpings
     ): Boolean {
         return Side.WORM !in usedSides || (pointsSoFar < availableHelpings.getSmallest() && pointsSoFar !in opponentTopHelpings)
@@ -16,6 +17,7 @@ class SimpleStrategy : Strategy {
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
         availableHelpings: Helpings,
+        topHelping: Int?,
         opponentTopHelpings: Helpings
     ): Side? {
         if (Side.WORM in roll && Side.WORM !in usedSides) return Side.WORM

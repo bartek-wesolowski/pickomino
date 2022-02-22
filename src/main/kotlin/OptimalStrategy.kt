@@ -10,11 +10,12 @@ class OptimalStrategy(memo: MutableMap<Pickomino.Key, ResultDistribution> = muta
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
         availableHelpings: Helpings,
+        topHelping: Int?,
         opponentTopHelpings: Helpings
     ): Boolean {
         val wormsIfContinued = pickomino.getResultDistribution(
             dyeCount,
-            ValueFunction.WormsFromAvailableHelpings(availableHelpings, opponentTopHelpings),
+            ValueFunction.WormsFromAvailableHelpings(availableHelpings, topHelping, opponentTopHelpings),
             usedSides,
             pointsSoFar
         ).getExpectedValue()
@@ -27,6 +28,7 @@ class OptimalStrategy(memo: MutableMap<Pickomino.Key, ResultDistribution> = muta
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
         availableHelpings: Helpings,
+        topHelping: Int?,
         opponentTopHelpings: Helpings
     ): Side? {
         val symbols = EnumSet.copyOf(roll)
@@ -37,7 +39,7 @@ class OptimalStrategy(memo: MutableMap<Pickomino.Key, ResultDistribution> = muta
             val symbolCount = roll.count { it == symbol }
             val expectedValue = pickomino.getResultDistribution(
                 dyeCount = roll.size - symbolCount,
-                valueFunction = ValueFunction.WormsFromAvailableHelpings(availableHelpings, opponentTopHelpings),
+                valueFunction = ValueFunction.WormsFromAvailableHelpings(availableHelpings, topHelping, opponentTopHelpings),
                 usedSides = usedSides.withUsed(symbol),
                 pointsSoFar = pointsSoFar + symbol.value * symbolCount
             ).getExpectedValue()

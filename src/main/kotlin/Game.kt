@@ -14,10 +14,11 @@ class Game(private val players: List<Strategy>) {
         var turn = 1
         while (availableHelpings.isNotEmpty()) {
             println("Player $playerIndex's turn ($turn)")
+            val topHelping = playerHelpings[playerIndex].lastOrNull()
             val lastPlayerHelpings = playerHelpings.map { it.lastOrNull() }
             val opponentTopHelpings =
                 Helpings(lastPlayerHelpings.filterNotNull().filter { it != lastPlayerHelpings[playerIndex] })
-            val points = simulatePlayerTurn(players[playerIndex], availableHelpings, opponentTopHelpings)
+            val points = simulatePlayerTurn(players[playerIndex], availableHelpings, topHelping, opponentTopHelpings)
             println("points: $points")
             if (points != 0) {
                 val playerToRobIndex = lastPlayerHelpings.indexOf(points)
@@ -72,7 +73,12 @@ class Game(private val players: List<Strategy>) {
         }
     }
 
-    private fun simulatePlayerTurn(strategy: Strategy, availableHelpings: Helpings, opponentTopHelpings: Helpings): Int {
+    private fun simulatePlayerTurn(
+        strategy: Strategy,
+        availableHelpings: Helpings,
+        topHelping: Int?,
+        opponentTopHelpings: Helpings
+    ): Int {
         var dyeCount = 8
         var pointsSoFar = 0
         val usedSides = EnumSet.noneOf(Side::class.java)
@@ -80,7 +86,8 @@ class Game(private val players: List<Strategy>) {
         do {
             val roll = randomRoll(dyeCount)
             println("roll: ${roll.sorted()}")
-            val symbolChosen = strategy.chooseSymbol(roll, usedSides, pointsSoFar, availableHelpings, opponentTopHelpings)
+            val symbolChosen =
+                strategy.chooseSymbol(roll, usedSides, pointsSoFar, availableHelpings, topHelping, opponentTopHelpings)
             if (symbolChosen == null) {
                 println("cannot choose any symbol")
                 return 0
@@ -96,6 +103,7 @@ class Game(private val players: List<Strategy>) {
                 usedSides,
                 pointsSoFar,
                 availableHelpings,
+                topHelping,
                 opponentTopHelpings
             )
             println("continue rolling: $shouldContinue")
