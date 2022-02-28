@@ -110,7 +110,7 @@ class Game(private val players: List<Strategy>) {
             )
             println("continue rolling: $shouldContinue")
         } while (dyeCount > 0 && shouldContinue)
-        return pointsSoFar
+        return if (Side.WORM in usedSides) pointsSoFar else 0
     }
 
     private fun randomRoll(dyeCount: Int): List<Side> {
