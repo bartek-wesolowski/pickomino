@@ -19,7 +19,9 @@ class Game(private val players: List<Strategy>) {
             val opponentTopHelpings =
                 Helpings(lastPlayerHelpings.filterNotNull().filter { it != lastPlayerHelpings[playerIndex] })
             val points = simulatePlayerTurn(players[playerIndex], availableHelpings, topHelping, opponentTopHelpings)
-            println("points: $points")
+            if (points != 0) {
+                println("points: $points")
+            }
             if (points != 0) {
                 val playerToRobIndex = lastPlayerHelpings.indexOf(points)
                 if (playerToRobIndex != -1 && playerToRobIndex != playerIndex) {
