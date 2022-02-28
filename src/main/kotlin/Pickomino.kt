@@ -1,12 +1,13 @@
 import java.util.EnumSet
 
-class Pickomino(private val memo: MutableMap<Key, ResultDistribution> = mutableMapOf()) {
+class Pickomino {
 
     fun getResultDistribution(
         dyeCount: Int,
         valueFunction: ValueFunction,
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
-        pointsSoFar: Int = 0
+        pointsSoFar: Int = 0,
+        memo: MutableMap<Key, ResultDistribution> = mutableMapOf()
     ): ResultDistribution {
         require(dyeCount >= 0) { "dyeCount cannot be negative" }
         val key = Key(dyeCount, valueFunction, usedSides, pointsSoFar)
@@ -27,7 +28,7 @@ class Pickomino(private val memo: MutableMap<Key, ResultDistribution> = mutableM
         val combinationProbability = sixth[dyeCount]
         for (combination in combinations(dyeCount)) {
             val combinationResultDistribution =
-                getResultDistributionForCombination(combination, valueFunction, usedSides, pointsSoFar)
+                getResultDistributionForCombination(combination, valueFunction, usedSides, pointsSoFar, memo)
             resultDistribution.merge(combinationResultDistribution, combinationProbability)
         }
         resultDistribution.setFailedIfEmpty(valueFunction.getValue(0))
@@ -50,7 +51,8 @@ class Pickomino(private val memo: MutableMap<Key, ResultDistribution> = mutableM
         combination: List<Side>,
         valueFunction: ValueFunction,
         usedSides: EnumSet<Side>,
-        pointsSoFar: Int
+        pointsSoFar: Int,
+        memo: MutableMap<Key, ResultDistribution>
     ): ResultDistribution {
         val symbols = EnumSet.copyOf(combination)
         var combinationBestValue = 0.0
@@ -70,7 +72,8 @@ class Pickomino(private val memo: MutableMap<Key, ResultDistribution> = mutableM
                     dyeCount = combination.size - symbolCount,
                     valueFunction = valueFunction,
                     usedSides = usedSides.withUsed(symbol),
-                    pointsSoFar = pointsSoFar + symbolsValue
+                    pointsSoFar = pointsSoFar + symbolsValue,
+                    memo
                 )
             }
             val canTakeDecision = Side.WORM in usedSides || symbol == Side.WORM

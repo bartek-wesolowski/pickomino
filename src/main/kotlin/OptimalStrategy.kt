@@ -1,9 +1,8 @@
 import java.util.EnumSet
 import kotlin.math.max
 
-class OptimalStrategy(memo: MutableMap<Pickomino.Key, ResultDistribution> = mutableMapOf()) : Strategy {
-
-    private val pickomino = Pickomino(memo)
+class OptimalStrategy : Strategy {
+    private val pickomino = Pickomino()
 
     override fun shouldContinue(
         dyeCount: Int,

@@ -23,7 +23,8 @@ internal class PickominoResultDistributionForCombinationTest {
             combination,
             valueFunction,
             usedSides,
-            pointsSoFar
+            pointsSoFar,
+            mutableMapOf()
         )
         for (value in 0..40) {
             assertEquals(resultDistribution[value], actual[value], epsilon)

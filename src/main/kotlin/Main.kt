@@ -1,8 +1,5 @@
-import java.util.EnumSet
-
 fun main() {
-    val memo = mutableMapOf<Pickomino.Key, ResultDistribution>()
-    val pickomino = Pickomino(memo)
+    val pickomino = Pickomino()
 //    println(
 //        pickomino.getResultDistribution(
 //            dyeCount = 8,
@@ -12,13 +9,14 @@ fun main() {
 //    )
 
 //    val advice = pickomino.getAdvice(
-//        roll = rollOf(2, 6),
+//        roll = rollOf(2, 2, 2, 3, 4, 6),
 //        valueFunction = ValueFunction.WormsFromAvailableHelpings(
-//            Helpings(),
-//            Helpings(listOf())
+//            Helpings(listOf(27, 29, 31, 32, 33)),
+//            topHelping = 23,
+//            Helpings(listOf(26))
 //        ),
-//        usedSides = EnumSet.of(Side.FOUR, Side.FIVE, Side.THREE, Side.ONE),
-//        pointsSoFar = 17
+//        usedSides = EnumSet.of(Side.FOUR),
+//        pointsSoFar = 8
 //    )
 //    for ((symbol, resultDistribution) in advice) {
 //        print("$symbol worms: ")
@@ -38,15 +36,26 @@ fun main() {
 //    val strategy = OptimalStrategy()
 //    println(
 //        strategy.chooseSymbol(
-//            rollOf(2, 6),
-//            usedSides = EnumSet.of(Side.THREE, Side.FIVE, Side.FOUR, Side.ONE),
-//            pointsSoFar = 17,
-//            availableHelpings = Helpings(),
-//            opponentTopHelpings = Helpings(listOf())
+//            roll = rollOf(2, 2, 2, 3, 4, 6),
+//            usedSides = EnumSet.of(Side.FOUR),
+//            pointsSoFar = 8,
+//            availableHelpings = Helpings(listOf(27, 29, 31, 32, 33)),
+//            opponentTopHelpings = Helpings(listOf(26)),
+//            topHelping = 23
+//        )
+//    )
+//    println(
+//        strategy.shouldContinue(
+//            dyeCount = 2,
+//            usedSides = EnumSet.of(Side.TWO, Side.FOUR, Side.FIVE),
+//            pointsSoFar = 23,
+//            availableHelpings = Helpings(listOf(21, 22, 23, 24, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36)),
+//            opponentTopHelpings = Helpings(listOf(25)),
+//            topHelping = null
 //        )
 //    )
 
-    println(Game(listOf(SimpleStrategy(), OptimalStrategy(memo))).simulate())
+    println(Game(listOf(SimpleStrategy(), OptimalStrategy())).simulate())
 }
 
 fun rollOf(vararg values: Int): List<Side> {
