@@ -19,8 +19,12 @@ class OptimalStrategy(memo: MutableMap<Pickomino.Key, ResultDistribution> = muta
             usedSides,
             pointsSoFar
         ).getExpectedValue()
-        val wormsIfStopped = max(availableHelpings.getWorms(pointsSoFar), opponentTopHelpings.getWormsExact(pointsSoFar))
-        return wormsIfContinued > wormsIfStopped
+        return if (Side.WORM in usedSides) {
+            val wormsIfStopped = max(availableHelpings.getWorms(pointsSoFar), opponentTopHelpings.getWormsExact(pointsSoFar))
+            wormsIfContinued > wormsIfStopped
+        } else {
+            true
+        }
     }
 
     override fun chooseSymbol(
