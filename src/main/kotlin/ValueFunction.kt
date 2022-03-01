@@ -1,20 +1,16 @@
 import kotlin.math.max
 
 sealed class ValueFunction(val maxValue: Int) {
-    abstract fun getValue(points: Int): Int
+    abstract fun getValue(points: Int, availableHelpings: Helpings, topHelping: Int?, opponentTopHelpings: Helpings): Int
 
     object Worms : ValueFunction(maxValue = 4) {
-        override fun getValue(points: Int): Int {
+        override fun getValue(points: Int, availableHelpings: Helpings, topHelping: Int?, opponentTopHelpings: Helpings): Int {
             return Helping.getWorms(points)
         }
     }
 
-    class WormsFromAvailableHelpings(
-        private val availableHelpings: Helpings,
-        private val topHelping: Int?,
-        private val opponentTopHelpings: Helpings
-    ) : ValueFunction(maxValue = 4) {
-        override fun getValue(points: Int): Int {
+    object WormsFromAvailableHelpings : ValueFunction(maxValue = 4) {
+        override fun getValue(points: Int, availableHelpings: Helpings, topHelping: Int?, opponentTopHelpings: Helpings): Int {
             val worms = max(availableHelpings.getWorms(points), opponentTopHelpings.getWormsExact(points))
             return if (worms > 0) {
                 worms
@@ -29,6 +25,8 @@ sealed class ValueFunction(val maxValue: Int) {
     }
 
     object Points : ValueFunction(maxValue = 40) {
-        override fun getValue(points: Int): Int = points
+        override fun getValue(points: Int, availableHelpings: Helpings, topHelping: Int?, opponentTopHelpings: Helpings): Int {
+            return points
+        }
     }
 }

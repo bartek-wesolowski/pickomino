@@ -21,9 +21,12 @@ internal class PickominoResultDistributionForCombinationTest {
     ) {
         val actual = pickomino.getResultDistributionForCombination(
             combination,
-            valueFunction,
             usedSides,
             pointsSoFar,
+            Helpings(),
+            null,
+            Helpings(listOf()),
+            valueFunction,
             mutableMapOf()
         )
         for (value in 0..40) {

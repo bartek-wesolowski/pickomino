@@ -14,9 +14,12 @@ class OptimalStrategy : Strategy {
     ): Boolean {
         val wormsIfContinued = pickomino.getResultDistribution(
             dyeCount,
-            ValueFunction.WormsFromAvailableHelpings(availableHelpings, topHelping, opponentTopHelpings),
             usedSides,
-            pointsSoFar
+            pointsSoFar,
+            availableHelpings,
+            topHelping,
+            opponentTopHelpings,
+            ValueFunction.WormsFromAvailableHelpings
         ).getExpectedValue()
         return if (Side.WORM in usedSides) {
             val wormsIfStopped = max(availableHelpings.getWorms(pointsSoFar), opponentTopHelpings.getWormsExact(pointsSoFar))
@@ -42,9 +45,12 @@ class OptimalStrategy : Strategy {
             val symbolCount = roll.count { it == symbol }
             val expectedValue = pickomino.getResultDistribution(
                 dyeCount = roll.size - symbolCount,
-                valueFunction = ValueFunction.WormsFromAvailableHelpings(availableHelpings, topHelping, opponentTopHelpings),
+                valueFunction = ValueFunction.WormsFromAvailableHelpings,
                 usedSides = usedSides.withUsed(symbol),
-                pointsSoFar = pointsSoFar + symbol.value * symbolCount
+                pointsSoFar = pointsSoFar + symbol.value * symbolCount,
+                availableHelpings = availableHelpings,
+                topHelping = topHelping,
+                opponentTopHelpings = opponentTopHelpings
             ).getExpectedValue()
             if (expectedValue > bestValue) {
                 bestSymbol = symbol

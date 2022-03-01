@@ -19,7 +19,15 @@ internal class PickominoResultDistributionTest {
         pointsSoFar: Int,
         resultDistribution: ResultDistribution
     ) {
-        val actual = pickomino.getResultDistribution(dyeCount, valueFunction, usedSides, pointsSoFar)
+        val actual = pickomino.getResultDistribution(
+            dyeCount,
+            usedSides,
+            pointsSoFar,
+            Helpings(),
+            null,
+            Helpings(listOf()),
+            valueFunction
+        )
         for (value in 0..40) {
             assertEquals(resultDistribution[value], actual[value], epsilon)
         }
