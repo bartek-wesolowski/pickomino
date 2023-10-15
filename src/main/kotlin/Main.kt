@@ -81,5 +81,5 @@ fun main() {
 
 fun rollOf(vararg values: Int): List<Side> {
     require(values.size <= 8) { "There can't be more then 8 dice" }
-    return values.map { Side.values()[it - 1] }
+    return values.map { Side.entries[it - 1] }
 }
