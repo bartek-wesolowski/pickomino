@@ -42,9 +42,8 @@ fun main() {
     )
     println(resultDistribution.toPrettyString())
 
-    val strategy = OptimalStrategy()
     println(
-        strategy.chooseSymbol(
+        OptimalStrategy.chooseSymbol(
             roll = rollOf(2, 2, 2, 3, 4, 6),
             usedSides = EnumSet.of(Side.FOUR),
             pointsSoFar = 8,
@@ -54,7 +53,7 @@ fun main() {
         )
     )
     println(
-        strategy.shouldContinue(
+        OptimalStrategy.shouldContinue(
             dyeCount = 2,
             usedSides = EnumSet.of(Side.TWO, Side.FOUR, Side.FIVE),
             pointsSoFar = 23,
@@ -64,7 +63,7 @@ fun main() {
         )
     )
 
-    println(Game(listOf(SimpleStrategy(), OptimalStrategy())).simulate())
+    println(Game(listOf(SimpleStrategy, OptimalStrategy)).simulate())
 
 //    val simpleStrategy = SimpleStrategy()
 //    val optimalStrategy = OptimalStrategy()

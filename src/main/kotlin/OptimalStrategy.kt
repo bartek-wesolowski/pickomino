@@ -1,7 +1,7 @@
 import java.util.EnumSet
 import kotlin.math.max
 
-class OptimalStrategy : Strategy {
+data object OptimalStrategy : Strategy {
     private val pickomino = Pickomino()
 
     override fun shouldContinue(

@@ -1,6 +1,6 @@
 import java.util.EnumSet
 
-class SimpleStrategy : Strategy {
+data object SimpleStrategy : Strategy {
     override fun shouldContinue(
         dyeCount: Int,
         usedSides: EnumSet<Side>,
