@@ -1,10 +1,10 @@
 import java.util.EnumSet
 import kotlin.random.Random
 
-class Game(private val players: List<Strategy>) {
+class Game(private val players: List<Player>) {
 
-    fun simulate(): Map<Strategy, Int> {
-        val availableHelpings = Helpings()
+    fun simulate(): Map<Player, Int> {
+        val availableHelpings = Helpings.all()
         val playerHelpings = mutableListOf<MutableList<Int>>().apply {
             for (i in players.indices) {
                 add(mutableListOf())
@@ -13,12 +13,13 @@ class Game(private val players: List<Strategy>) {
         var playerIndex = 0
         var turn = 1
         while (availableHelpings.isNotEmpty()) {
-            println("Player $playerIndex's turn ($turn)")
+            if (turn != 1) println()
+            println("${players[playerIndex].name}'s turn ($turn)")
             val topHelping = playerHelpings[playerIndex].lastOrNull()
             val lastPlayerHelpings = playerHelpings.map { it.lastOrNull() }
             val opponentTopHelpings =
                 Helpings(lastPlayerHelpings.filterNotNull().filter { it != lastPlayerHelpings[playerIndex] })
-            val points = simulatePlayerTurn(players[playerIndex], availableHelpings, topHelping, opponentTopHelpings)
+            val points = simulatePlayerTurn(players[playerIndex].strategy, availableHelpings, topHelping, opponentTopHelpings)
             if (points != 0) {
                 println("points: $points")
             }
@@ -49,7 +50,7 @@ class Game(private val players: List<Strategy>) {
             playerIndex = (playerIndex + 1) % players.size
             turn += 1
         }
-        val result = mutableMapOf<Strategy, Int>()
+        val result = mutableMapOf<Player, Int>()
         players.forEachIndexed { index, player ->
             result[player] = playerHelpings[index].fold(0) { totalWorms, points -> totalWorms + Helping.getWorms(points) }
         }
@@ -84,7 +85,7 @@ class Game(private val players: List<Strategy>) {
         var dyeCount = 8
         var pointsSoFar = 0
         val usedSides = EnumSet.noneOf(Side::class.java)
-        var shouldContinue = false
+        var shouldContinue: Boolean
         do {
             val roll = randomRoll(dyeCount)
             println("roll: ${roll.sorted()}")
@@ -117,5 +118,5 @@ class Game(private val players: List<Strategy>) {
         return List(dyeCount) { randomSide() }
     }
 
-    private fun randomSide() = Side.values()[Random.nextInt(0, Side.values().size)]
+    private fun randomSide() = Side.entries[Random.nextInt(0, Side.entries.size)]
 }

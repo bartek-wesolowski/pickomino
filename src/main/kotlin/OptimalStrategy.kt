@@ -22,7 +22,10 @@ data object OptimalStrategy : Strategy {
             ValueFunction.WormsFromAvailableHelpings
         ).getExpectedValue()
         return if (Side.WORM in usedSides) {
-            val wormsIfStopped = max(availableHelpings.getWorms(pointsSoFar), opponentTopHelpings.getWormsExact(pointsSoFar))
+            var wormsIfStopped = max(availableHelpings.getWorms(pointsSoFar), opponentTopHelpings.getWormsExact(pointsSoFar))
+            if (wormsIfStopped == 0 && topHelping != null) {
+                wormsIfStopped = -topHelping
+            }
             wormsIfContinued > wormsIfStopped
         } else {
             true
@@ -39,7 +42,7 @@ data object OptimalStrategy : Strategy {
     ): Side? {
         val symbols = EnumSet.copyOf(roll)
         var bestSymbol: Side? = null
-        var bestValue = 0.0
+        var bestValue = Double.NEGATIVE_INFINITY
         for (symbol in symbols) {
             if (symbol in usedSides) continue
             val symbolCount = roll.count { it == symbol }

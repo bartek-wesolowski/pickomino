@@ -16,7 +16,7 @@ sealed class ValueFunction(val maxValue: Int) {
                 worms
             } else {
                 if (topHelping != null) {
-                    -Helping.getWorms(points)
+                    -Helping.getWorms(topHelping)
                 } else {
                     0
                 }

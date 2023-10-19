@@ -1,4 +1,5 @@
 class Helpings(helpings: Collection<Int>? = null) {
+
     private val available = if (helpings != null) {
         Array(41) { index -> index in helpings }
     } else {
@@ -72,5 +73,11 @@ class Helpings(helpings: Collection<Int>? = null) {
         }
         sb.append("}")
         return sb.toString()
+    }
+
+    companion object {
+        fun none() = Helpings(emptyList())
+        fun all() = Helpings(null)
+        fun of(vararg helping: Int) = Helpings(helping.toList())
     }
 }
