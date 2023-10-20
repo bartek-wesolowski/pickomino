@@ -23,9 +23,9 @@ internal class PickominoResultDistributionForCombinationTest {
             combination,
             usedSides,
             pointsSoFar,
-            HelpingCollection(),
+            HelpingCollection.all(),
             null,
-            HelpingCollection(listOf()),
+            HelpingCollection.empty(),
             valueFunction,
             mutableMapOf()
         )

@@ -6,7 +6,7 @@ interface Strategy {
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
         availableHelpings: HelpingCollection,
-        topHelping: Int?,
+        topHelping: Helping?,
         opponentTopHelpings: HelpingCollection
     ): Boolean
 
@@ -15,7 +15,7 @@ interface Strategy {
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
         availableHelpings: HelpingCollection,
-        topHelping: Int?,
+        topHelping: Helping?,
         opponentTopHelpings: HelpingCollection
     ): Side?
 }

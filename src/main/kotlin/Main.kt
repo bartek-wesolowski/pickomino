@@ -7,9 +7,9 @@ fun main() {
     val roll = rollOf(2, 2, 2, 3, 4, 6)
     val usedSides = EnumSet.of(Side.FIVE, Side.THREE, Side.WORM)
     val pointsSoFar = 21
-    val availableHelpings = HelpingCollection.of(24, 27, 29, 31, 32, 33, 34, 35, 36)
-    val topHelping = 30
-    val opponentTopHelpings = HelpingCollection(listOf(22))
+    val availableHelpings = HelpingCollection.fromPoints(24, 27, 29, 31, 32, 33, 34, 35, 36)
+    val topHelping = Helping.fromPoints(30)
+    val opponentTopHelpings = HelpingCollection.fromPoints(22)
     val valueFunction = ValueFunction.WormsFromAvailableHelpings
 
     println("Result distribution")

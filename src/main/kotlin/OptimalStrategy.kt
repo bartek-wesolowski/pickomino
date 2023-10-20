@@ -9,7 +9,7 @@ data object OptimalStrategy : Strategy {
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
         availableHelpings: HelpingCollection,
-        topHelping: Int?,
+        topHelping: Helping?,
         opponentTopHelpings: HelpingCollection
     ): Boolean {
         val wormsIfContinued = pickomino.getResultDistribution(
@@ -22,9 +22,12 @@ data object OptimalStrategy : Strategy {
             ValueFunction.WormsFromAvailableHelpings
         ).getExpectedValue()
         return if (Side.WORM in usedSides) {
-            var wormsIfStopped = max(availableHelpings.getWorms(pointsSoFar), opponentTopHelpings.getWormsExact(pointsSoFar))
+            var wormsIfStopped = max(
+                availableHelpings.getExactOrSmaller(pointsSoFar)?.getWorms() ?: 0,
+                opponentTopHelpings.getOrNull(pointsSoFar)?.getWorms() ?: 0
+            )
             if (wormsIfStopped == 0 && topHelping != null) {
-                wormsIfStopped = -topHelping
+                wormsIfStopped = -topHelping.getWorms()
             }
             wormsIfContinued > wormsIfStopped
         } else {
@@ -37,7 +40,7 @@ data object OptimalStrategy : Strategy {
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
         availableHelpings: HelpingCollection,
-        topHelping: Int?,
+        topHelping: Helping?,
         opponentTopHelpings: HelpingCollection
     ): Side? {
         val symbols = EnumSet.copyOf(roll)

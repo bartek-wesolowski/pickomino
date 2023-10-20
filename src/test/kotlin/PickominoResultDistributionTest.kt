@@ -23,9 +23,9 @@ internal class PickominoResultDistributionTest {
             dyeCount,
             usedSides,
             pointsSoFar,
-            HelpingCollection(),
+            HelpingCollection.all(),
             null,
-            HelpingCollection(listOf()),
+            HelpingCollection.empty(),
             valueFunction
         )
         for (value in 0..40) {

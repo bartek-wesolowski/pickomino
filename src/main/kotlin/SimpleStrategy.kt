@@ -6,10 +6,10 @@ data object SimpleStrategy : Strategy {
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
         availableHelpings: HelpingCollection,
-        topHelping: Int?,
+        topHelping: Helping?,
         opponentTopHelpings: HelpingCollection
     ): Boolean {
-        return Side.WORM !in usedSides || (pointsSoFar < availableHelpings.getSmallest() && pointsSoFar !in opponentTopHelpings)
+        return Side.WORM !in usedSides || (pointsSoFar < availableHelpings.getSmallest().points && pointsSoFar !in opponentTopHelpings)
     }
 
     override fun chooseSymbol(
@@ -17,7 +17,7 @@ data object SimpleStrategy : Strategy {
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
         availableHelpings: HelpingCollection,
-        topHelping: Int?,
+        topHelping: Helping?,
         opponentTopHelpings: HelpingCollection
     ): Side? {
         if (Side.WORM in roll && Side.WORM !in usedSides) return Side.WORM

@@ -5,11 +5,13 @@ class HelpingCollectionTest {
 
     @Test
     fun testAddingAndRemovingHelpings() {
-        val helpings = HelpingCollection.of(21, 25, 29)
-        assertEquals(29, helpings.getBiggest())
-        helpings.add(33)
-        assertEquals(33, helpings.getBiggest())
-        helpings.remove(33)
-        assertEquals(29, helpings.getBiggest())
+        val helpings = HelpingCollection.fromPoints(21, 25, 29)
+        val helping29 = Helping.fromPoints(29)
+        assertEquals(helping29, helpings.getBiggest())
+        val helping33 = Helping.fromPoints(33)!!
+        helpings.add(helping33)
+        assertEquals(helping33, helpings.getBiggest())
+        helpings.remove(helping33)
+        assertEquals(helping29, helpings.getBiggest())
     }
 }

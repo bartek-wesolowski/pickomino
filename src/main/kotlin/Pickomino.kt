@@ -7,7 +7,7 @@ class Pickomino {
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
         pointsSoFar: Int = 0,
         availableHelpings: HelpingCollection,
-        topHelping: Int?,
+        topHelping: Helping?,
         opponentTopHelpings: HelpingCollection,
         valueFunction: ValueFunction,
         memo: MutableMap<Key, ResultDistribution> = mutableMapOf()
@@ -66,7 +66,7 @@ class Pickomino {
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
         availableHelpings: HelpingCollection,
-        topHelping: Int?,
+        topHelping: Helping?,
         opponentTopHelpings: HelpingCollection,
         valueFunction: ValueFunction,
         memo: MutableMap<Key, ResultDistribution>
@@ -140,7 +140,7 @@ class Pickomino {
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
         pointsSoFar: Int,
         availableHelpings: HelpingCollection,
-        topHelping: Int?,
+        topHelping: Helping?,
         opponentTopHelpings: HelpingCollection,
         valueFunction: ValueFunction
     ): Map<Side, ResultDistribution> {

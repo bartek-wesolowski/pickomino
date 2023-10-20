@@ -1,58 +1,50 @@
 import java.util.*
 
-class HelpingCollection(helpingsToAdd: Collection<Int>? = null) {
-
+class HelpingCollection private constructor() {
     private var helpings = BitSet(16)
-
-    init {
-        if (helpingsToAdd != null) {
-            helpingsToAdd.forEach { helpings.set(it - 21) }
-        } else {
-            repeat(16) {helpings.set(it) }
-        }
-    }
 
     fun isNotEmpty(): Boolean = !helpings.isEmpty
 
-    fun add(helping: Int) {
-        require(helping >= 21) { "points < 21" }
-        require(helping <= 36) { "points > 36" }
-        require(!helpings[helping - 21]) { "helping is already added" }
-        helpings[helping - 21] = true
+    fun add(helping: Helping) {
+        addByPoints(helping.points)
     }
 
-    fun remove(helping: Int) {
-        require(helpings[helping - 21]) { "helping is already removed" }
-        helpings[helping - 21] = false
+    private fun addByPoints(points: Int) {
+        require(!helpings[points - 21]) { "helping is already added" }
+        helpings[points - 21] = true
     }
 
-    fun getSmallest(): Int {
-        val smallest = helpings.nextSetBit(0)
-        require(smallest != -1) { "no helpings available" }
-        return smallest + 21
+    fun remove(helping: Helping) {
+        require(helpings[helping.points - 21]) { "helping is already removed" }
+        helpings[helping.points - 21] = false
     }
 
-    fun getBiggest(): Int {
-        val biggest = helpings.previousSetBit(16)
-        require(biggest != -1) { "no helpings available" }
-        return biggest + 21
+    fun getSmallest(): Helping {
+        val helpingIndex = helpings.nextSetBit(0)
+        require(helpingIndex != -1) { "no helpings available" }
+        return Helping.fromPoints(helpingIndex + 21)!!
     }
 
-    fun getWorms(points: Int): Int {
-        val helping = helpings.previousSetBit(points)
-        require(helping != -1)
-        return Helping.getWorms(helping + 21)
+    fun getBiggest(): Helping {
+        val helpingIndex = helpings.previousSetBit(16)
+        require(helpingIndex != -1) { "no helpings available" }
+        return Helping.fromPoints(helpingIndex + 21)!!
     }
 
-    fun getWormsExact(points: Int): Int {
-        if (points < 21) return 0
-        return if (helpings[points - 21]) Helping.getWorms(points) else 0
+    fun getOrNull(points: Int): Helping? {
+        if (points < 21) return null
+        if (helpings[points - 21]) return Helping.fromPoints(points)
+        return null
     }
 
-    fun getHelpingPoints(points: Int): Int {
-        val helping = helpings.previousSetBit(points)
-        require(helping != -1)
-        return helping + 21
+    fun getExactOrSmaller(points: Int): Helping? {
+        if (points < 21) return null
+        val helpingIndex = helpings.previousSetBit(points - 21)
+        return if (helpingIndex > 0) {
+            Helping.fromPoints(helpingIndex + 21)
+        } else {
+            null
+        }
     }
 
     operator fun contains(points: Int): Boolean {
@@ -82,8 +74,21 @@ class HelpingCollection(helpingsToAdd: Collection<Int>? = null) {
     }
 
     companion object {
-        fun none() = HelpingCollection(emptyList())
-        fun all() = HelpingCollection(null)
-        fun of(vararg helping: Int) = HelpingCollection(helping.toList())
+        fun empty() = HelpingCollection()
+        fun all() = HelpingCollection().apply {
+            for (points in 21..36) {
+                addByPoints(points)
+            }
+        }
+        fun fromPoints(vararg pointValues: Int) = HelpingCollection().apply {
+            for (points in pointValues) {
+                addByPoints(points)
+            }
+        }
+        fun fromHelpings(helpings: Iterable<Helping>) = HelpingCollection().apply {
+            for (helping in helpings) {
+                add(helping)
+            }
+        }
     }
 }
