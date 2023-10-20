@@ -4,7 +4,7 @@ import kotlin.random.Random
 class Game(private val players: List<Player>) {
 
     fun simulate(): Map<Player, Int> {
-        val availableHelpings = HelpingSet.all()
+        val availableHelpings = HelpingCollection.all()
         val playerHelpings = mutableListOf<MutableList<Int>>().apply {
             for (i in players.indices) {
                 add(mutableListOf())
@@ -18,7 +18,7 @@ class Game(private val players: List<Player>) {
             val topHelping = playerHelpings[playerIndex].lastOrNull()
             val lastPlayerHelpings = playerHelpings.map { it.lastOrNull() }
             val opponentTopHelpings =
-                HelpingSet(lastPlayerHelpings.filterNotNull().filter { it != lastPlayerHelpings[playerIndex] })
+                HelpingCollection(lastPlayerHelpings.filterNotNull().filter { it != lastPlayerHelpings[playerIndex] })
             val points = simulatePlayerTurn(players[playerIndex].strategy, availableHelpings, topHelping, opponentTopHelpings)
             if (points != 0) {
                 println("points: $points")
@@ -58,7 +58,7 @@ class Game(private val players: List<Player>) {
     }
 
     private fun returnHelping(
-        availableHelpings: HelpingSet,
+        availableHelpings: HelpingCollection,
         playerHelpings: MutableList<MutableList<Int>>,
         playerIndex: Int
     ) {
@@ -78,9 +78,9 @@ class Game(private val players: List<Player>) {
 
     private fun simulatePlayerTurn(
         strategy: Strategy,
-        availableHelpings: HelpingSet,
+        availableHelpings: HelpingCollection,
         topHelping: Int?,
-        opponentTopHelpings: HelpingSet
+        opponentTopHelpings: HelpingCollection
     ): Int {
         var dyeCount = 8
         var pointsSoFar = 0

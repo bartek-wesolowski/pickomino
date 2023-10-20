@@ -1,6 +1,6 @@
 import java.util.*
 
-class HelpingSet(helpingsToAdd: Collection<Int>? = null) {
+class HelpingCollection(helpingsToAdd: Collection<Int>? = null) {
 
     private var helpings = BitSet(16)
 
@@ -82,8 +82,8 @@ class HelpingSet(helpingsToAdd: Collection<Int>? = null) {
     }
 
     companion object {
-        fun none() = HelpingSet(emptyList())
-        fun all() = HelpingSet(null)
-        fun of(vararg helping: Int) = HelpingSet(helping.toList())
+        fun none() = HelpingCollection(emptyList())
+        fun all() = HelpingCollection(null)
+        fun of(vararg helping: Int) = HelpingCollection(helping.toList())
     }
 }

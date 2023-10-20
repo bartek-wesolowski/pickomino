@@ -6,9 +6,9 @@ class Pickomino {
         dyeCount: Int,
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
         pointsSoFar: Int = 0,
-        availableHelpings: HelpingSet,
+        availableHelpings: HelpingCollection,
         topHelping: Int?,
-        opponentTopHelpings: HelpingSet,
+        opponentTopHelpings: HelpingCollection,
         valueFunction: ValueFunction,
         memo: MutableMap<Key, ResultDistribution> = mutableMapOf()
     ): ResultDistribution {
@@ -65,9 +65,9 @@ class Pickomino {
         combination: List<Side>,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
-        availableHelpings: HelpingSet,
+        availableHelpings: HelpingCollection,
         topHelping: Int?,
-        opponentTopHelpings: HelpingSet,
+        opponentTopHelpings: HelpingCollection,
         valueFunction: ValueFunction,
         memo: MutableMap<Key, ResultDistribution>
     ): ResultDistribution {
@@ -139,9 +139,9 @@ class Pickomino {
         roll: List<Side>,
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
         pointsSoFar: Int,
-        availableHelpings: HelpingSet,
+        availableHelpings: HelpingCollection,
         topHelping: Int?,
-        opponentTopHelpings: HelpingSet,
+        opponentTopHelpings: HelpingCollection,
         valueFunction: ValueFunction
     ): Map<Side, ResultDistribution> {
         val advice = mutableMapOf<Side, ResultDistribution>()

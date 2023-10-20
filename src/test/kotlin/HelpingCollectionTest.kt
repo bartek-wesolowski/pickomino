@@ -1,11 +1,11 @@
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-class HelpingSetTest {
+class HelpingCollectionTest {
 
     @Test
     fun testAddingAndRemovingHelpings() {
-        val helpings = HelpingSet.of(21, 25, 29)
+        val helpings = HelpingCollection.of(21, 25, 29)
         assertEquals(29, helpings.getBiggest())
         helpings.add(33)
         assertEquals(33, helpings.getBiggest())

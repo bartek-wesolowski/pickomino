@@ -9,9 +9,9 @@ internal class ValueFunctionTest {
             -1,
             ValueFunction.WormsFromAvailableHelpings.getValue(
                 points = 19,
-                availableHelpings = HelpingSet(listOf(24)),
+                availableHelpings = HelpingCollection(listOf(24)),
                 topHelping = 23,
-                opponentTopHelpings = HelpingSet(listOf())
+                opponentTopHelpings = HelpingCollection(listOf())
             )
         )
     }
