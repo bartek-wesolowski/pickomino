@@ -8,9 +8,9 @@ data object OptimalStrategy : Strategy {
         dyeCount: Int,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
-        availableHelpings: Helpings,
+        availableHelpings: HelpingSet,
         topHelping: Int?,
-        opponentTopHelpings: Helpings
+        opponentTopHelpings: HelpingSet
     ): Boolean {
         val wormsIfContinued = pickomino.getResultDistribution(
             dyeCount,
@@ -36,9 +36,9 @@ data object OptimalStrategy : Strategy {
         roll: List<Side>,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
-        availableHelpings: Helpings,
+        availableHelpings: HelpingSet,
         topHelping: Int?,
-        opponentTopHelpings: Helpings
+        opponentTopHelpings: HelpingSet
     ): Side? {
         val symbols = EnumSet.copyOf(roll)
         var bestSymbol: Side? = null

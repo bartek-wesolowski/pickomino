@@ -5,9 +5,9 @@ data object SimpleStrategy : Strategy {
         dyeCount: Int,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
-        availableHelpings: Helpings,
+        availableHelpings: HelpingSet,
         topHelping: Int?,
-        opponentTopHelpings: Helpings
+        opponentTopHelpings: HelpingSet
     ): Boolean {
         return Side.WORM !in usedSides || (pointsSoFar < availableHelpings.getSmallest() && pointsSoFar !in opponentTopHelpings)
     }
@@ -16,9 +16,9 @@ data object SimpleStrategy : Strategy {
         roll: List<Side>,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
-        availableHelpings: Helpings,
+        availableHelpings: HelpingSet,
         topHelping: Int?,
-        opponentTopHelpings: Helpings
+        opponentTopHelpings: HelpingSet
     ): Side? {
         if (Side.WORM in roll && Side.WORM !in usedSides) return Side.WORM
         val sidesSortedByValue = roll.distinct().sortedBy { -it.value }

@@ -23,9 +23,9 @@ internal class PickominoResultDistributionTest {
             dyeCount,
             usedSides,
             pointsSoFar,
-            Helpings(),
+            HelpingSet(),
             null,
-            Helpings(listOf()),
+            HelpingSet(listOf()),
             valueFunction
         )
         for (value in 0..40) {

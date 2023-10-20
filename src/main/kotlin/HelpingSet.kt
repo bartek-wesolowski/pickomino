@@ -1,4 +1,4 @@
-class Helpings(helpings: Collection<Int>? = null) {
+class HelpingSet(helpings: Collection<Int>? = null) {
 
     private val available = if (helpings != null) {
         Array(41) { index -> index in helpings }
@@ -76,8 +76,8 @@ class Helpings(helpings: Collection<Int>? = null) {
     }
 
     companion object {
-        fun none() = Helpings(emptyList())
-        fun all() = Helpings(null)
-        fun of(vararg helping: Int) = Helpings(helping.toList())
+        fun none() = HelpingSet(emptyList())
+        fun all() = HelpingSet(null)
+        fun of(vararg helping: Int) = HelpingSet(helping.toList())
     }
 }

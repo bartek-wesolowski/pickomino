@@ -5,17 +5,17 @@ interface Strategy {
         dyeCount: Int,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
-        availableHelpings: Helpings,
+        availableHelpings: HelpingSet,
         topHelping: Int?,
-        opponentTopHelpings: Helpings
+        opponentTopHelpings: HelpingSet
     ): Boolean
 
     fun chooseSymbol(
         roll: List<Side>,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
-        availableHelpings: Helpings,
+        availableHelpings: HelpingSet,
         topHelping: Int?,
-        opponentTopHelpings: Helpings
+        opponentTopHelpings: HelpingSet
     ): Side?
 }
