@@ -1,77 +1,83 @@
-class HelpingSet(helpings: Collection<Int>? = null) {
+import java.util.*
 
-    private val available = if (helpings != null) {
-        Array(41) { index -> index in helpings }
-    } else {
-        Array(41) { index -> index in 21..36 }
-    }
-    private var size = helpings?.size ?: 16
+class HelpingSet(helpingsToAdd: Collection<Int>? = null) {
 
-    fun isNotEmpty(): Boolean = size > 0
+    private var helpings = BitSet(16)
 
-    fun add(points: Int) {
-        require(!available[points]) { "helping is already added" }
-        available[points] = true
-        size += 1
+    init {
+        if (helpingsToAdd != null) {
+            helpingsToAdd.forEach { helpings.set(it - 21) }
+        } else {
+            repeat(16) {helpings.set(it) }
+        }
     }
 
-    fun remove(points: Int) {
-        require(available[points]) { "helping is already removed" }
-        available[points] = false
-        size -= 1
+    fun isNotEmpty(): Boolean = !helpings.isEmpty
+
+    fun add(helping: Int) {
+        require(helping >= 21) { "points < 21" }
+        require(helping <= 36) { "points > 36" }
+        require(!helpings[helping - 21]) { "helping is already added" }
+        helpings[helping - 21] = true
+    }
+
+    fun remove(helping: Int) {
+        require(helpings[helping - 21]) { "helping is already removed" }
+        helpings[helping - 21] = false
     }
 
     fun getSmallest(): Int {
-        val smallest = available.indexOf(true)
+        val smallest = helpings.nextSetBit(0)
         require(smallest != -1) { "no helpings available" }
-        return smallest
+        return smallest + 21
     }
 
     fun getBiggest(): Int {
-        val biggest = available.lastIndexOf(true)
+        val biggest = helpings.previousSetBit(16)
         require(biggest != -1) { "no helpings available" }
-        return biggest
+        return biggest + 21
     }
 
     fun getWorms(points: Int): Int {
-        val smallest = getSmallest()
-        if (points < smallest) return 0
-        for (p in points downTo smallest) {
-            if (available[p]) return Helping.getWorms(p)
-        }
-        throw IllegalStateException("no helpings available")
+        val helping = helpings.previousSetBit(points)
+        require(helping != -1)
+        return Helping.getWorms(helping + 21)
     }
 
     fun getWormsExact(points: Int): Int {
-        return if (available[points]) Helping.getWorms(points) else 0
+        if (points < 21) return 0
+        return if (helpings[points - 21]) Helping.getWorms(points) else 0
     }
 
     fun getHelpingPoints(points: Int): Int {
-        val smallest = getSmallest()
-        if (points < smallest) return 0
-        for (p in points downTo smallest) {
-            if (available[p]) return p
-        }
-        throw IllegalStateException("no helpings available")
+        val helping = helpings.previousSetBit(points)
+        require(helping != -1)
+        return helping + 21
     }
 
-    operator fun contains(points: Int): Boolean = available[points]
+    operator fun contains(points: Int): Boolean {
+        return if (points >= 21) {
+            helpings[points - 21]
+        } else {
+            false
+        }
+    }
 
     override fun toString(): String {
         val sb = StringBuilder()
-        sb.append("{")
+        sb.append("[")
+        var helping = helpings.nextSetBit(0)
         var first = true
-        for (index in 21..36) {
-            if (available[index]) {
-                if (!first) {
-                    sb.append(", ")
-                } else {
-                    first = false
-                }
-                sb.append(index)
+        while (helping != -1) {
+            if (!first) {
+                sb.append(", ")
+            } else {
+                first = false
             }
+            sb.append(helping + 21)
+            helping = helpings.nextSetBit(helping + 1)
         }
-        sb.append("}")
+        sb.append("]")
         return sb.toString()
     }
 
