@@ -1,8 +1,9 @@
 import java.text.DecimalFormat
 
+private val percentageFormat by lazy { DecimalFormat("#,##0.00'%'") }
+
 class ResultDistribution(private val maxValue: Int) {
     private val probability: DoubleArray = DoubleArray(2 * maxValue + 1)
-    private val percentageFormat by lazy { DecimalFormat("#,##0.00'%'") }
 
     fun getExpectedValue(): Double {
         var expectedValue = 0.0
