@@ -10,7 +10,7 @@ internal class PickominoResultDistributionForCombinationTest {
     private val pickomino = Pickomino()
     private val epsilon = 0.000000000000001
 
-    @ParameterizedTest(name = "result distribution for combinaiton: {0}, value function: {1}, dye count: {2}, used sides: {3}, points so far {4}")
+    @ParameterizedTest(name = "result distribution for combination: {0}, value function: {1}, dye count: {2}, used sides: {3}, points so far {4}")
     @MethodSource("getParameters")
     fun test(
         combination: List<Side>,
