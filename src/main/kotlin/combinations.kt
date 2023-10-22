@@ -7,7 +7,7 @@ private fun combinations(length: Int, combination: MutableList<Side>): Sequence<
     if (length == 0) {
         yield(combination)
     } else {
-        for (side in Side.values()) {
+        for (side in Side.entries) {
             combination[combination.size - length] = side
             yieldAll(combinations(length - 1, combination))
         }
