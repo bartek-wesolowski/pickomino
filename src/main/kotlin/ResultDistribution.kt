@@ -38,7 +38,7 @@ class ResultDistribution(private val maxValue: Int) {
         probability[value + maxValue] = p
     }
 
-    fun toPrettyString(precision: Int = 3): String {
+    fun toPrettyString(): String {
         val items = probability
             .mapIndexed { index, value -> index - maxValue to value }
             .filter { it.second != 0.0 }
