@@ -9,5 +9,3 @@ val sixth = arrayOf(
     1.0 / (6 * 6 * 6 * 6 * 6 * 6 * 6),
     1.0 / (6 * 6 * 6 * 6 * 6 * 6 * 6 * 6),
 )
-
-val oneSixth = sixth[1]
