@@ -104,7 +104,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.Worms,
-                    pointsSoFar = 0,
                     resultDistribution = ResultDistribution(ValueFunction.Worms.maxValue).apply {
                         this[0] = 0.23458062342397099
                         this[1] = 0.16693298472271803
@@ -116,7 +115,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    pointsSoFar = 0,
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
                         this[0] = 0.2542120632803378
                         this[1] = 0.13786452011452044
@@ -128,7 +126,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
                         this[0] = 0.8061207349999395
@@ -139,7 +136,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 33),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
                         this[0] = 0.8061207349999395
@@ -150,7 +146,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     topHelping = Helping.fromPoints(21),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
@@ -162,7 +157,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 33),
                     topHelping = Helping.fromPoints(21),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
@@ -174,7 +168,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     topHelping = Helping.fromPoints(25),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
@@ -186,7 +179,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 33),
                     topHelping = Helping.fromPoints(25),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
@@ -198,7 +190,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     topHelping = Helping.fromPoints(29),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
@@ -210,7 +201,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 33),
                     topHelping = Helping.fromPoints(29),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
@@ -222,7 +212,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.Points,
-                    pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     topHelping = Helping.fromPoints(25),
                     resultDistribution = ResultDistribution(ValueFunction.Points.maxValue).apply {
