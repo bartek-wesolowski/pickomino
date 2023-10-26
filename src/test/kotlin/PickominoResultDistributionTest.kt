@@ -23,13 +23,13 @@ internal class PickominoResultDistributionTest {
         resultDistribution: ResultDistribution
     ) {
         val actual = pickomino.getResultDistribution(
-            dyeCount,
-            usedSides,
-            pointsSoFar,
-            availableHelpings,
-            topHelping,
-            HelpingCollection.empty(),
-            valueFunction
+            dyeCount = dyeCount,
+            usedSides = usedSides,
+            pointsSoFar = pointsSoFar,
+            availableHelpings = availableHelpings,
+            topHelping = topHelping,
+            opponentTopHelpings = HelpingCollection.empty(),
+            valueFunction = valueFunction
         )
         assertEquals(resultDistribution.maxValue, actual.maxValue)
         assertAll(
@@ -103,8 +103,19 @@ internal class PickominoResultDistributionTest {
                 // snapshot tests
                 argumentsOf(
                     dyeCount = 8,
+                    valueFunction = ValueFunction.Worms,
+                    pointsSoFar = 0,
+                    resultDistribution = ResultDistribution(ValueFunction.Worms.maxValue).apply {
+                        this[0] = 0.23458062342397099
+                        this[1] = 0.16693298472271803
+                        this[2] = 0.36352505561803683
+                        this[3] = 0.19800835219013907
+                        this[4] = 0.036952984039838606
+                    }
+                ),
+                argumentsOf(
+                    dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    usedSides = EnumSet.noneOf(Side::class.java),
                     pointsSoFar = 0,
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
                         this[0] = 0.2542120632803378
@@ -117,7 +128,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    usedSides = EnumSet.noneOf(Side::class.java),
                     pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
@@ -129,7 +139,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    usedSides = EnumSet.noneOf(Side::class.java),
                     pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 33),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
@@ -141,7 +150,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    usedSides = EnumSet.noneOf(Side::class.java),
                     pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     topHelping = Helping.fromPoints(21),
@@ -154,7 +162,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    usedSides = EnumSet.noneOf(Side::class.java),
                     pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 33),
                     topHelping = Helping.fromPoints(21),
@@ -167,7 +174,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    usedSides = EnumSet.noneOf(Side::class.java),
                     pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     topHelping = Helping.fromPoints(25),
@@ -180,7 +186,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    usedSides = EnumSet.noneOf(Side::class.java),
                     pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 33),
                     topHelping = Helping.fromPoints(25),
@@ -193,7 +198,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    usedSides = EnumSet.noneOf(Side::class.java),
                     pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     topHelping = Helping.fromPoints(29),
@@ -206,7 +210,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    usedSides = EnumSet.noneOf(Side::class.java),
                     pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 33),
                     topHelping = Helping.fromPoints(29),
@@ -219,7 +222,6 @@ internal class PickominoResultDistributionTest {
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.Points,
-                    usedSides = EnumSet.noneOf(Side::class.java),
                     pointsSoFar = 0,
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     topHelping = Helping.fromPoints(25),
