@@ -2,7 +2,7 @@ import java.text.DecimalFormat
 
 private val percentageFormat by lazy { DecimalFormat("#,##0.00'%'") }
 
-class ResultDistribution(private val maxValue: Int) {
+class ResultDistribution(val maxValue: Int) {
     private val probability: DoubleArray = DoubleArray(2 * maxValue + 1)
 
     fun getExpectedValue(): Double {
