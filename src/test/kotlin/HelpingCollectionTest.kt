@@ -14,4 +14,10 @@ class HelpingCollectionTest {
         helpings.remove(helping33)
         assertEquals(helping29, helpings.getBiggest())
     }
+
+    @Test
+    fun testGetExactOrSmaller() {
+        val helpings = HelpingCollection.all()
+        assertEquals(Helping.fromPoints(21), helpings.getExactOrSmaller(21))
+    }
 }

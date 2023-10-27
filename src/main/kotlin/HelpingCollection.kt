@@ -40,7 +40,7 @@ class HelpingCollection private constructor() {
     fun getExactOrSmaller(points: Int): Helping? {
         if (points < 21) return null
         val helpingIndex = helpings.previousSetBit(points - 21)
-        return if (helpingIndex > 0) {
+        return if (helpingIndex >= 0) {
             Helping.fromPoints(helpingIndex + 21)
         } else {
             null
