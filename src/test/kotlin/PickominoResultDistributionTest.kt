@@ -105,22 +105,22 @@ internal class PickominoResultDistributionTest {
                     dyeCount = 8,
                     valueFunction = ValueFunction.Worms,
                     resultDistribution = ResultDistribution(ValueFunction.Worms.maxValue).apply {
-                        this[0] = 0.23458062342397099
-                        this[1] = 0.16693298472271803
-                        this[2] = 0.36352505561803683
-                        this[3] = 0.19800835219013907
-                        this[4] = 0.036952984039838606
+                        this[0] = 0.2322383576478062
+                        this[1] = 0.16763793705696214
+                        this[2] = 0.3631946313179833
+                        this[3] = 0.19701382156756783
+                        this[4] = 0.0399152524137451
                     }
                 ),
                 argumentsOf(
                     dyeCount = 8,
                     valueFunction = ValueFunction.WormsFromAvailableHelpings,
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
-                        this[0] = 0.2542120632803378
-                        this[1] = 0.13786452011452044
-                        this[2] = 0.36941828766480356
-                        this[3] = 0.1983853211810725
-                        this[4] = 0.040119807757798324
+                        this[0] = 0.2322383576478062
+                        this[1] = 0.16763793705696214
+                        this[2] = 0.3631946313179833
+                        this[3] = 0.19701382156756783
+                        this[4] = 0.0399152524137451
                     }
                 ),
                 argumentsOf(

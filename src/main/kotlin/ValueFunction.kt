@@ -14,7 +14,10 @@ sealed class ValueFunction(val maxValue: Int) {
             availableHelpings: HelpingCollection,
             topHelping: Helping?,
             opponentTopHelpings: HelpingCollection
-        ): Int = Helping.fromPoints(points)?.getWorms() ?: 0
+        ): Int {
+            if (points > 36) return 4
+            return Helping.fromPoints(points)?.getWorms() ?: 0
+        }
     }
 
     data object WormsFromAvailableHelpings : ValueFunction(maxValue = 4) {
