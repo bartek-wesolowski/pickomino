@@ -4,10 +4,10 @@ fun main() {
     val player1 = Player("Simple", SimpleStrategy)
     val player2 = Player("Optimal", OptimalStrategy)
     val players = listOf(player1, player2)
-    val game = Game(players)
+    val gameSimulator = GameSimulator(players)
     val results = mutableListOf<Map<Player, Int>>()
     for (i in 0 until count) {
-        results.add(game.simulate())
+        results.add(gameSimulator.simulate())
     }
     println()
     for (i in 0 until count) {

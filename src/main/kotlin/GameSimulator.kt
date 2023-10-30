@@ -1,7 +1,7 @@
 import java.util.EnumSet
 import kotlin.random.Random
 
-class Game(private val players: List<Player>) {
+class GameSimulator(private val players: List<Player>) {
 
     fun simulate(): Map<Player, Int> {
         val availableHelpings = HelpingCollection.all()
