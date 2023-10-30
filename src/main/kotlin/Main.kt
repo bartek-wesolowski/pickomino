@@ -1,7 +1,7 @@
 import java.util.EnumSet
 
 fun main() {
-    val pickomino = Pickomino()
+    val pickomino = Pickomino(ValueFunction.WormsFromAvailableHelpings)
 
     val dyeCount = 3
     val roll = rollOf(2, 2, 2, 3, 4, 6)
@@ -10,7 +10,6 @@ fun main() {
     val availableHelpings = HelpingCollection.fromPoints(24, 27, 29, 31, 32, 33, 34, 35, 36)
     val topHelping = Helping.fromPoints(30)
     val opponentTopHelpings = HelpingCollection.fromPoints(22)
-    val valueFunction = ValueFunction.WormsFromAvailableHelpings
 
     println("Result distribution")
     println(
@@ -21,7 +20,6 @@ fun main() {
             availableHelpings = availableHelpings,
             topHelping = topHelping,
             opponentTopHelpings = opponentTopHelpings,
-            valueFunction = valueFunction
         )
             .toPrettyString()
     )
@@ -34,7 +32,6 @@ fun main() {
         availableHelpings = availableHelpings,
         topHelping = topHelping,
         opponentTopHelpings = opponentTopHelpings,
-        valueFunction = valueFunction
     )
     println("Advice")
     for ((symbol, resultDistribution) in advice) {

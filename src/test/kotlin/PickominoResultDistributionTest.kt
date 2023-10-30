@@ -8,7 +8,6 @@ import java.util.stream.Stream
 
 internal class PickominoResultDistributionTest {
 
-    private val pickomino = Pickomino()
     private val epsilon = 0.000000000000001
 
     @ParameterizedTest
@@ -22,14 +21,13 @@ internal class PickominoResultDistributionTest {
         topHelping: Helping?,
         resultDistribution: ResultDistribution<V>
     ) {
-        val actual = pickomino.getResultDistribution(
+        val actual = Pickomino(valueFunction).getResultDistribution(
             dyeCount = dyeCount,
             usedSides = usedSides,
             pointsSoFar = pointsSoFar,
             availableHelpings = availableHelpings,
             topHelping = topHelping,
             opponentTopHelpings = HelpingCollection.empty(),
-            valueFunction = valueFunction
         )
         assertAll(
             (valueFunction.valueRange).map { value ->

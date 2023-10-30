@@ -2,7 +2,7 @@ import java.util.EnumSet
 import kotlin.math.max
 
 data object OptimalStrategy : Strategy {
-    private val pickomino = Pickomino()
+    private val pickomino = Pickomino(ValueFunction.WormsFromAvailableHelpings)
 
     override fun shouldContinue(
         dyeCount: Int,
@@ -19,7 +19,6 @@ data object OptimalStrategy : Strategy {
             availableHelpings,
             topHelping,
             opponentTopHelpings,
-            ValueFunction.WormsFromAvailableHelpings
         ).getExpectedValue()
         return if (Side.WORM in usedSides) {
             var wormsIfStopped = max(
@@ -51,7 +50,6 @@ data object OptimalStrategy : Strategy {
             val symbolCount = roll.count { it == symbol }
             val expectedValue = pickomino.getResultDistribution(
                 dyeCount = roll.size - symbolCount,
-                valueFunction = ValueFunction.WormsFromAvailableHelpings,
                 usedSides = usedSides.withUsed(symbol),
                 pointsSoFar = pointsSoFar + symbol.value * symbolCount,
                 availableHelpings = availableHelpings,
