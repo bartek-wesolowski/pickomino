@@ -20,16 +20,16 @@ internal class PickominoResultDistributionForCombinationTest {
         resultDistribution: ResultDistribution
     ) {
         val actual = pickomino.getResultDistributionForCombination(
-            combination,
-            usedSides,
-            pointsSoFar,
-            HelpingCollection.all(),
-            null,
-            HelpingCollection.empty(),
-            valueFunction,
-            mutableMapOf()
+            combination = combination,
+            usedSides = usedSides,
+            pointsSoFar = pointsSoFar,
+            availableHelpings = HelpingCollection.all(),
+            topHelping = null,
+            opponentTopHelpings = HelpingCollection.empty(),
+            valueFunction = valueFunction,
+            memo = mutableMapOf()
         )
-        for (value in 0..40) {
+        for (value in -valueFunction.maxValue..valueFunction.maxValue) {
             assertEquals(resultDistribution[value], actual[value], epsilon)
         }
     }
@@ -104,7 +104,11 @@ internal class PickominoResultDistributionForCombinationTest {
             pointsSoFar: Int = 0,
             resultDistribution: ResultDistribution
         ): Arguments = Arguments.of(
-            combination, valueFunction, usedSides, pointsSoFar, resultDistribution
+            combination,
+            valueFunction,
+            usedSides,
+            pointsSoFar,
+            resultDistribution
         )
     }
 }
