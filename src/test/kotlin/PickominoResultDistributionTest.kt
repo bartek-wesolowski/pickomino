@@ -11,7 +11,7 @@ internal class PickominoResultDistributionTest {
     private val pickomino = Pickomino()
     private val epsilon = 0.000000000000001
 
-    @ParameterizedTest()
+    @ParameterizedTest
     @MethodSource("getParameters")
     fun test(
         dyeCount: Int,
@@ -149,9 +149,9 @@ internal class PickominoResultDistributionTest {
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     topHelping = Helping.fromPoints(21),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
-                        this[-1] = 0.9661285085070774
-                        this[3] = 0.01846505395940725
-                        this[4] = 0.015406437518721379
+                        this[-1] = 0.8060193325207861
+                        this[3] = 0.1342935351951597
+                        this[4] = 0.059687132281632624
                     }
                 ),
                 argumentsOf(
@@ -160,9 +160,9 @@ internal class PickominoResultDistributionTest {
                     availableHelpings = HelpingCollection.fromPoints(31, 33),
                     topHelping = Helping.fromPoints(21),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
-                        this[-1] = 0.9661285085070774
-                        this[3] = 0.01846505395940725
-                        this[4] = 0.015406437518721379
+                        this[-1] = 0.8060193325207861
+                        this[3] = 0.1342935351951597
+                        this[4] = 0.059687132281632624
                     }
                 ),
                 argumentsOf(
@@ -171,9 +171,9 @@ internal class PickominoResultDistributionTest {
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     topHelping = Helping.fromPoints(25),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
-                        this[-2] = 0.9944862948223797
-                        this[3] = 0.0019183054108233067
-                        this[4] = 0.003595399750003831
+                        this[-2] = 0.8060186854631007
+                        this[3] = 0.1342969707120195
+                        this[4] = 0.059684343822960916
                     }
                 ),
                 argumentsOf(
@@ -182,9 +182,9 @@ internal class PickominoResultDistributionTest {
                     availableHelpings = HelpingCollection.fromPoints(31, 33),
                     topHelping = Helping.fromPoints(25),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
-                        this[-2] = 0.9944862948223797
-                        this[3] = 0.0019183054108233067
-                        this[4] = 0.003595399750003831
+                        this[-2] = 0.8060186854631007
+                        this[3] = 0.1342969707120195
+                        this[4] = 0.059684343822960916
                     }
                 ),
                 argumentsOf(
@@ -193,9 +193,9 @@ internal class PickominoResultDistributionTest {
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     topHelping = Helping.fromPoints(29),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
-                        this[-3] = 0.9960748780919186
-                        this[3] = 0.001516335960075063
-                        this[4] = 0.0024087859313955662
+                        this[-3] = 0.8060029048102788
+                        this[3] = 0.13439898586518664
+                        this[4] = 0.059598109315630435
                     }
                 ),
                 argumentsOf(
@@ -204,9 +204,9 @@ internal class PickominoResultDistributionTest {
                     availableHelpings = HelpingCollection.fromPoints(31, 33),
                     topHelping = Helping.fromPoints(29),
                     resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings.maxValue).apply {
-                        this[-3] = 0.9960748780919186
-                        this[3] = 0.001516335960075063
-                        this[4] = 0.0024087859313955662
+                        this[-3] = 0.8060029048102788
+                        this[3] = 0.13439898586518664
+                        this[4] = 0.059598109315630435
                     }
                 ),
                 argumentsOf(
