@@ -22,12 +22,14 @@ internal class PickominoResultDistributionTest {
         resultDistribution: ResultDistribution<V>
     ) {
         val actual = Pickomino(valueFunction).getResultDistribution(
+            gameState = GameState(
+                availableHelpings = availableHelpings,
+                topHelping = topHelping,
+                opponentTopHelpings = HelpingCollection.empty()
+            ),
             dyeCount = dyeCount,
             usedSides = usedSides,
             pointsSoFar = pointsSoFar,
-            availableHelpings = availableHelpings,
-            topHelping = topHelping,
-            opponentTopHelpings = HelpingCollection.empty(),
         )
         assertAll(
             (valueFunction.valueRange).map { value ->

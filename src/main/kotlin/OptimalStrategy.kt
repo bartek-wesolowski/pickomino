@@ -5,28 +5,24 @@ data object OptimalStrategy : Strategy {
     private val pickomino = Pickomino(ValueFunction.WormsFromAvailableHelpings)
 
     override fun shouldContinue(
+        gameState: GameState,
         dyeCount: Int,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
-        availableHelpings: HelpingCollection,
-        topHelping: Helping?,
-        opponentTopHelpings: HelpingCollection
     ): Boolean {
         val wormsIfContinued = pickomino.getResultDistribution(
+            gameState,
             dyeCount,
             usedSides,
             pointsSoFar,
-            availableHelpings,
-            topHelping,
-            opponentTopHelpings,
         ).getExpectedValue()
         return if (Side.WORM in usedSides) {
             var wormsIfStopped = max(
-                availableHelpings.getExactOrSmaller(pointsSoFar)?.getWorms() ?: 0,
-                opponentTopHelpings.getOrNull(pointsSoFar)?.getWorms() ?: 0
+                gameState.availableHelpings.getExactOrSmaller(pointsSoFar)?.getWorms() ?: 0,
+                gameState.opponentTopHelpings.getOrNull(pointsSoFar)?.getWorms() ?: 0
             )
-            if (wormsIfStopped == 0 && topHelping != null) {
-                wormsIfStopped = -topHelping.getWorms()
+            if (wormsIfStopped == 0 && gameState.topHelping != null) {
+                wormsIfStopped = -gameState.topHelping.getWorms()
             }
             wormsIfContinued > wormsIfStopped
         } else {
@@ -35,12 +31,10 @@ data object OptimalStrategy : Strategy {
     }
 
     override fun chooseSymbol(
+        gameState: GameState,
         roll: List<Side>,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
-        availableHelpings: HelpingCollection,
-        topHelping: Helping?,
-        opponentTopHelpings: HelpingCollection
     ): Side? {
         val symbols = EnumSet.copyOf(roll)
         var bestSymbol: Side? = null
@@ -49,12 +43,10 @@ data object OptimalStrategy : Strategy {
             if (symbol in usedSides) continue
             val symbolCount = roll.count { it == symbol }
             val expectedValue = pickomino.getResultDistribution(
+                gameState = gameState,
                 dyeCount = roll.size - symbolCount,
                 usedSides = usedSides.withUsed(symbol),
                 pointsSoFar = pointsSoFar + symbol.value * symbolCount,
-                availableHelpings = availableHelpings,
-                topHelping = topHelping,
-                opponentTopHelpings = opponentTopHelpings
             ).getExpectedValue()
             if (expectedValue > bestValue) {
                 bestSymbol = symbol

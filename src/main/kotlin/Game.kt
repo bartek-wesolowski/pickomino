@@ -16,7 +16,8 @@ class Game(private val players: List<Player>) {
             val opponentTopHelpings = HelpingCollection.fromHelpings(
                 lastPlayerHelpings.filterNotNull().filter { it != topHelping }
             )
-            val points = simulatePlayerTurn(players[playerIndex].strategy, availableHelpings, topHelping, opponentTopHelpings)
+            val gameState = GameState(availableHelpings, topHelping, opponentTopHelpings)
+            val points = simulatePlayerTurn(gameState, players[playerIndex].strategy)
             if (points != 0) {
                 println("points: $points")
             }
@@ -78,12 +79,7 @@ class Game(private val players: List<Player>) {
         }
     }
 
-    private fun simulatePlayerTurn(
-        strategy: Strategy,
-        availableHelpings: HelpingCollection,
-        topHelping: Helping?,
-        opponentTopHelpings: HelpingCollection
-    ): Int {
+    private fun simulatePlayerTurn(gameState: GameState, strategy: Strategy): Int {
         var dyeCount = 8
         var pointsSoFar = 0
         val usedSides = EnumSet.noneOf(Side::class.java)
@@ -91,8 +87,7 @@ class Game(private val players: List<Player>) {
         do {
             val roll = randomRoll(dyeCount)
             println("roll: ${roll.sorted()}")
-            val symbolChosen =
-                strategy.chooseSymbol(roll, usedSides, pointsSoFar, availableHelpings, topHelping, opponentTopHelpings)
+            val symbolChosen = strategy.chooseSymbol(gameState, roll, usedSides, pointsSoFar)
             if (symbolChosen == null) {
                 println("cannot choose any symbol")
                 return 0
@@ -103,14 +98,7 @@ class Game(private val players: List<Player>) {
             println("points so far: $pointsSoFar")
             dyeCount -= symbolCount
             usedSides.add(symbolChosen)
-            shouldContinue = strategy.shouldContinue(
-                dyeCount,
-                usedSides,
-                pointsSoFar,
-                availableHelpings,
-                topHelping,
-                opponentTopHelpings
-            )
+            shouldContinue = strategy.shouldContinue(gameState, dyeCount, usedSides, pointsSoFar)
             println("continue rolling: $shouldContinue")
         } while (dyeCount > 0 && shouldContinue)
         return if (Side.WORM in usedSides) pointsSoFar else 0

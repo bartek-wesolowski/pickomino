@@ -7,31 +7,29 @@ fun main() {
     val roll = rollOf(2, 2, 2, 3, 4, 6)
     val usedSides = EnumSet.of(Side.FIVE, Side.THREE, Side.WORM)
     val pointsSoFar = 21
-    val availableHelpings = HelpingCollection.fromPoints(24, 27, 29, 31, 32, 33, 34, 35, 36)
-    val topHelping = Helping.fromPoints(30)
-    val opponentTopHelpings = HelpingCollection.fromPoints(22)
+    val gameState = GameState(
+        availableHelpings = HelpingCollection.fromPoints(24, 27, 29, 31, 32, 33, 34, 35, 36),
+        topHelping = Helping.fromPoints(30),
+        opponentTopHelpings = HelpingCollection.fromPoints(22)
+    )
 
     println("Result distribution")
     println(
         pickomino.getResultDistribution(
+            gameState = gameState,
             dyeCount = dyeCount,
             usedSides = usedSides,
             pointsSoFar = pointsSoFar,
-            availableHelpings = availableHelpings,
-            topHelping = topHelping,
-            opponentTopHelpings = opponentTopHelpings,
         )
             .toPrettyString()
     )
     println()
 
     val advice = pickomino.getAdvice(
+        gameState = gameState,
         roll = roll,
         usedSides = usedSides,
         pointsSoFar = pointsSoFar,
-        availableHelpings = availableHelpings,
-        topHelping = topHelping,
-        opponentTopHelpings = opponentTopHelpings,
     )
     println("Advice")
     for ((symbol, resultDistribution) in advice) {
@@ -45,23 +43,19 @@ fun main() {
     println(
         "Symbol chosen: " +
         OptimalStrategy.chooseSymbol(
+            gameState = gameState,
             roll = roll,
             usedSides = usedSides,
             pointsSoFar = pointsSoFar,
-            availableHelpings = availableHelpings,
-            opponentTopHelpings = opponentTopHelpings,
-            topHelping = topHelping
         )
     )
     println(
         "Should continue: " +
         OptimalStrategy.shouldContinue(
+            gameState = gameState,
             dyeCount = dyeCount,
             usedSides = usedSides,
             pointsSoFar = pointsSoFar,
-            availableHelpings = availableHelpings,
-            opponentTopHelpings = opponentTopHelpings,
-            topHelping = topHelping
         )
     )
 }

@@ -19,12 +19,15 @@ internal class PickominoResultDistributionForCombinationTest {
         resultDistribution: ResultDistribution<V>
     ) {
         val actual = pickomino.getResultDistributionForCombination(
+            gameState = GameState(
+                availableHelpings = HelpingCollection.all(),
+                topHelping = null,
+                opponentTopHelpings = HelpingCollection.empty(),
+            ),
             combination = combination,
             usedSides = usedSides,
             pointsSoFar = pointsSoFar,
-            availableHelpings = HelpingCollection.all(),
-            topHelping = null,
-            opponentTopHelpings = HelpingCollection.empty(),
+
             memo = mutableMapOf()
         )
         for (value in ValueFunction.Points.valueRange) {

@@ -9,10 +9,12 @@ internal class ValueFunctionTest {
         assertEquals(
             -1,
             ValueFunction.WormsFromAvailableHelpings.getValue(
-                points = 19,
-                availableHelpings = HelpingCollection.fromPoints(24),
-                topHelping = Helping.fromPoints(23),
-                opponentTopHelpings = HelpingCollection.empty()
+                gameState = GameState(
+                    availableHelpings = HelpingCollection.fromPoints(24),
+                    topHelping = Helping.fromPoints(23),
+                    opponentTopHelpings = HelpingCollection.empty()
+                ),
+                points = 19
             )
         )
     }
@@ -25,10 +27,12 @@ internal class ValueFunctionTest {
                     assertEquals(
                         if (points <= 36) Helping.fromPoints(points)?.getWorms() ?: 0 else 4,
                         ValueFunction.WormsFromAvailableHelpings.getValue(
-                            points = points,
-                            availableHelpings = HelpingCollection.all(),
-                            topHelping = null,
-                            opponentTopHelpings = HelpingCollection.empty()
+                            GameState(
+                                availableHelpings = HelpingCollection.all(),
+                                topHelping = null,
+                                opponentTopHelpings = HelpingCollection.empty()
+                            ),
+                            points = points
                         ),
                         "Value for $points points"
                     )

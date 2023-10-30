@@ -3,12 +3,10 @@ import java.util.EnumSet
 class Pickomino<V : ValueFunction>(private val valueFunction: V) {
 
     fun getResultDistribution(
+        gameState: GameState,
         dyeCount: Int,
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
         pointsSoFar: Int = 0,
-        availableHelpings: HelpingCollection,
-        topHelping: Helping?,
-        opponentTopHelpings: HelpingCollection,
         memo: MutableMap<Key, ResultDistribution<V>> = mutableMapOf()
     ): ResultDistribution<V> {
         require(dyeCount >= 0) { "dyeCount cannot be negative" }
@@ -16,14 +14,14 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
         if (memo.containsKey(key)) {
             return memo.getValue(key)
         }
-        val valueSoFar = valueFunction.getValue(pointsSoFar, availableHelpings, topHelping, opponentTopHelpings)
+        val valueSoFar = valueFunction.getValue(gameState, pointsSoFar)
         if (dyeCount == 0) {
             val result = if (Side.WORM in usedSides) {
                 ResultDistribution.single(valueFunction, valueSoFar)
             } else {
                 ResultDistribution.single(
                     valueFunction,
-                    valueFunction.getValue(0, availableHelpings, topHelping, opponentTopHelpings)
+                    valueFunction.getValue(gameState, 0)
                 )
             }
             memo[key] = result
@@ -33,24 +31,15 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
         val combinationProbability = sixth[dyeCount]
         for (combination in combinations(dyeCount)) {
             val combinationResultDistribution = getResultDistributionForCombination(
+                gameState,
                 combination,
                 usedSides,
                 pointsSoFar,
-                availableHelpings,
-                topHelping,
-                opponentTopHelpings,
                 memo
             )
             resultDistribution.merge(combinationResultDistribution, combinationProbability)
         }
-        resultDistribution.setFailedIfEmpty(
-            valueFunction.getValue(
-                0,
-                availableHelpings,
-                topHelping,
-                opponentTopHelpings
-            )
-        )
+        resultDistribution.setFailedIfEmpty(valueFunction.getValue(gameState, 0))
         val result = if (Side.WORM in usedSides) {
             val expectedValue = resultDistribution.getExpectedValue()
             val successProbability = resultDistribution.getSuccessProbability()
@@ -67,12 +56,10 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
     }
 
     internal fun getResultDistributionForCombination(
+        gameState: GameState,
         combination: List<Side>,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
-        availableHelpings: HelpingCollection,
-        topHelping: Helping?,
-        opponentTopHelpings: HelpingCollection,
         memo: MutableMap<Key, ResultDistribution<V>>
     ): ResultDistribution<V> {
         val symbols = EnumSet.copyOf(combination)
@@ -86,49 +73,34 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
                 if (Side.WORM in usedSides || symbol == Side.WORM) {
                     ResultDistribution.single(
                         valueFunction,
-                        valueFunction.getValue(
-                            pointsSoFar + symbolsValue,
-                            availableHelpings,
-                            topHelping,
-                            opponentTopHelpings
-                        )
+                        valueFunction.getValue(gameState, pointsSoFar + symbolsValue)
                     )
                 } else {
                     return ResultDistribution.single(
                         valueFunction,
-                        valueFunction.getValue(0, availableHelpings, topHelping, opponentTopHelpings)
+                        valueFunction.getValue(gameState, 0)
                     )
                 }
             } else {
                 getResultDistribution(
+                    gameState = gameState,
                     dyeCount = combination.size - symbolCount,
                     usedSides = usedSides.withUsed(symbol),
                     pointsSoFar = pointsSoFar + symbolsValue,
-                    availableHelpings = availableHelpings,
-                    topHelping = topHelping,
-                    opponentTopHelpings = opponentTopHelpings,
                     memo = memo
                 )
             }
             val canTakeDecision = Side.WORM in usedSides || symbol == Side.WORM
             val symbolResultDistributionAfterDecision =
                 if (!canTakeDecision || symbolResultDistribution.getExpectedValue() > valueFunction.getValue(
-                        pointsSoFar + symbolsValue,
-                        availableHelpings,
-                        topHelping,
-                        opponentTopHelpings
+                        gameState, pointsSoFar + symbolsValue
                     )
                 ) {
                     symbolResultDistribution
                 } else {
                     ResultDistribution.single(
                         valueFunction,
-                        valueFunction.getValue(
-                            pointsSoFar + symbolsValue,
-                            availableHelpings,
-                            topHelping,
-                            opponentTopHelpings
-                        )
+                        valueFunction.getValue(gameState, pointsSoFar + symbolsValue)
                     )
                 }
             val symbolExpectedValueAfterDecision = symbolResultDistributionAfterDecision.getExpectedValue()
@@ -138,23 +110,16 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
             }
         }
         combinationBestResultDistribution.setFailedIfEmpty(
-            valueFunction.getValue(
-                0,
-                availableHelpings,
-                topHelping,
-                opponentTopHelpings
-            )
+            valueFunction.getValue(gameState, 0)
         )
         return combinationBestResultDistribution
     }
 
     fun getAdvice(
+        gameState: GameState,
         roll: List<Side>,
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
         pointsSoFar: Int,
-        availableHelpings: HelpingCollection,
-        topHelping: Helping?,
-        opponentTopHelpings: HelpingCollection,
     ): Map<Side, ResultDistribution<V>> {
         val advice = mutableMapOf<Side, ResultDistribution<V>>()
         for (side in roll) {
@@ -162,12 +127,10 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
             if (side in advice) continue
             val count = roll.count { it == side }
             val resultDistribution = getResultDistribution(
+                gameState = gameState,
                 dyeCount = roll.size - count,
                 usedSides = usedSides.withUsed(side),
                 pointsSoFar = pointsSoFar + side.value * count,
-                availableHelpings = availableHelpings,
-                topHelping = topHelping,
-                opponentTopHelpings = opponentTopHelpings,
             )
             advice[side] = resultDistribution
         }
