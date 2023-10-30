@@ -1,6 +1,6 @@
 import kotlin.math.max
 
-sealed class ValueFunction(val maxValue: Int) {
+sealed class ValueFunction(val valueRange: IntRange) {
     abstract fun getValue(
         points: Int,
         availableHelpings: HelpingCollection,
@@ -8,7 +8,7 @@ sealed class ValueFunction(val maxValue: Int) {
         opponentTopHelpings: HelpingCollection
     ): Int
 
-    data object Worms : ValueFunction(maxValue = 4) {
+    data object Worms : ValueFunction(0..4) {
         override fun getValue(
             points: Int,
             availableHelpings: HelpingCollection,
@@ -20,7 +20,7 @@ sealed class ValueFunction(val maxValue: Int) {
         }
     }
 
-    data object WormsFromAvailableHelpings : ValueFunction(maxValue = 4) {
+    data object WormsFromAvailableHelpings : ValueFunction(-4..4) {
         override fun getValue(
             points: Int,
             availableHelpings: HelpingCollection,
@@ -43,7 +43,7 @@ sealed class ValueFunction(val maxValue: Int) {
         }
     }
 
-    data object Points : ValueFunction(maxValue = 40) {
+    data object Points : ValueFunction(0..40) {
         override fun getValue(
             points: Int,
             availableHelpings: HelpingCollection,
