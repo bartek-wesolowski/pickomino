@@ -72,7 +72,7 @@ class Pickomino {
         memo: MutableMap<Key, ResultDistribution>
     ): ResultDistribution {
         val symbols = EnumSet.copyOf(combination)
-        var combinationBestValue = 0.0
+        var combinationBestValue = Double.NEGATIVE_INFINITY
         var combinationBestResultDistribution = ResultDistribution(valueFunction.maxValue)
         for (symbol in symbols) {
             if (symbol in usedSides) continue
