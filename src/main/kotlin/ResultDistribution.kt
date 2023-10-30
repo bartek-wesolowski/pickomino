@@ -51,5 +51,13 @@ class ResultDistribution<V: ValueFunction>(private val valueFunction: V) {
         fun <V: ValueFunction> single(valueFunction: V, value: Int) = ResultDistribution(valueFunction).apply {
             probability[value - valueFunction.valueRange.first] = 1.0
         }
+
+        fun <V: ValueFunction> singleForPoints(
+            valueFunction: V,
+            gameState: GameState,
+            points: Int
+        ) = ResultDistribution(valueFunction).apply {
+            probability[valueFunction.getValue(gameState, points) - valueFunction.valueRange.first] = 1.0
+        }
     }
 }

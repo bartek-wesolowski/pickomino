@@ -19,10 +19,7 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
             val result = if (Side.WORM in usedSides) {
                 ResultDistribution.single(valueFunction, valueSoFar)
             } else {
-                ResultDistribution.single(
-                    valueFunction,
-                    valueFunction.getValue(gameState, 0)
-                )
+                ResultDistribution.singleForPoints(valueFunction, gameState, 0)
             }
             memo[key] = result
             return result
@@ -71,15 +68,9 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
             val symbolsValue = symbolCount * symbol.value
             val symbolResultDistribution = if (symbolCount == combination.size) {
                 if (Side.WORM in usedSides || symbol == Side.WORM) {
-                    ResultDistribution.single(
-                        valueFunction,
-                        valueFunction.getValue(gameState, pointsSoFar + symbolsValue)
-                    )
+                    ResultDistribution.singleForPoints(valueFunction, gameState, pointsSoFar + symbolsValue)
                 } else {
-                    return ResultDistribution.single(
-                        valueFunction,
-                        valueFunction.getValue(gameState, 0)
-                    )
+                    return ResultDistribution.singleForPoints(valueFunction, gameState, 0)
                 }
             } else {
                 getResultDistribution(
@@ -98,10 +89,7 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
                 ) {
                     symbolResultDistribution
                 } else {
-                    ResultDistribution.single(
-                        valueFunction,
-                        valueFunction.getValue(gameState, pointsSoFar + symbolsValue)
-                    )
+                    ResultDistribution.singleForPoints(valueFunction, gameState, pointsSoFar + symbolsValue)
                 }
             val symbolExpectedValueAfterDecision = symbolResultDistributionAfterDecision.getExpectedValue()
             if (symbolExpectedValueAfterDecision > combinationBestValue) {
