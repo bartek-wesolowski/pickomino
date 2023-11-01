@@ -11,8 +11,9 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
     ): ResultDistribution<V> {
         require(dyeCount >= 0) { "dyeCount cannot be negative" }
         val key = Key(dyeCount, usedSides, pointsSoFar)
-        if (memo.containsKey(key)) {
-            return memo.getValue(key)
+        val cachedResultDistribution = memo[key]
+        if (cachedResultDistribution != null) {
+            return cachedResultDistribution
         }
         val valueSoFar = valueFunction.getValue(gameState, pointsSoFar)
         if (dyeCount == 0) {
