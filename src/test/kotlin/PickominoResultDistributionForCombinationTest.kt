@@ -12,11 +12,11 @@ internal class PickominoResultDistributionForCombinationTest {
 
     @ParameterizedTest(name = "result distribution for combination: {0}, value function: {1}, dye count: {2}, used sides: {3}, points so far {4}")
     @MethodSource("getParameters")
-    fun <V: ValueFunction> test(
+    fun test(
         combination: List<Side>,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
-        resultDistribution: ResultDistribution<V>
+        resultDistribution: ResultDistribution
     ) {
         val actual = pickomino.getResultDistributionForCombination(
             gameState = GameState(
@@ -41,26 +41,26 @@ internal class PickominoResultDistributionForCombinationTest {
             return Stream.of(
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.ONE),
-                    resultDistribution = ResultDistribution.single(Points, 0)
+                    resultDistribution = SingleResultDistribution(0)
                 ),
                 argumentsOf(
                     combination = listOf(Side.TWO, Side.TWO),
-                    resultDistribution = ResultDistribution.single(Points, 0)
+                    resultDistribution = SingleResultDistribution(0)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
-                    resultDistribution = ResultDistribution(Points).apply {
+                    resultDistribution = ArrayResultDistribution(Points).apply {
                         this[0] = 5.0 / 6
                         this[7] = 1.0 / 6
                     }
                 ),
                 argumentsOf(
                     combination = listOf(Side.WORM, Side.WORM),
-                    resultDistribution = ResultDistribution.single(Points, 10)
+                    resultDistribution = SingleResultDistribution(10)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.WORM),
-                    resultDistribution = ResultDistribution(Points).apply {
+                    resultDistribution = ArrayResultDistribution(Points).apply {
                         this[0] = 1.0 / 6
                         this[6] = 1.0 / 6
                         this[7] = 1.0 / 6
@@ -73,19 +73,19 @@ internal class PickominoResultDistributionForCombinationTest {
                     combination = listOf(Side.ONE, Side.ONE),
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution.single(Points, 7)
+                    resultDistribution = SingleResultDistribution(7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution.single(Points, 7)
+                    resultDistribution = SingleResultDistribution(7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.THREE),
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution.single(Points, 8)
+                    resultDistribution = SingleResultDistribution(8)
                 ),
             )
         }
@@ -94,7 +94,7 @@ internal class PickominoResultDistributionForCombinationTest {
             combination: List<Side>,
             usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
             pointsSoFar: Int = 0,
-            resultDistribution: ResultDistribution<Points>
+            resultDistribution: ResultDistribution
         ): Arguments = Arguments.of(
             combination,
             usedSides,

@@ -21,7 +21,6 @@ fun main() {
             usedSides = usedSides,
             pointsSoFar = pointsSoFar,
         )
-            .toPrettyString()
     )
     println()
 
@@ -36,7 +35,7 @@ fun main() {
         print("$symbol worms: ")
         print("%.3f".format(resultDistribution.getExpectedValue()))
         print(" ")
-        println(resultDistribution.toPrettyString())
+        println(resultDistribution)
     }
     println()
 
