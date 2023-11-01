@@ -1,7 +1,7 @@
 import java.util.EnumSet
 
 fun main() {
-    val pickomino = Pickomino(ValueFunction.WormsFromAvailableHelpings)
+    val pickomino = Pickomino(WormsFromAvailableHelpings)
 
     val dyeCount = 3
     val roll = rollOf(2, 2, 2, 3, 4, 6)

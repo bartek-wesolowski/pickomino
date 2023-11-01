@@ -7,7 +7,7 @@ import java.util.stream.Stream
 
 internal class PickominoResultDistributionForCombinationTest {
 
-    private val pickomino = Pickomino(ValueFunction.Points)
+    private val pickomino = Pickomino(Points)
     private val epsilon = 0.000000000000001
 
     @ParameterizedTest(name = "result distribution for combination: {0}, value function: {1}, dye count: {2}, used sides: {3}, points so far {4}")
@@ -30,7 +30,7 @@ internal class PickominoResultDistributionForCombinationTest {
 
             memo = mutableMapOf()
         )
-        for (value in ValueFunction.Points.valueRange) {
+        for (value in Points.valueRange) {
             assertEquals(resultDistribution[value], actual[value], epsilon)
         }
     }
@@ -41,26 +41,26 @@ internal class PickominoResultDistributionForCombinationTest {
             return Stream.of(
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.ONE),
-                    resultDistribution = ResultDistribution.single(ValueFunction.Points, 0)
+                    resultDistribution = ResultDistribution.single(Points, 0)
                 ),
                 argumentsOf(
                     combination = listOf(Side.TWO, Side.TWO),
-                    resultDistribution = ResultDistribution.single(ValueFunction.Points, 0)
+                    resultDistribution = ResultDistribution.single(Points, 0)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
-                    resultDistribution = ResultDistribution(ValueFunction.Points).apply {
+                    resultDistribution = ResultDistribution(Points).apply {
                         this[0] = 5.0 / 6
                         this[7] = 1.0 / 6
                     }
                 ),
                 argumentsOf(
                     combination = listOf(Side.WORM, Side.WORM),
-                    resultDistribution = ResultDistribution.single(ValueFunction.Points, 10)
+                    resultDistribution = ResultDistribution.single(Points, 10)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.WORM),
-                    resultDistribution = ResultDistribution(ValueFunction.Points).apply {
+                    resultDistribution = ResultDistribution(Points).apply {
                         this[0] = 1.0 / 6
                         this[6] = 1.0 / 6
                         this[7] = 1.0 / 6
@@ -73,19 +73,19 @@ internal class PickominoResultDistributionForCombinationTest {
                     combination = listOf(Side.ONE, Side.ONE),
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution.single(ValueFunction.Points, 7)
+                    resultDistribution = ResultDistribution.single(Points, 7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.TWO),
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution.single(ValueFunction.Points, 7)
+                    resultDistribution = ResultDistribution.single(Points, 7)
                 ),
                 argumentsOf(
                     combination = listOf(Side.ONE, Side.THREE),
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution.single(ValueFunction.Points, 8)
+                    resultDistribution = ResultDistribution.single(Points, 8)
                 ),
             )
         }
@@ -94,7 +94,7 @@ internal class PickominoResultDistributionForCombinationTest {
             combination: List<Side>,
             usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
             pointsSoFar: Int = 0,
-            resultDistribution: ResultDistribution<ValueFunction.Points>
+            resultDistribution: ResultDistribution<Points>
         ): Arguments = Arguments.of(
             combination,
             usedSides,

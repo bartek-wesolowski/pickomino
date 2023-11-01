@@ -51,18 +51,18 @@ internal class PickominoResultDistributionTest {
             return Stream.of(
                 argumentsOf(
                     dyeCount = 1,
-                    valueFunction = ValueFunction.Points,
-                    resultDistribution = ResultDistribution(ValueFunction.Points).apply {
+                    valueFunction = Points,
+                    resultDistribution = ResultDistribution(Points).apply {
                         this[0] = 5.0 / 6
                         this[5] = 1.0 / 6
                     }
                 ),
                 argumentsOf(
                     dyeCount = 1,
-                    valueFunction = ValueFunction.Points,
+                    valueFunction = Points,
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution(ValueFunction.Points).apply {
+                    resultDistribution = ResultDistribution(Points).apply {
                         this[0] = 1.0 / 6
                         this[6] = 1.0 / 6
                         this[7] = 1.0 / 6
@@ -73,8 +73,8 @@ internal class PickominoResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 2,
-                    valueFunction = ValueFunction.Points,
-                    resultDistribution = ResultDistribution(ValueFunction.Points).apply {
+                    valueFunction = Points,
+                    resultDistribution = ResultDistribution(Points).apply {
                         this[0] = 140.0 / 216
                         this[6] = 10.0 / 216
                         this[7] = 12.0 / 216
@@ -85,10 +85,10 @@ internal class PickominoResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 2,
-                    valueFunction = ValueFunction.Points,
+                    valueFunction = Points,
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
-                    resultDistribution = ResultDistribution(ValueFunction.Points).apply {
+                    resultDistribution = ResultDistribution(Points).apply {
                         this[0] = 10.0 / 216
                         this[7] = 30.0 / 216
                         this[8] = 38.0 / 216
@@ -102,8 +102,8 @@ internal class PickominoResultDistributionTest {
                 // snapshot tests
                 argumentsOf(
                     dyeCount = 8,
-                    valueFunction = ValueFunction.Worms,
-                    resultDistribution = ResultDistribution(ValueFunction.Worms).apply {
+                    valueFunction = Worms,
+                    resultDistribution = ResultDistribution(Worms).apply {
                         this[0] = 0.2322383576478062
                         this[1] = 0.16763793705696214
                         this[2] = 0.3631946313179833
@@ -113,8 +113,8 @@ internal class PickominoResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 8,
-                    valueFunction = ValueFunction.WormsFromAvailableHelpings,
-                    resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings).apply {
+                    valueFunction = WormsFromAvailableHelpings,
+                    resultDistribution = ResultDistribution(WormsFromAvailableHelpings).apply {
                         this[0] = 0.2322383576478062
                         this[1] = 0.16763793705696214
                         this[2] = 0.3631946313179833
@@ -124,9 +124,9 @@ internal class PickominoResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 8,
-                    valueFunction = ValueFunction.WormsFromAvailableHelpings,
+                    valueFunction = WormsFromAvailableHelpings,
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
-                    resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings).apply {
+                    resultDistribution = ResultDistribution(WormsFromAvailableHelpings).apply {
                         this[0] = 0.8061207349999395
                         this[3] = 0.13387599671521075
                         this[4] = 0.06000326829412743
@@ -134,9 +134,9 @@ internal class PickominoResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 8,
-                    valueFunction = ValueFunction.WormsFromAvailableHelpings,
+                    valueFunction = WormsFromAvailableHelpings,
                     availableHelpings = HelpingCollection.fromPoints(31, 33),
-                    resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings).apply {
+                    resultDistribution = ResultDistribution(WormsFromAvailableHelpings).apply {
                         this[0] = 0.8061207349999395
                         this[3] = 0.13387599671521075
                         this[4] = 0.06000326829412743
@@ -144,10 +144,10 @@ internal class PickominoResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 8,
-                    valueFunction = ValueFunction.WormsFromAvailableHelpings,
+                    valueFunction = WormsFromAvailableHelpings,
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     topHelping = Helping.fromPoints(21),
-                    resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings).apply {
+                    resultDistribution = ResultDistribution(WormsFromAvailableHelpings).apply {
                         this[-1] = 0.8060193325207861
                         this[3] = 0.1342935351951597
                         this[4] = 0.059687132281632624
@@ -155,10 +155,10 @@ internal class PickominoResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 8,
-                    valueFunction = ValueFunction.WormsFromAvailableHelpings,
+                    valueFunction = WormsFromAvailableHelpings,
                     availableHelpings = HelpingCollection.fromPoints(31, 33),
                     topHelping = Helping.fromPoints(21),
-                    resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings).apply {
+                    resultDistribution = ResultDistribution(WormsFromAvailableHelpings).apply {
                         this[-1] = 0.8060193325207861
                         this[3] = 0.1342935351951597
                         this[4] = 0.059687132281632624
@@ -166,10 +166,10 @@ internal class PickominoResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 8,
-                    valueFunction = ValueFunction.WormsFromAvailableHelpings,
+                    valueFunction = WormsFromAvailableHelpings,
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     topHelping = Helping.fromPoints(25),
-                    resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings).apply {
+                    resultDistribution = ResultDistribution(WormsFromAvailableHelpings).apply {
                         this[-2] = 0.8060186854631007
                         this[3] = 0.1342969707120195
                         this[4] = 0.059684343822960916
@@ -177,10 +177,10 @@ internal class PickominoResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 8,
-                    valueFunction = ValueFunction.WormsFromAvailableHelpings,
+                    valueFunction = WormsFromAvailableHelpings,
                     availableHelpings = HelpingCollection.fromPoints(31, 33),
                     topHelping = Helping.fromPoints(25),
-                    resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings).apply {
+                    resultDistribution = ResultDistribution(WormsFromAvailableHelpings).apply {
                         this[-2] = 0.8060186854631007
                         this[3] = 0.1342969707120195
                         this[4] = 0.059684343822960916
@@ -188,10 +188,10 @@ internal class PickominoResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 8,
-                    valueFunction = ValueFunction.WormsFromAvailableHelpings,
+                    valueFunction = WormsFromAvailableHelpings,
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     topHelping = Helping.fromPoints(29),
-                    resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings).apply {
+                    resultDistribution = ResultDistribution(WormsFromAvailableHelpings).apply {
                         this[-3] = 0.8060029048102788
                         this[3] = 0.13439898586518664
                         this[4] = 0.059598109315630435
@@ -199,10 +199,10 @@ internal class PickominoResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 8,
-                    valueFunction = ValueFunction.WormsFromAvailableHelpings,
+                    valueFunction = WormsFromAvailableHelpings,
                     availableHelpings = HelpingCollection.fromPoints(31, 33),
                     topHelping = Helping.fromPoints(29),
-                    resultDistribution = ResultDistribution(ValueFunction.WormsFromAvailableHelpings).apply {
+                    resultDistribution = ResultDistribution(WormsFromAvailableHelpings).apply {
                         this[-3] = 0.8060029048102788
                         this[3] = 0.13439898586518664
                         this[4] = 0.059598109315630435
@@ -210,10 +210,10 @@ internal class PickominoResultDistributionTest {
                 ),
                 argumentsOf(
                     dyeCount = 8,
-                    valueFunction = ValueFunction.Points,
+                    valueFunction = Points,
                     availableHelpings = HelpingCollection.fromPoints(31, 32, 33, 34),
                     topHelping = Helping.fromPoints(25),
-                    resultDistribution = ResultDistribution(ValueFunction.Points).apply {
+                    resultDistribution = ResultDistribution(Points).apply {
                         this[0] = 0.08655269719808172
                         this[11] = 4.621874520193569E-6
                         this[12] = 2.5628979776412135E-6

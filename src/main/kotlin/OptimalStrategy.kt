@@ -2,7 +2,7 @@ import java.util.EnumSet
 import kotlin.math.max
 
 data object OptimalStrategy : Strategy {
-    private val pickomino = Pickomino(ValueFunction.WormsFromAvailableHelpings)
+    private val pickomino = Pickomino(WormsFromAvailableHelpings)
 
     override fun shouldContinue(
         gameState: GameState,
