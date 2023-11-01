@@ -8,7 +8,7 @@ class ArrayResultDistribution<V: ValueFunction>(private val valueFunction: V): R
     private val size = valueFunction.valueRange.last - valueFunction.valueRange.first + 1
     private val probability: DoubleArray = DoubleArray(size)
 
-    internal constructor(valueFunction: V, vararg probabilities: Pair<Int, Double>): this(valueFunction) {
+    internal constructor(valueFunction: V, probabilities: Iterable<Pair<Int, Double>>): this(valueFunction) {
         probabilities.forEach { (value, p) ->
             probability[value - valueFunction.valueRange.first] = p
         }

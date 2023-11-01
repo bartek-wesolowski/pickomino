@@ -51,8 +51,10 @@ internal class PickominoResultDistributionForCombinationTest {
                     combination = listOf(Side.ONE, Side.TWO),
                     resultDistribution = ArrayResultDistribution(
                         Points,
-                        0 to 5.0 / 6,
-                        7 to 1.0 / 6
+                        listOf(
+                            0 to 5.0 / 6,
+                            7 to 1.0 / 6
+                        )
                     )
                 ),
                 argumentsOf(
@@ -63,12 +65,14 @@ internal class PickominoResultDistributionForCombinationTest {
                     combination = listOf(Side.ONE, Side.WORM),
                     resultDistribution = ArrayResultDistribution(
                         Points,
-                        0 to 1.0 / 6,
-                        6 to 1.0 / 6,
-                        7 to 1.0 / 6,
-                        8 to 1.0 / 6,
-                        9 to 1.0 / 6,
-                        10 to 1.0 / 6
+                        listOf(
+                            0 to 1.0 / 6,
+                            6 to 1.0 / 6,
+                            7 to 1.0 / 6,
+                            8 to 1.0 / 6,
+                            9 to 1.0 / 6,
+                            10 to 1.0 / 6
+                        )
                     )
                 ),
                 argumentsOf(
