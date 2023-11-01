@@ -3,7 +3,10 @@ import java.text.DecimalFormat
 private val percentageFormat by lazy { DecimalFormat("#,##0.00'%'") }
 
 class ResultDistribution<V: ValueFunction>(private val valueFunction: V) {
-    private val probability: DoubleArray = DoubleArray(valueFunction.valueRange.count())
+    private val probability: DoubleArray = DoubleArray(
+        // count() is much slower then doing the manual calculation
+        valueFunction.valueRange.last - valueFunction.valueRange.first + 1
+    )
 
     fun getExpectedValue(): Double {
         var expectedValue = 0.0
