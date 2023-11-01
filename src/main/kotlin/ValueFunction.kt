@@ -35,7 +35,7 @@ data object WormsFromAvailableHelpings : ValueFunction {
 }
 
 data object AnyWormFromAvailableHelpings : ValueFunction {
-    override val valueRange = -4..4
+    override val valueRange = -1..1
 
     override fun getValue(gameState: GameState, points: Int): Int {
         val worms = max(
