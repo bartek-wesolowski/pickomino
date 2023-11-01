@@ -6,12 +6,13 @@ class ArrayResultDistributionTest {
 
     @Test
     fun `contains correct values`() {
-        val resultDistribution = ArrayResultDistribution(WormsFromAvailableHelpings).apply {
-            set(-1, 0.2)
-            set(1, 0.45)
-            set(2, 0.3)
-            set(3, 0.05)
-        }
+        val resultDistribution = ArrayResultDistribution(
+            WormsFromAvailableHelpings,
+            -1 to 0.2,
+            1 to 0.45,
+            2 to 0.3,
+            3 to 0.05,
+        )
         assertEquals(0.0, resultDistribution[-2])
         assertEquals(0.2, resultDistribution[-1])
         assertEquals(0.45, resultDistribution[1])
@@ -22,23 +23,25 @@ class ArrayResultDistributionTest {
 
     @Test
     fun `expected value is correct`() {
-        val resultDistribution = ArrayResultDistribution(WormsFromAvailableHelpings).apply {
-            set(-1, 0.2)
-            set(1, 0.45)
-            set(2, 0.3)
-            set(3, 0.05)
-        }
+        val resultDistribution = ArrayResultDistribution(
+            WormsFromAvailableHelpings,
+            -1 to 0.2,
+            1 to 0.45,
+            2 to 0.3,
+            3 to 0.05,
+        )
         assertEquals(1.0, resultDistribution.getExpectedValue())
     }
 
     @Test
     fun `iterator works`() {
-        val resultDistribution = ArrayResultDistribution(WormsFromAvailableHelpings).apply {
-            set(-1, 0.2)
-            set(1, 0.45)
-            set(2, 0.3)
-            set(3, 0.05)
-        }
+        val resultDistribution = ArrayResultDistribution(
+            WormsFromAvailableHelpings,
+            -1 to 0.2,
+            1 to 0.45,
+            2 to 0.3,
+            3 to 0.05
+        )
         assertEquals(
             listOf(
                 SimpleEntry(-1, 0.2),

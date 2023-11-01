@@ -8,6 +8,12 @@ class ArrayResultDistribution<V: ValueFunction>(private val valueFunction: V): R
     private val size = valueFunction.valueRange.last - valueFunction.valueRange.first + 1
     private val probability: DoubleArray = DoubleArray(size)
 
+    internal constructor(valueFunction: V, vararg probabilities: Pair<Int, Double>): this(valueFunction) {
+        probabilities.forEach { (value, p) ->
+            probability[value - valueFunction.valueRange.first] = p
+        }
+    }
+
     override operator fun get(value: Int): Double = probability[value - valueFunction.valueRange.first]
 
     override fun getExpectedValue(): Double {
@@ -50,10 +56,6 @@ class ArrayResultDistribution<V: ValueFunction>(private val valueFunction: V): R
         for ((value, p) in other) {
             probability[value - valueFunction.valueRange.first] += p * scale
         }
-    }
-
-    operator fun set(value: Int, p: Double) {
-        probability[value - valueFunction.valueRange.first] = p
     }
 
     override fun toString(): String {
