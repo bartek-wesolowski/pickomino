@@ -37,7 +37,6 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
             )
             resultDistribution.merge(combinationResultDistribution, combinationProbability)
         }
-        resultDistribution.setFailedIfEmpty(valueFunction.getValue(gameState, 0))
         val result = if (Side.WORM in usedSides) {
             val expectedValue = resultDistribution.getExpectedValue()
             val successProbability = resultDistribution.getSuccessProbability()

@@ -46,12 +46,6 @@ class ArrayResultDistribution<V: ValueFunction>(private val valueFunction: V): R
         return successProbability
     }
 
-    fun setFailedIfEmpty(value: Int) {
-        if (probability.all { it == 0.0 }) {
-            probability[value - valueFunction.valueRange.first] = 1.0
-        }
-    }
-
     fun merge(other: ResultDistribution, scale: Double) {
         for ((value, p) in other) {
             probability[value - valueFunction.valueRange.first] += p * scale
