@@ -1,6 +1,7 @@
 import java.util.AbstractMap.SimpleEntry
 
-class SingleResultDistribution(
+@JvmInline
+value class SingleResultDistribution(
     private val value: Int
 ): ResultDistribution {
     override fun get(value: Int) = if (value == this.value) 1.0 else 0.0
