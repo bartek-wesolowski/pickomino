@@ -2,7 +2,7 @@ import java.util.EnumSet
 import kotlin.math.max
 
 data object OptimalStrategy : Strategy {
-    private val pickomino = Pickomino(WormsFromAvailableHelpings)
+    private val resultDistributionCalculator = ResultDistributionCalculator(WormsFromAvailableHelpings)
 
     override fun shouldContinue(
         gameState: GameState,
@@ -10,7 +10,7 @@ data object OptimalStrategy : Strategy {
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
     ): Boolean {
-        val wormsIfContinued = pickomino.getResultDistribution(
+        val wormsIfContinued = resultDistributionCalculator.getResultDistribution(
             gameState,
             dyeCount,
             usedSides,
@@ -41,7 +41,7 @@ data object OptimalStrategy : Strategy {
         for (side in roll.sides) {
             if (side in usedSides) continue
             val sideCount = roll[side]
-            val expectedValue = pickomino.getResultDistribution(
+            val expectedValue = resultDistributionCalculator.getResultDistribution(
                 gameState = gameState,
                 dyeCount = roll.dyeCount - sideCount,
                 usedSides = usedSides.withUsed(side),

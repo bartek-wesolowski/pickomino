@@ -1,6 +1,6 @@
 import java.util.*
 
-class Pickomino<V : ValueFunction>(private val valueFunction: V) {
+class ResultDistributionCalculator<V : ValueFunction>(private val valueFunction: V) {
 
     fun getResultDistribution(
         gameState: GameState,
@@ -52,7 +52,7 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
         return result
     }
 
-    internal fun getResultDistributionForRoll(
+    fun getResultDistributionForRoll(
         gameState: GameState,
         roll: Roll,
         usedSides: EnumSet<Side>,
@@ -99,16 +99,15 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
         return combinationBestResultDistribution ?: SingleResultDistribution(valueFunction.getValue(gameState, 0))
     }
 
-    fun getAdvice(
+    fun getResultDistributionsForAllChoices(
         gameState: GameState,
         roll: Roll,
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
         pointsSoFar: Int,
     ): Map<Side, ResultDistribution> {
-        val advice = mutableMapOf<Side, ResultDistribution>()
+        val resultDistributions = mutableMapOf<Side, ResultDistribution>()
         for (side in roll.sides) {
             if (side in usedSides) continue
-            if (side in advice) continue
             val count = roll[side]
             val resultDistribution = getResultDistribution(
                 gameState = gameState,
@@ -116,9 +115,9 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
                 usedSides = usedSides.withUsed(side),
                 pointsSoFar = pointsSoFar + side.value * count,
             )
-            advice[side] = resultDistribution
+            resultDistributions[side] = resultDistribution
         }
-        return advice
+        return resultDistributions
     }
 
     data class Key(

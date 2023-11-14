@@ -1,7 +1,7 @@
 import java.util.EnumSet
 
 fun main() {
-    val pickomino = Pickomino(WormsFromAvailableHelpings)
+    val resultDistributionCalculator = ResultDistributionCalculator(WormsFromAvailableHelpings)
 
     val dyeCount = 8
     val roll = Roll.of(Side.TWO to 3, Side.THREE to 1, Side.FOUR to 1, Side.WORM to 1)
@@ -15,7 +15,7 @@ fun main() {
 
     println("Result distribution")
     println(
-        pickomino.getResultDistribution(
+        resultDistributionCalculator.getResultDistribution(
             gameState = gameState,
             dyeCount = dyeCount,
             usedSides = usedSides,
@@ -24,7 +24,7 @@ fun main() {
     )
     println()
 
-    val advice = pickomino.getAdvice(
+    val advice = resultDistributionCalculator.getResultDistributionsForAllChoices(
         gameState = gameState,
         roll = roll,
         usedSides = usedSides,

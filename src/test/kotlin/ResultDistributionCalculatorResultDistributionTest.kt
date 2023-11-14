@@ -6,7 +6,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.EnumSet
 import java.util.stream.Stream
 
-internal class PickominoResultDistributionTest {
+internal class ResultDistributionCalculatorResultDistributionTest {
 
     private val epsilon = 0.000000000000001
 
@@ -21,7 +21,7 @@ internal class PickominoResultDistributionTest {
         topHelping: Helping?,
         resultDistribution: ResultDistribution
     ) {
-        val actual = Pickomino(valueFunction).getResultDistribution(
+        val actual = ResultDistributionCalculator(valueFunction).getResultDistribution(
             gameState = GameState(
                 availableHelpings = availableHelpings,
                 topHelping = topHelping,

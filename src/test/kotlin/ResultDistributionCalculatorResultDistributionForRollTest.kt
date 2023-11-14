@@ -5,9 +5,9 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.*
 import java.util.stream.Stream
 
-internal class PickominoResultDistributionForCombinationTest {
+internal class ResultDistributionCalculatorResultDistributionForRollTest {
 
-    private val pickomino = Pickomino(Points)
+    private val resultDistributionCalculator = ResultDistributionCalculator(Points)
     private val epsilon = 0.000000000000001
 
     @ParameterizedTest(name = "result distribution for combination: {0}, used sides: {1}, dye count: {2}, points so far {3}")
@@ -18,7 +18,7 @@ internal class PickominoResultDistributionForCombinationTest {
         pointsSoFar: Int,
         resultDistribution: ResultDistribution
     ) {
-        val actual = pickomino.getResultDistributionForRoll(
+        val actual = resultDistributionCalculator.getResultDistributionForRoll(
             gameState = GameState(
                 availableHelpings = HelpingCollection.all(),
                 topHelping = null,
