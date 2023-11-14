@@ -1,5 +1,3 @@
-import java.util.EnumSet
-
 class GameSimulator(private val players: List<Player>) {
 
     fun simulate(): Map<Player, Int> {
@@ -79,27 +77,27 @@ class GameSimulator(private val players: List<Player>) {
     }
 
     private fun simulatePlayerTurn(gameState: GameState, strategy: Strategy): Int {
-        var dyeCount = 8
-        var pointsSoFar = 0
-        val usedSides = EnumSet.noneOf(Side::class.java)
+        var turnState = TurnState.initial()
         var shouldContinue: Boolean
         do {
-            val roll = Roll.random(dyeCount)
+            val roll = Roll.random(turnState.dyeCount)
             println("roll: $roll")
-            val sideChosen = strategy.chooseSide(gameState, roll, usedSides, pointsSoFar)
+            val sideChosen = strategy.chooseSide(gameState, turnState, roll)
             if (sideChosen == null) {
                 println("cannot choose any side")
                 return 0
             }
             println("side chosen: $sideChosen")
             val sideCount = roll[sideChosen]
-            pointsSoFar += sideChosen.value * sideCount
-            println("points so far: $pointsSoFar")
-            dyeCount -= sideCount
-            usedSides.add(sideChosen)
-            shouldContinue = strategy.shouldContinue(gameState, dyeCount, usedSides, pointsSoFar)
+            turnState = TurnState(
+                dyeCount = turnState.dyeCount - sideCount,
+                usedSides = turnState.usedSides.withUsed(sideChosen),
+                pointsSoFar = turnState.pointsSoFar + sideChosen.value * sideCount
+            )
+            println("points so far: ${turnState.pointsSoFar}")
+            shouldContinue = strategy.shouldContinue(gameState, turnState)
             println("continue rolling: $shouldContinue")
-        } while (dyeCount > 0 && shouldContinue)
-        return if (Side.WORM in usedSides) pointsSoFar else 0
+        } while (turnState.dyeCount > 0 && shouldContinue)
+        return if (Side.WORM in turnState.usedSides) turnState.pointsSoFar else 0
     }
 }

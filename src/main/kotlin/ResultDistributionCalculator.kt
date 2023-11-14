@@ -4,40 +4,37 @@ class ResultDistributionCalculator<V : ValueFunction>(private val valueFunction:
 
     fun getResultDistribution(
         gameState: GameState,
-        dyeCount: Int,
-        usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
-        pointsSoFar: Int = 0,
-        memo: MutableMap<Key, ResultDistribution> = mutableMapOf()
+        turnState: TurnState,
+        memo: MutableMap<TurnState, ResultDistribution> = mutableMapOf()
     ): ResultDistribution {
-        require(dyeCount >= 0) { "dyeCount cannot be negative" }
-        val key = Key(dyeCount, usedSides, pointsSoFar)
-        val cachedResultDistribution = memo[key]
+        require(turnState.dyeCount >= 0) { "dyeCount cannot be negative" }
+        val cachedResultDistribution = memo[turnState]
         if (cachedResultDistribution != null) {
             return cachedResultDistribution
         }
-        val valueSoFar = valueFunction.getValue(gameState, pointsSoFar)
-        if (dyeCount == 0) {
-            val result = if (Side.WORM in usedSides) {
+        val valueSoFar = valueFunction.getValue(gameState, turnState.pointsSoFar)
+        if (turnState.dyeCount == 0) {
+            val result = if (Side.WORM in turnState.usedSides) {
                 SingleResultDistribution(valueSoFar)
             } else {
                 SingleResultDistribution(valueFunction.getValue(gameState, 0))
             }
-            memo[key] = result
+            memo[turnState] = result
             return result
         }
         val resultDistribution = ArrayResultDistribution(valueFunction)
-        for (roll in Roll.generateAll(dyeCount)) {
+        for (roll in Roll.generateAll(turnState.dyeCount)) {
             val combinationProbability = roll.probability()
             val combinationResultDistribution = getResultDistributionForRoll(
                 gameState,
                 roll,
-                usedSides,
-                pointsSoFar,
+                turnState.usedSides,
+                turnState.pointsSoFar,
                 memo
             )
             resultDistribution.merge(combinationResultDistribution, combinationProbability)
         }
-        val result = if (Side.WORM in usedSides) {
+        val result = if (Side.WORM in turnState.usedSides) {
             val expectedValue = resultDistribution.getExpectedValue()
             val successProbability = resultDistribution.getSuccessProbability()
             if (valueSoFar * successProbability + expectedValue > valueSoFar) {
@@ -48,7 +45,7 @@ class ResultDistributionCalculator<V : ValueFunction>(private val valueFunction:
         } else {
             resultDistribution
         }
-        memo[key] = result
+        memo[turnState] = result
         return result
     }
 
@@ -57,7 +54,7 @@ class ResultDistributionCalculator<V : ValueFunction>(private val valueFunction:
         roll: Roll,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
-        memo: MutableMap<Key, ResultDistribution>
+        memo: MutableMap<TurnState, ResultDistribution>
     ): ResultDistribution {
         var combinationBestValue = Double.NEGATIVE_INFINITY
         var combinationBestResultDistribution: ResultDistribution? = null
@@ -74,9 +71,11 @@ class ResultDistributionCalculator<V : ValueFunction>(private val valueFunction:
             } else {
                 getResultDistribution(
                     gameState = gameState,
-                    dyeCount = roll.dyeCount - sideCount,
-                    usedSides = usedSides.withUsed(side),
-                    pointsSoFar = pointsSoFar + sideValue,
+                    turnState = TurnState(
+                        dyeCount = roll.dyeCount - sideCount,
+                        usedSides = usedSides.withUsed(side),
+                        pointsSoFar = pointsSoFar + sideValue,
+                    ),
                     memo = memo
                 )
             }
@@ -101,28 +100,25 @@ class ResultDistributionCalculator<V : ValueFunction>(private val valueFunction:
 
     fun getResultDistributionsForAllChoices(
         gameState: GameState,
-        roll: Roll,
-        usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
-        pointsSoFar: Int,
+        turnState: TurnState,
+        roll: Roll
     ): Map<Side, ResultDistribution> {
         val resultDistributions = mutableMapOf<Side, ResultDistribution>()
         for (side in roll.sides) {
-            if (side in usedSides) continue
+            if (side in turnState.usedSides) continue
             val count = roll[side]
+            val memo = mutableMapOf<TurnState, ResultDistribution>()
             val resultDistribution = getResultDistribution(
                 gameState = gameState,
-                dyeCount = roll.dyeCount - count,
-                usedSides = usedSides.withUsed(side),
-                pointsSoFar = pointsSoFar + side.value * count,
+                turnState = TurnState(
+                    dyeCount = roll.dyeCount - count,
+                    usedSides = turnState.usedSides.withUsed(side),
+                    pointsSoFar = turnState.pointsSoFar + side.value * count,
+                ),
+                memo
             )
             resultDistributions[side] = resultDistribution
         }
         return resultDistributions
     }
-
-    data class Key(
-        val dyeCount: Int,
-        val usedSides: EnumSet<Side>,
-        val pointsSoFar: Int
-    )
 }

@@ -1,25 +1,47 @@
-import java.util.EnumSet
 import kotlin.math.max
 
 data object OptimalStrategy : Strategy {
     private val resultDistributionCalculator = ResultDistributionCalculator(WormsFromAvailableHelpings)
 
+    override fun chooseSide(
+        gameState: GameState,
+        turnState: TurnState,
+        roll: Roll
+    ): Side? {
+        require(roll.dyeCount == turnState.dyeCount)
+        var bestSide: Side? = null
+        var bestValue = Double.NEGATIVE_INFINITY
+        for (side in roll.sides) {
+            if (side in turnState.usedSides) continue
+            val sideCount = roll[side]
+            val expectedValue = resultDistributionCalculator.getResultDistribution(
+                gameState = gameState,
+                turnState = TurnState(
+                    dyeCount = roll.dyeCount - sideCount,
+                    usedSides = turnState.usedSides.withUsed(side),
+                    pointsSoFar = turnState.pointsSoFar + side.value * sideCount,
+                )
+            ).getExpectedValue()
+            if (expectedValue > bestValue) {
+                bestSide = side
+                bestValue = expectedValue
+            }
+        }
+        return bestSide
+    }
+
     override fun shouldContinue(
         gameState: GameState,
-        dyeCount: Int,
-        usedSides: EnumSet<Side>,
-        pointsSoFar: Int,
+        turnState: TurnState
     ): Boolean {
         val wormsIfContinued = resultDistributionCalculator.getResultDistribution(
             gameState,
-            dyeCount,
-            usedSides,
-            pointsSoFar,
+            turnState,
         ).getExpectedValue()
-        return if (Side.WORM in usedSides) {
+        return if (Side.WORM in turnState.usedSides) {
             var wormsIfStopped = max(
-                gameState.availableHelpings.getExactOrSmaller(pointsSoFar)?.getWorms() ?: 0,
-                gameState.opponentTopHelpings.getOrNull(pointsSoFar)?.getWorms() ?: 0
+                gameState.availableHelpings.getExactOrSmaller(turnState.pointsSoFar)?.getWorms() ?: 0,
+                gameState.opponentTopHelpings.getOrNull(turnState.pointsSoFar)?.getWorms() ?: 0
             )
             if (wormsIfStopped == 0 && gameState.topHelping != null) {
                 wormsIfStopped = -gameState.topHelping.getWorms()
@@ -28,30 +50,5 @@ data object OptimalStrategy : Strategy {
         } else {
             true
         }
-    }
-
-    override fun chooseSide(
-        gameState: GameState,
-        roll: Roll,
-        usedSides: EnumSet<Side>,
-        pointsSoFar: Int,
-    ): Side? {
-        var bestSide: Side? = null
-        var bestValue = Double.NEGATIVE_INFINITY
-        for (side in roll.sides) {
-            if (side in usedSides) continue
-            val sideCount = roll[side]
-            val expectedValue = resultDistributionCalculator.getResultDistribution(
-                gameState = gameState,
-                dyeCount = roll.dyeCount - sideCount,
-                usedSides = usedSides.withUsed(side),
-                pointsSoFar = pointsSoFar + side.value * sideCount,
-            ).getExpectedValue()
-            if (expectedValue > bestValue) {
-                bestSide = side
-                bestValue = expectedValue
-            }
-        }
-        return bestSide
     }
 }

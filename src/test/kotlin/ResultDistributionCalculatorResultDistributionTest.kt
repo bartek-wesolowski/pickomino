@@ -27,9 +27,11 @@ internal class ResultDistributionCalculatorResultDistributionTest {
                 topHelping = topHelping,
                 opponentTopHelpings = HelpingCollection.empty()
             ),
-            dyeCount = dyeCount,
-            usedSides = usedSides,
-            pointsSoFar = pointsSoFar,
+            turnState = TurnState(
+                dyeCount = dyeCount,
+                usedSides = usedSides,
+                pointsSoFar = pointsSoFar
+            )
         )
         assertAll(
             (valueFunction.valueRange).map { value ->
