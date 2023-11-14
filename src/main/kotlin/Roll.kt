@@ -1,26 +1,33 @@
 import kotlin.math.pow
+import kotlin.random.Random
 
-data class Roll(
+class Roll(
     val dyeCount: Int,
-    private val roll: IntArray
+    private val countArray: IntArray
 ) {
-    val symbols: Sequence<Side> = sequence {
+    val sides: Sequence<Side> = sequence {
         for (side in Side.entries) {
-            if (roll[side.ordinal] > 0) yield(side)
+            if (countArray[side.ordinal] > 0) yield(side)
         }
     }
 
-    operator fun get(side: Side): Int = roll[side.ordinal]
+    operator fun get(side: Side): Int = countArray[side.ordinal]
+
+    operator fun contains(side: Side): Boolean = countArray[side.ordinal] > 0
 
     fun probability(): Double {
         var probability =  factorial[dyeCount] / Side.entries.count().toDouble().pow(dyeCount)
         for (side in Side.entries) {
-            val count = roll[side.ordinal]
+            val count = countArray[side.ordinal]
             if (count > 0) {
                 probability /= factorial[count]
             }
         }
         return probability
+    }
+
+    override fun toString(): String {
+        return "{" + sides.joinToString(separator = ", ") { side -> "$side: ${this[side]}" } + "}"
     }
 
     override fun equals(other: Any?): Boolean {
@@ -30,14 +37,14 @@ data class Roll(
         other as Roll
 
         if (dyeCount != other.dyeCount) return false
-        if (!roll.contentEquals(other.roll)) return false
+        if (!countArray.contentEquals(other.countArray)) return false
 
         return true
     }
 
     override fun hashCode(): Int {
         var result = dyeCount
-        result = 31 * result + roll.contentHashCode()
+        result = 31 * result + countArray.contentHashCode()
         return result
     }
 
@@ -49,9 +56,19 @@ data class Roll(
             }
             return Roll(
                 dyeCount = sideCount.sumOf { it.second },
-                roll = roll
+                countArray = roll
             )
         }
+
+        fun random(dyeCount: Int): Roll {
+            val roll = IntArray(Side.entries.size)
+            repeat(dyeCount) {
+                roll[randomSide().ordinal] += 1
+            }
+            return Roll(dyeCount, roll)
+        }
+
+        private fun randomSide() = Side.entries[Random.nextInt(0, Side.entries.size)]
 
         fun generateAll(dieCount: Int): Sequence<Roll> = sequence {
             yieldAll(generateAll(dieCount, dieCount, 0, IntArray(Side.entries.size)))

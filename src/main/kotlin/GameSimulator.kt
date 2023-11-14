@@ -1,5 +1,4 @@
 import java.util.EnumSet
-import kotlin.random.Random
 
 class GameSimulator(private val players: List<Player>) {
 
@@ -85,28 +84,22 @@ class GameSimulator(private val players: List<Player>) {
         val usedSides = EnumSet.noneOf(Side::class.java)
         var shouldContinue: Boolean
         do {
-            val roll = randomRoll(dyeCount)
-            println("roll: ${roll.sorted()}")
-            val symbolChosen = strategy.chooseSymbol(gameState, roll, usedSides, pointsSoFar)
-            if (symbolChosen == null) {
-                println("cannot choose any symbol")
+            val roll = Roll.random(dyeCount)
+            println("roll: $roll")
+            val sideChosen = strategy.chooseSide(gameState, roll, usedSides, pointsSoFar)
+            if (sideChosen == null) {
+                println("cannot choose any side")
                 return 0
             }
-            println("symbol chosen: $symbolChosen")
-            val symbolCount = roll.count { it == symbolChosen }
-            pointsSoFar += symbolChosen.value * symbolCount
+            println("side chosen: $sideChosen")
+            val sideCount = roll[sideChosen]
+            pointsSoFar += sideChosen.value * sideCount
             println("points so far: $pointsSoFar")
-            dyeCount -= symbolCount
-            usedSides.add(symbolChosen)
+            dyeCount -= sideCount
+            usedSides.add(sideChosen)
             shouldContinue = strategy.shouldContinue(gameState, dyeCount, usedSides, pointsSoFar)
             println("continue rolling: $shouldContinue")
         } while (dyeCount > 0 && shouldContinue)
         return if (Side.WORM in usedSides) pointsSoFar else 0
     }
-
-    private fun randomRoll(dyeCount: Int): List<Side> {
-        return List(dyeCount) { randomSide() }
-    }
-
-    private fun randomSide() = Side.entries[Random.nextInt(0, Side.entries.size)]
 }

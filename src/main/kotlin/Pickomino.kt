@@ -61,39 +61,39 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
     ): ResultDistribution {
         var combinationBestValue = Double.NEGATIVE_INFINITY
         var combinationBestResultDistribution: ResultDistribution? = null
-        for (symbol in roll.symbols) {
-            if (symbol in usedSides) continue
-            val symbolCount = roll[symbol]
-            val symbolsValue = symbolCount * symbol.value
-            val symbolResultDistribution = if (symbolCount == roll.dyeCount) {
-                if (Side.WORM in usedSides || symbol == Side.WORM) {
-                    SingleResultDistribution(valueFunction.getValue(gameState, pointsSoFar + symbolsValue))
+        for (side in roll.sides) {
+            if (side in usedSides) continue
+            val sideCount = roll[side]
+            val sideValue = sideCount * side.value
+            val sideResultDistribution = if (sideCount == roll.dyeCount) {
+                if (Side.WORM in usedSides || side == Side.WORM) {
+                    SingleResultDistribution(valueFunction.getValue(gameState, pointsSoFar + sideValue))
                 } else {
                     SingleResultDistribution(valueFunction.getValue(gameState, 0))
                 }
             } else {
                 getResultDistribution(
                     gameState = gameState,
-                    dyeCount = roll.dyeCount - symbolCount,
-                    usedSides = usedSides.withUsed(symbol),
-                    pointsSoFar = pointsSoFar + symbolsValue,
+                    dyeCount = roll.dyeCount - sideCount,
+                    usedSides = usedSides.withUsed(side),
+                    pointsSoFar = pointsSoFar + sideValue,
                     memo = memo
                 )
             }
-            val canTakeDecision = Side.WORM in usedSides || symbol == Side.WORM
-            val symbolResultDistributionAfterDecision =
-                if (!canTakeDecision || symbolResultDistribution.getExpectedValue() > valueFunction.getValue(
-                        gameState, pointsSoFar + symbolsValue
+            val canTakeDecision = Side.WORM in usedSides || side == Side.WORM
+            val sideResultDistributionAfterDecision =
+                if (!canTakeDecision || sideResultDistribution.getExpectedValue() > valueFunction.getValue(
+                        gameState, pointsSoFar + sideValue
                     )
                 ) {
-                    symbolResultDistribution
+                    sideResultDistribution
                 } else {
-                    SingleResultDistribution(valueFunction.getValue(gameState, pointsSoFar + symbolsValue))
+                    SingleResultDistribution(valueFunction.getValue(gameState, pointsSoFar + sideValue))
                 }
-            val symbolExpectedValueAfterDecision = symbolResultDistributionAfterDecision.getExpectedValue()
-            if (symbolExpectedValueAfterDecision > combinationBestValue) {
-                combinationBestValue = symbolExpectedValueAfterDecision
-                combinationBestResultDistribution = symbolResultDistributionAfterDecision
+            val sideExpectedValueAfterDecision = sideResultDistributionAfterDecision.getExpectedValue()
+            if (sideExpectedValueAfterDecision > combinationBestValue) {
+                combinationBestValue = sideExpectedValueAfterDecision
+                combinationBestResultDistribution = sideResultDistributionAfterDecision
             }
         }
         return combinationBestResultDistribution ?: SingleResultDistribution(valueFunction.getValue(gameState, 0))
@@ -101,18 +101,18 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
 
     fun getAdvice(
         gameState: GameState,
-        roll: List<Side>,
+        roll: Roll,
         usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
         pointsSoFar: Int,
     ): Map<Side, ResultDistribution> {
         val advice = mutableMapOf<Side, ResultDistribution>()
-        for (side in roll) {
+        for (side in roll.sides) {
             if (side in usedSides) continue
             if (side in advice) continue
-            val count = roll.count { it == side }
+            val count = roll[side]
             val resultDistribution = getResultDistribution(
                 gameState = gameState,
-                dyeCount = roll.size - count,
+                dyeCount = roll.dyeCount - count,
                 usedSides = usedSides.withUsed(side),
                 pointsSoFar = pointsSoFar + side.value * count,
             )

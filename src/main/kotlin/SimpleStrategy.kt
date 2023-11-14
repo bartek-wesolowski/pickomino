@@ -10,14 +10,14 @@ data object SimpleStrategy : Strategy {
         return Side.WORM !in usedSides || (pointsSoFar < gameState.availableHelpings.getSmallest().points && pointsSoFar !in gameState.opponentTopHelpings)
     }
 
-    override fun chooseSymbol(
+    override fun chooseSide(
         gameState: GameState,
-        roll: List<Side>,
+        roll: Roll,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
     ): Side? {
         if (Side.WORM in roll && Side.WORM !in usedSides) return Side.WORM
-        val sidesSortedByValue = roll.distinct().sortedBy { -it.value }
+        val sidesSortedByValue = roll.sides.sortedBy { -it.value }
         for (side in sidesSortedByValue) {
             if (side !in usedSides) return side
         }

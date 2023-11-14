@@ -11,16 +11,16 @@ data object RandomStrategy : Strategy {
         return Side.WORM !in usedSides || (pointsSoFar < gameState.availableHelpings.getSmallest().points && pointsSoFar !in gameState.opponentTopHelpings)
     }
 
-    override fun chooseSymbol(
+    override fun chooseSide(
         gameState: GameState,
-        roll: List<Side>,
+        roll: Roll,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int
     ): Side? {
         if (Side.WORM in roll && Side.WORM !in usedSides) return Side.WORM
-        val distinctNotUsedSides = roll.filter { it !in usedSides }.distinct()
-        return if (distinctNotUsedSides.isNotEmpty()) {
-            distinctNotUsedSides[Random.nextInt() % distinctNotUsedSides.size]
+        val notUsedSides = roll.sides.filter { it !in usedSides }.toList()
+        return if (notUsedSides.isNotEmpty()) {
+            notUsedSides[Random.nextInt() % notUsedSides.size]
         } else {
             null
         }

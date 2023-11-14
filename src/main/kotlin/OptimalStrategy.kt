@@ -30,29 +30,28 @@ data object OptimalStrategy : Strategy {
         }
     }
 
-    override fun chooseSymbol(
+    override fun chooseSide(
         gameState: GameState,
-        roll: List<Side>,
+        roll: Roll,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
     ): Side? {
-        val symbols = EnumSet.copyOf(roll)
-        var bestSymbol: Side? = null
+        var bestSide: Side? = null
         var bestValue = Double.NEGATIVE_INFINITY
-        for (symbol in symbols) {
-            if (symbol in usedSides) continue
-            val symbolCount = roll.count { it == symbol }
+        for (side in roll.sides) {
+            if (side in usedSides) continue
+            val sideCount = roll[side]
             val expectedValue = pickomino.getResultDistribution(
                 gameState = gameState,
-                dyeCount = roll.size - symbolCount,
-                usedSides = usedSides.withUsed(symbol),
-                pointsSoFar = pointsSoFar + symbol.value * symbolCount,
+                dyeCount = roll.dyeCount - sideCount,
+                usedSides = usedSides.withUsed(side),
+                pointsSoFar = pointsSoFar + side.value * sideCount,
             ).getExpectedValue()
             if (expectedValue > bestValue) {
-                bestSymbol = symbol
+                bestSide = side
                 bestValue = expectedValue
             }
         }
-        return bestSymbol
+        return bestSide
     }
 }

@@ -8,9 +8,9 @@ interface Strategy {
         pointsSoFar: Int,
     ): Boolean
 
-    fun chooseSymbol(
+    fun chooseSide(
         gameState: GameState,
-        roll: List<Side>,
+        roll: Roll,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
     ): Side?
