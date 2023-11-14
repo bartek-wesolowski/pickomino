@@ -1,4 +1,7 @@
-class GameSimulator(private val players: List<Player>) {
+class GameSimulator(
+    private val players: List<Player>,
+    private val verbose: Boolean,
+) {
 
     fun simulate(): Map<Player, Int> {
         val availableHelpings = HelpingCollection.all()
@@ -6,8 +9,10 @@ class GameSimulator(private val players: List<Player>) {
         var playerIndex = 0
         var turn = 1
         while (availableHelpings.isNotEmpty()) {
-            if (turn != 1) println()
-            println("${players[playerIndex].name}'s turn ($turn)")
+            if (verbose) {
+                if (turn != 1) println()
+                println("${players[playerIndex].name}'s turn ($turn)")
+            }
             val topHelping = playerHelpings[playerIndex].lastOrNull()
             val lastPlayerHelpings = playerHelpings.map { it.lastOrNull() }
             val opponentTopHelpings = HelpingCollection.fromHelpings(
@@ -16,7 +21,9 @@ class GameSimulator(private val players: List<Player>) {
             val gameState = GameState(availableHelpings, topHelping, opponentTopHelpings)
             val points = simulatePlayerTurn(gameState, players[playerIndex].strategy)
             if (points != 0) {
-                println("points: $points")
+                if (verbose) {
+                    println("points: $points")
+                }
             }
             if (points != 0) {
                 val helpingToRob = Helping.fromPoints(points)
@@ -25,23 +32,31 @@ class GameSimulator(private val players: List<Player>) {
                     playerHelpings[playerIndex].add(helpingToRob!!)
                     playerHelpings[playerToRobIndex].removeLast()
                     val totalWorms = playerHelpings[playerIndex].sumOf { it.getWorms() }
-                    println("stealing the last helping from ${players[playerToRobIndex].name} for a total of $totalWorms worms")
+                    if (verbose) {
+                        println("stealing the last helping from ${players[playerToRobIndex].name} for a total of $totalWorms worms")
+                    }
                 } else {
                     val helping = availableHelpings.getExactOrSmaller(points)
                     if (helping != null) {
                         playerHelpings[playerIndex].add(helping)
                         availableHelpings.remove(helping)
                         val totalWorms = playerHelpings[playerIndex].sumOf { it.getWorms() }
-                        println("taking the available helping $helping worth ${helping.getWorms()} worms for a total of $totalWorms worms")
-                        println("available helpings: $availableHelpings")
+                        if (verbose) {
+                            println("taking the available helping $helping worth ${helping.getWorms()} worms for a total of $totalWorms worms")
+                            println("available helpings: $availableHelpings")
+                        }
                     } else {
                         returnHelping(availableHelpings, playerHelpings, playerIndex)
-                        println("available helpings: $availableHelpings")
+                        if (verbose) {
+                            println("available helpings: $availableHelpings")
+                        }
                     }
                 }
             } else {
                 returnHelping(availableHelpings, playerHelpings, playerIndex)
-                println("available helpings: $availableHelpings")
+                if (verbose) {
+                    println("available helpings: $availableHelpings")
+                }
             }
             playerIndex = (playerIndex + 1) % players.size
             turn += 1
@@ -50,9 +65,11 @@ class GameSimulator(private val players: List<Player>) {
         players.forEachIndexed { index, player ->
             result[player] = playerHelpings[index].fold(0) { totalWorms, helping -> totalWorms + helping.getWorms() }
         }
-        println()
-        println("game finished with result: $result")
-        println()
+        if (verbose) {
+            println()
+            println("game finished with result: $result")
+            println()
+        }
         return result
     }
 
@@ -63,16 +80,22 @@ class GameSimulator(private val players: List<Player>) {
     ) {
         val helpingToReturn = playerHelpings[playerIndex].lastOrNull()
         if (helpingToReturn != null) {
-            println("returning helping $helpingToReturn worth ${helpingToReturn.getWorms()} worms")
+            if (verbose) {
+                println("returning helping $helpingToReturn worth ${helpingToReturn.getWorms()} worms")
+            }
             playerHelpings[playerIndex].removeLast()
             availableHelpings.add(helpingToReturn)
         } else {
-            println("not helping to return")
+            if (verbose) {
+                println("not helping to return")
+            }
         }
         val biggestHelping = availableHelpings.getBiggest()
         if (biggestHelping != helpingToReturn) {
             availableHelpings.remove(biggestHelping)
-            println("removing helping $biggestHelping from available helpings")
+            if (verbose) {
+                println("removing helping $biggestHelping from available helpings")
+            }
         }
     }
 
@@ -81,22 +104,32 @@ class GameSimulator(private val players: List<Player>) {
         var shouldContinue: Boolean
         do {
             val roll = Roll.random(turnState.dyeCount)
-            println("roll: $roll")
+            if (verbose) {
+                println("roll: $roll")
+            }
             val sideChosen = strategy.chooseSide(gameState, turnState, roll)
             if (sideChosen == null) {
-                println("cannot choose any side")
+                if (verbose) {
+                    println("cannot choose any side")
+                }
                 return 0
             }
-            println("side chosen: $sideChosen")
+            if (verbose) {
+                println("side chosen: $sideChosen")
+            }
             val sideCount = roll[sideChosen]
             turnState = TurnState(
                 dyeCount = turnState.dyeCount - sideCount,
                 usedSides = turnState.usedSides.withUsed(sideChosen),
                 pointsSoFar = turnState.pointsSoFar + sideChosen.value * sideCount
             )
-            println("points so far: ${turnState.pointsSoFar}")
+            if (verbose) {
+                println("points so far: ${turnState.pointsSoFar}")
+            }
             shouldContinue = strategy.shouldContinue(gameState, turnState)
-            println("continue rolling: $shouldContinue")
+            if (verbose) {
+                println("continue rolling: $shouldContinue")
+            }
         } while (turnState.dyeCount > 0 && shouldContinue)
         return if (Side.WORM in turnState.usedSides) turnState.pointsSoFar else 0
     }
