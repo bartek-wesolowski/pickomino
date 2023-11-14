@@ -1,4 +1,4 @@
-import java.util.EnumSet
+import java.util.*
 
 class Pickomino<V : ValueFunction>(private val valueFunction: V) {
 
@@ -26,11 +26,11 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
             return result
         }
         val resultDistribution = ArrayResultDistribution(valueFunction)
-        val combinationProbability = sixth[dyeCount]
-        for (combination in combinations(dyeCount)) {
-            val combinationResultDistribution = getResultDistributionForCombination(
+        for (roll in Roll.generateAll(dyeCount)) {
+            val combinationProbability = roll.probability()
+            val combinationResultDistribution = getResultDistributionForRoll(
                 gameState,
-                combination,
+                roll,
                 usedSides,
                 pointsSoFar,
                 memo
@@ -52,21 +52,20 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
         return result
     }
 
-    internal fun getResultDistributionForCombination(
+    internal fun getResultDistributionForRoll(
         gameState: GameState,
-        combination: List<Side>,
+        roll: Roll,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
         memo: MutableMap<Key, ResultDistribution>
     ): ResultDistribution {
-        val symbols = EnumSet.copyOf(combination)
         var combinationBestValue = Double.NEGATIVE_INFINITY
         var combinationBestResultDistribution: ResultDistribution? = null
-        for (symbol in symbols) {
+        for (symbol in roll.symbols) {
             if (symbol in usedSides) continue
-            val symbolCount = combination.count { it == symbol }
+            val symbolCount = roll[symbol]
             val symbolsValue = symbolCount * symbol.value
-            val symbolResultDistribution = if (symbolCount == combination.size) {
+            val symbolResultDistribution = if (symbolCount == roll.dyeCount) {
                 if (Side.WORM in usedSides || symbol == Side.WORM) {
                     SingleResultDistribution(valueFunction.getValue(gameState, pointsSoFar + symbolsValue))
                 } else {
@@ -75,7 +74,7 @@ class Pickomino<V : ValueFunction>(private val valueFunction: V) {
             } else {
                 getResultDistribution(
                     gameState = gameState,
-                    dyeCount = combination.size - symbolCount,
+                    dyeCount = roll.dyeCount - symbolCount,
                     usedSides = usedSides.withUsed(symbol),
                     pointsSoFar = pointsSoFar + symbolsValue,
                     memo = memo

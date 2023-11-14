@@ -38,7 +38,7 @@ internal class PickominoResultDistributionTest {
                         resultDistribution[value],
                         actual[value],
                         epsilon,
-                        "Expected P[$value]: ${resultDistribution[value]} but was: ${actual[value]}"
+                        "Expected P[$value]"
                     )
                 }
             }
@@ -118,11 +118,11 @@ internal class PickominoResultDistributionTest {
                     resultDistribution = ArrayResultDistribution(
                         Worms,
                         listOf(
-                            0 to 0.2322383576478062,
-                            1 to 0.16763793705696214,
-                            2 to 0.3631946313179833,
-                            3 to 0.19701382156756783,
-                            4 to 0.0399152524137451
+                            0 to 0.23223185528387308,
+                            1 to 0.16763805751119396,
+                            2 to 0.3631946029658429,
+                            3 to 0.1970395263591341,
+                            4 to 0.03989595787995435
                         )
                     )
                 ),
@@ -132,11 +132,11 @@ internal class PickominoResultDistributionTest {
                     resultDistribution = ArrayResultDistribution(
                         WormsFromAvailableHelpings,
                         listOf(
-                            0 to 0.2322383576478062,
-                            1 to 0.16763793705696214,
-                            2 to 0.3631946313179833,
-                            3 to 0.19701382156756783,
-                            4 to 0.0399152524137451
+                            0 to 0.23223185528387308,
+                            1 to 0.16763805751119396,
+                            2 to 0.3631946029658429,
+                            3 to 0.1970395263591341,
+                            4 to 0.03989595787995435
                         )
                     )
                 ),
@@ -147,9 +147,9 @@ internal class PickominoResultDistributionTest {
                     resultDistribution = ArrayResultDistribution(
                         WormsFromAvailableHelpings,
                         listOf(
-                            0 to 0.8061207349999395,
-                            3 to 0.13387599671521075,
-                            4 to 0.06000326829412743
+                            0 to 0.806094687995294,
+                            3 to 0.13398018470072579,
+                            4 to 0.05992512730398163
                         )
                     )
                 ),
@@ -160,9 +160,9 @@ internal class PickominoResultDistributionTest {
                     resultDistribution = ArrayResultDistribution(
                         WormsFromAvailableHelpings,
                         listOf(
-                            0 to 0.8061207349999395,
-                            3 to 0.13387599671521075,
-                            4 to 0.06000326829412743
+                            0 to 0.806094687995294,
+                            3 to 0.13398018470072579,
+                            4 to 0.05992512730398163
                         )
                     )
                 ),
@@ -174,9 +174,9 @@ internal class PickominoResultDistributionTest {
                     resultDistribution = ArrayResultDistribution(
                         WormsFromAvailableHelpings,
                         listOf(
-                            -1 to 0.8060193325207861,
-                            3 to 0.1342935351951597,
-                            4 to 0.059687132281632624
+                            -1 to 0.8060193325223208,
+                            3 to 0.1342935351960034,
+                            4 to 0.0596871322816763
                         )
                     )
                 ),
@@ -188,9 +188,9 @@ internal class PickominoResultDistributionTest {
                     resultDistribution = ArrayResultDistribution(
                         WormsFromAvailableHelpings,
                         listOf(
-                            -1 to 0.8060193325207861,
-                            3 to 0.1342935351951597,
-                            4 to 0.059687132281632624
+                            -1 to 0.8060193325223208,
+                            3 to 0.1342935351960034,
+                            4 to 0.0596871322816763
                         )
                     )
                 ),
@@ -202,9 +202,9 @@ internal class PickominoResultDistributionTest {
                     resultDistribution = ArrayResultDistribution(
                         WormsFromAvailableHelpings,
                         listOf(
-                            -2 to 0.8060186854631007,
-                            3 to 0.1342969707120195,
-                            4 to 0.059684343822960916
+                            -2 to 0.8060186854640207,
+                            3 to 0.13429697071299848,
+                            4 to 0.059684343822981434
                         )
                     )
                 ),
@@ -216,9 +216,9 @@ internal class PickominoResultDistributionTest {
                     resultDistribution = ArrayResultDistribution(
                         WormsFromAvailableHelpings,
                         listOf(
-                            -2 to 0.8060186854631007,
-                            3 to 0.1342969707120195,
-                            4 to 0.059684343822960916
+                            -2 to 0.8060186854640207,
+                            3 to 0.13429697071299848,
+                            4 to 0.059684343822981434
                         )
                     )
                 ),
@@ -230,9 +230,9 @@ internal class PickominoResultDistributionTest {
                     resultDistribution = ArrayResultDistribution(
                         WormsFromAvailableHelpings,
                         listOf(
-                            -3 to 0.8060029048102788,
-                            3 to 0.13439898586518664,
-                            4 to 0.059598109315630435
+                            -3 to 0.806002903827932,
+                            3 to 0.13439899280184206,
+                            4 to 0.05959810337022896
                         )
                     )
                 ),
@@ -244,9 +244,9 @@ internal class PickominoResultDistributionTest {
                     resultDistribution = ArrayResultDistribution(
                         WormsFromAvailableHelpings,
                         listOf(
-                            -3 to 0.8060029048102788,
-                            3 to 0.13439898586518664,
-                            4 to 0.059598109315630435
+                            -3 to 0.806002903827932,
+                            3 to 0.13439899280184206,
+                            4 to 0.05959810337022896
                         )
                     )
                 ),
@@ -258,38 +258,38 @@ internal class PickominoResultDistributionTest {
                     resultDistribution = ArrayResultDistribution(
                         Points,
                         listOf(
-                            0 to 0.08655269719808172,
+                            0 to 0.08619829849860244,
                             11 to 4.621874520193569E-6,
                             12 to 2.5628979776412135E-6,
-                            13 to 1.103253548170806E-4,
-                            14 to 8.987180535584511E-4,
-                            15 to 0.0020144285892626664,
-                            16 to 0.006080250698130404,
-                            17 to 0.016628104478529682,
-                            18 to 0.014734997529290455,
-                            19 to 0.016701129867793662,
-                            20 to 0.04621881537641437,
-                            21 to 0.061389915225378254,
-                            22 to 0.102919592999264,
-                            22 to 0.102919592999264,
-                            23 to 0.10919133939221902,
-                            24 to 0.14252561994341648,
-                            25 to 0.07575118422430933,
-                            26 to 0.06677756368356642,
-                            27 to 0.061185854201904345,
-                            28 to 0.06419825265404427,
-                            29 to 0.05507356716816991,
-                            30 to 0.026429804128920546,
-                            31 to 0.016585546699087222,
-                            32 to 0.009797527509283149,
-                            33 to 0.010600216031228146,
-                            34 to 0.002860913980455483,
-                            35 to 0.0027755557389688925,
-                            36 to 6.49496287373086E-4,
-                            37 to 8.200807145687093E-4,
-                            38 to 3.1808031294733454E-4,
-                            39 to 9.366077573623695E-5,
-                            40 to 1.0957641287864079E-4
+                            13 to 1.1034460918999309E-4,
+                            14 to 8.98564018564324E-4,
+                            15 to 0.0020144692373807232,
+                            16 to 0.00608030204312011,
+                            17 to 0.016628105191700163,
+                            18 to 0.01473499752937039,
+                            19 to 0.01670114056451229,
+                            20 to 0.0462188153757707,
+                            21 to 0.061389925921729746,
+                            22 to 0.102919592998544,
+                            22 to 0.102919592998544,
+                            23 to 0.10919134010569487,
+                            24 to 0.14252561994336826,
+                            25 to 0.07575118422480492,
+                            26 to 0.06677756439626718,
+                            27 to 0.06118585420158376,
+                            28 to 0.06738801423601287,
+                            29 to 0.054719149214249564,
+                            30 to 0.025809572710271206,
+                            31 to 0.015876710792231193,
+                            32 to 0.009708923020987281,
+                            33 to 0.009714171147375467,
+                            34 to 0.002772309492087072,
+                            35 to 0.0027755557389654824,
+                            36 to 6.494962873670299E-4,
+                            37 to 8.200807145623424E-4,
+                            38 to 2.2947582456963009E-4,
+                            39 to 9.366077573727057E-5,
+                            40 to 1.0957641288026388E-4
                         )
                     )
                 ),

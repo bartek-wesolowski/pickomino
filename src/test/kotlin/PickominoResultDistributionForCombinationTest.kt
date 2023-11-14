@@ -2,7 +2,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.util.EnumSet
+import java.util.*
 import java.util.stream.Stream
 
 internal class PickominoResultDistributionForCombinationTest {
@@ -10,21 +10,21 @@ internal class PickominoResultDistributionForCombinationTest {
     private val pickomino = Pickomino(Points)
     private val epsilon = 0.000000000000001
 
-    @ParameterizedTest(name = "result distribution for combination: {0}, value function: {1}, dye count: {2}, used sides: {3}, points so far {4}")
+    @ParameterizedTest(name = "result distribution for combination: {0}, used sides: {1}, dye count: {2}, points so far {3}")
     @MethodSource("getParameters")
     fun test(
-        combination: List<Side>,
+        roll: Roll,
         usedSides: EnumSet<Side>,
         pointsSoFar: Int,
         resultDistribution: ResultDistribution
     ) {
-        val actual = pickomino.getResultDistributionForCombination(
+        val actual = pickomino.getResultDistributionForRoll(
             gameState = GameState(
                 availableHelpings = HelpingCollection.all(),
                 topHelping = null,
                 opponentTopHelpings = HelpingCollection.empty(),
             ),
-            combination = combination,
+            roll = roll,
             usedSides = usedSides,
             pointsSoFar = pointsSoFar,
 
@@ -40,15 +40,15 @@ internal class PickominoResultDistributionForCombinationTest {
         fun getParameters(): Stream<Arguments> {
             return Stream.of(
                 argumentsOf(
-                    combination = listOf(Side.ONE, Side.ONE),
+                    roll = Roll.of(Side.ONE to 2),
                     resultDistribution = SingleResultDistribution(0)
                 ),
                 argumentsOf(
-                    combination = listOf(Side.TWO, Side.TWO),
+                    roll = Roll.of(Side.TWO to 2),
                     resultDistribution = SingleResultDistribution(0)
                 ),
                 argumentsOf(
-                    combination = listOf(Side.ONE, Side.TWO),
+                    roll = Roll.of(Side.ONE to 1, Side.TWO to 1),
                     resultDistribution = ArrayResultDistribution(
                         Points,
                         listOf(
@@ -58,11 +58,11 @@ internal class PickominoResultDistributionForCombinationTest {
                     )
                 ),
                 argumentsOf(
-                    combination = listOf(Side.WORM, Side.WORM),
+                    roll = Roll.of(Side.WORM to 2),
                     resultDistribution = SingleResultDistribution(10)
                 ),
                 argumentsOf(
-                    combination = listOf(Side.ONE, Side.WORM),
+                    roll = Roll.of(Side.ONE to 1, Side.WORM to 1),
                     resultDistribution = ArrayResultDistribution(
                         Points,
                         listOf(
@@ -76,19 +76,19 @@ internal class PickominoResultDistributionForCombinationTest {
                     )
                 ),
                 argumentsOf(
-                    combination = listOf(Side.ONE, Side.ONE),
+                    roll = Roll.of(Side.ONE to 2),
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
                     resultDistribution = SingleResultDistribution(7)
                 ),
                 argumentsOf(
-                    combination = listOf(Side.ONE, Side.TWO),
+                    roll = Roll.of(Side.ONE to 1, Side.TWO to 1),
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
                     resultDistribution = SingleResultDistribution(7)
                 ),
                 argumentsOf(
-                    combination = listOf(Side.ONE, Side.THREE),
+                    roll = Roll.of(Side.ONE to 1, Side.THREE to 1),
                     usedSides = EnumSet.of(Side.WORM),
                     pointsSoFar = 5,
                     resultDistribution = SingleResultDistribution(8)
@@ -97,12 +97,12 @@ internal class PickominoResultDistributionForCombinationTest {
         }
 
         private fun argumentsOf(
-            combination: List<Side>,
+            roll: Roll,
             usedSides: EnumSet<Side> = EnumSet.noneOf(Side::class.java),
             pointsSoFar: Int = 0,
             resultDistribution: ResultDistribution
         ): Arguments = Arguments.of(
-            combination,
+            roll,
             usedSides,
             pointsSoFar,
             resultDistribution
