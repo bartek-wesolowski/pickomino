@@ -1,3 +1,4 @@
+import kotlin.math.absoluteValue
 import kotlin.random.Random
 
 data object RandomStrategy : Strategy {
@@ -9,7 +10,7 @@ data object RandomStrategy : Strategy {
         if (Side.WORM in roll && Side.WORM !in turnState.usedSides) return Side.WORM
         val notUsedSides = roll.sides.filter { it !in turnState.usedSides }.toList()
         return if (notUsedSides.isNotEmpty()) {
-            notUsedSides[Random.nextInt() % notUsedSides.size]
+            notUsedSides[Random.nextInt().absoluteValue % notUsedSides.size]
         } else {
             null
         }
