@@ -1,3 +1,6 @@
+package com.bartoszwesolowski.pickomino
+
+import com.bartoszwesolowski.pickomino.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest

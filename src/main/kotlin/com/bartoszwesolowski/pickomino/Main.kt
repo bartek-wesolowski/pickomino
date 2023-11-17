@@ -1,3 +1,5 @@
+package com.bartoszwesolowski.pickomino
+
 fun main() {
     val resultDistributionCalculator = ResultDistributionCalculator(WormsFromAvailableHelpings)
 

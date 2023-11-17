@@ -1,3 +1,5 @@
+package com.bartoszwesolowski.pickomino
+
 import kotlin.math.max
 
 interface ValueFunction {

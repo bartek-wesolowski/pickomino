@@ -1,3 +1,5 @@
+package com.bartoszwesolowski.pickomino
+
 private const val count = 10
 
 fun main() {

@@ -1,3 +1,5 @@
+package com.bartoszwesolowski.pickomino
+
 import java.util.*
 
 class HelpingCollection private constructor() {

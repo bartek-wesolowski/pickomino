@@ -1,25 +1,20 @@
-import kotlin.math.absoluteValue
-import kotlin.random.Random
+package com.bartoszwesolowski.pickomino
 
-data object RandomStrategy : Strategy {
+data object SimpleStrategy : Strategy {
     override fun chooseSide(
         gameState: GameState,
         turnState: TurnState,
         roll: Roll,
     ): Side? {
         if (Side.WORM in roll && Side.WORM !in turnState.usedSides) return Side.WORM
-        val notUsedSides = roll.sides.filter { it !in turnState.usedSides }.toList()
-        return if (notUsedSides.isNotEmpty()) {
-            notUsedSides[Random.nextInt().absoluteValue % notUsedSides.size]
-        } else {
-            null
+        val sidesSortedByValue = roll.sides.sortedBy { -it.value }
+        for (side in sidesSortedByValue) {
+            if (side !in turnState.usedSides) return side
         }
+        return null
     }
 
-    override fun shouldContinue(
-        gameState: GameState,
-        turnState: TurnState
-    ): Boolean {
+    override fun shouldContinue(gameState: GameState, turnState: TurnState): Boolean {
         return Side.WORM !in turnState.usedSides ||
                 (
                         turnState.pointsSoFar < gameState.availableHelpings.getSmallest().points &&

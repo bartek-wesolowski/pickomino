@@ -1,3 +1,5 @@
+package com.bartoszwesolowski.pickomino
+
 interface Strategy {
     fun chooseSide(
         gameState: GameState,

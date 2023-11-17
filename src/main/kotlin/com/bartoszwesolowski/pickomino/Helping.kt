@@ -1,3 +1,5 @@
+package com.bartoszwesolowski.pickomino
+
 @JvmInline
 value class Helping private constructor(val points: Int) {
     init {

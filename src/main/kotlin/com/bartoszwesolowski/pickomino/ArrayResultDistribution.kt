@@ -1,3 +1,5 @@
+package com.bartoszwesolowski.pickomino
+
 import java.text.DecimalFormat
 import java.util.AbstractMap.SimpleEntry
 

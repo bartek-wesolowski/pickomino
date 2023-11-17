@@ -1,3 +1,5 @@
+package com.bartoszwesolowski.pickomino
+
 import kotlin.math.pow
 import kotlin.random.Random
 

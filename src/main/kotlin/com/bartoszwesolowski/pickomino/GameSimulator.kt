@@ -1,3 +1,5 @@
+package com.bartoszwesolowski.pickomino
+
 class GameSimulator(
     private val players: List<Player>,
     private val verbose: Boolean,
