@@ -1,5 +1,9 @@
 package com.bartoszwesolowski.pickomino
 
+import com.bartoszwesolowski.pickomino.model.Player
+import com.bartoszwesolowski.pickomino.strategy.OptimalStrategy
+import com.bartoszwesolowski.pickomino.strategy.SimpleStrategy
+
 private const val count = 10
 
 fun main() {

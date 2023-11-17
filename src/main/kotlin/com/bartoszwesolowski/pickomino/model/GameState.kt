@@ -1,4 +1,4 @@
-package com.bartoszwesolowski.pickomino
+package com.bartoszwesolowski.pickomino.model
 
 data class GameState(
     val availableHelpings: HelpingCollection,

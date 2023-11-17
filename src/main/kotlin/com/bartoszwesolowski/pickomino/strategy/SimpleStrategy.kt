@@ -1,4 +1,6 @@
-package com.bartoszwesolowski.pickomino
+package com.bartoszwesolowski.pickomino.strategy
+
+import com.bartoszwesolowski.pickomino.model.*
 
 data object SimpleStrategy : Strategy {
     override fun chooseSide(

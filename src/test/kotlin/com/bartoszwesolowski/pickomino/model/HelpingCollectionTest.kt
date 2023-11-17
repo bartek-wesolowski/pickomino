@@ -1,5 +1,7 @@
-package com.bartoszwesolowski.pickomino
+package com.bartoszwesolowski.pickomino.model
 
+import com.bartoszwesolowski.pickomino.model.Helping
+import com.bartoszwesolowski.pickomino.model.HelpingCollection
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 

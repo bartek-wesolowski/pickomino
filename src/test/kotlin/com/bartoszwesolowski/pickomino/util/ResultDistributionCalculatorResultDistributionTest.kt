@@ -1,12 +1,14 @@
-package com.bartoszwesolowski.pickomino
+package com.bartoszwesolowski.pickomino.util
 
 import com.bartoszwesolowski.pickomino.*
+import com.bartoszwesolowski.pickomino.model.*
+import com.bartoszwesolowski.pickomino.resultdistribution.ArrayResultDistribution
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.util.EnumSet
+import java.util.*
 import java.util.stream.Stream
 
 internal class ResultDistributionCalculatorResultDistributionTest {

@@ -1,5 +1,8 @@
-package com.bartoszwesolowski.pickomino
+package com.bartoszwesolowski.pickomino.util
 
+import com.bartoszwesolowski.pickomino.resultdistribution.SingleResultDistribution
+import com.bartoszwesolowski.pickomino.model.*
+import com.bartoszwesolowski.pickomino.resultdistribution.ArrayResultDistribution
 import java.util.*
 
 class ResultDistributionCalculator<V : ValueFunction>(private val valueFunction: V) {

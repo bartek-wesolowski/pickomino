@@ -1,5 +1,8 @@
-package com.bartoszwesolowski.pickomino
+package com.bartoszwesolowski.pickomino.strategy
 
+import com.bartoszwesolowski.pickomino.model.*
+import com.bartoszwesolowski.pickomino.util.ResultDistributionCalculator
+import com.bartoszwesolowski.pickomino.util.withUsed
 import kotlin.math.max
 
 class OptimalStrategy(

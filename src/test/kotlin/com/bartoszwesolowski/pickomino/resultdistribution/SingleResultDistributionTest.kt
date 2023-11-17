@@ -1,4 +1,4 @@
-package com.bartoszwesolowski.pickomino
+package com.bartoszwesolowski.pickomino.resultdistribution
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

@@ -1,5 +1,7 @@
-package com.bartoszwesolowski.pickomino
+package com.bartoszwesolowski.pickomino.resultdistribution
 
+import com.bartoszwesolowski.pickomino.model.ResultDistribution
+import com.bartoszwesolowski.pickomino.model.ValueFunction
 import java.text.DecimalFormat
 import java.util.AbstractMap.SimpleEntry
 

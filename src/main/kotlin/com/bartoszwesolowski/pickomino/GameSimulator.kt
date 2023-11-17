@@ -1,5 +1,8 @@
 package com.bartoszwesolowski.pickomino
 
+import com.bartoszwesolowski.pickomino.model.*
+import com.bartoszwesolowski.pickomino.util.withUsed
+
 class GameSimulator(
     private val players: List<Player>,
     private val verbose: Boolean,

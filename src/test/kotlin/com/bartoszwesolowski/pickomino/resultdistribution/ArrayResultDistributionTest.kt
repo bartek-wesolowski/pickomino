@@ -1,5 +1,6 @@
-package com.bartoszwesolowski.pickomino
+package com.bartoszwesolowski.pickomino.resultdistribution
 
+import com.bartoszwesolowski.pickomino.model.WormsFromAvailableHelpings
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.util.AbstractMap.SimpleEntry

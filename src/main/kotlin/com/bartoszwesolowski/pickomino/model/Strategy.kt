@@ -1,4 +1,4 @@
-package com.bartoszwesolowski.pickomino
+package com.bartoszwesolowski.pickomino.model
 
 interface Strategy {
     fun chooseSide(

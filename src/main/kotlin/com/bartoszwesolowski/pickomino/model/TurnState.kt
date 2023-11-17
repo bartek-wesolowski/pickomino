@@ -1,4 +1,4 @@
-package com.bartoszwesolowski.pickomino
+package com.bartoszwesolowski.pickomino.model
 
 import java.util.*
 

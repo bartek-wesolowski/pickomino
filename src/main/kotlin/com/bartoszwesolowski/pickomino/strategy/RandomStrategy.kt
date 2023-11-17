@@ -1,5 +1,6 @@
-package com.bartoszwesolowski.pickomino
+package com.bartoszwesolowski.pickomino.strategy
 
+import com.bartoszwesolowski.pickomino.model.*
 import kotlin.math.absoluteValue
 import kotlin.random.Random
 

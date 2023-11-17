@@ -1,6 +1,7 @@
-package com.bartoszwesolowski.pickomino
+package com.bartoszwesolowski.pickomino.resultdistribution
 
-import java.util.AbstractMap.SimpleEntry
+import com.bartoszwesolowski.pickomino.model.ResultDistribution
+import java.util.AbstractMap
 
 @JvmInline
 value class SingleResultDistribution(
@@ -14,7 +15,7 @@ value class SingleResultDistribution(
         override fun next(): Map.Entry<Int, Double> {
             if (!isValueReturned) {
                 isValueReturned = true
-                return SimpleEntry(value, 1.0)
+                return AbstractMap.SimpleEntry(value, 1.0)
             }
             error("No more elements")
         }
