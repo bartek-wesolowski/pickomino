@@ -1,7 +1,7 @@
 package com.bartoszwesolowski.pickomino
 
 import com.bartoszwesolowski.pickomino.model.Player
-import com.bartoszwesolowski.pickomino.model.WormsFromAvailableHelpings
+import com.bartoszwesolowski.pickomino.valuefunction.WormsFromAvailableHelpings
 import com.bartoszwesolowski.pickomino.strategy.ValueFunctionMaximizingStrategy
 import com.bartoszwesolowski.pickomino.strategy.SimpleStrategy
 

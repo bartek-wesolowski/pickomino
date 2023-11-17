@@ -3,6 +3,9 @@ package com.bartoszwesolowski.pickomino.util
 import com.bartoszwesolowski.pickomino.*
 import com.bartoszwesolowski.pickomino.model.*
 import com.bartoszwesolowski.pickomino.resultdistribution.ArrayResultDistribution
+import com.bartoszwesolowski.pickomino.valuefunction.Points
+import com.bartoszwesolowski.pickomino.valuefunction.Worms
+import com.bartoszwesolowski.pickomino.valuefunction.WormsFromAvailableHelpings
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest

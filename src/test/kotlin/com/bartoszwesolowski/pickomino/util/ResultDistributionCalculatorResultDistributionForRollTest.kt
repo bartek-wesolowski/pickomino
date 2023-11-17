@@ -3,6 +3,7 @@ package com.bartoszwesolowski.pickomino.util
 import com.bartoszwesolowski.pickomino.model.*
 import com.bartoszwesolowski.pickomino.resultdistribution.ArrayResultDistribution
 import com.bartoszwesolowski.pickomino.resultdistribution.SingleResultDistribution
+import com.bartoszwesolowski.pickomino.valuefunction.Points
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments

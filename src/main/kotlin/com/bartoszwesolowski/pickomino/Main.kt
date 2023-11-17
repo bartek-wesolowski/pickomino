@@ -3,6 +3,7 @@ package com.bartoszwesolowski.pickomino
 import com.bartoszwesolowski.pickomino.model.*
 import com.bartoszwesolowski.pickomino.strategy.ValueFunctionMaximizingStrategy
 import com.bartoszwesolowski.pickomino.util.ResultDistributionCalculator
+import com.bartoszwesolowski.pickomino.valuefunction.WormsFromAvailableHelpings
 
 fun main() {
     val resultDistributionCalculator = ResultDistributionCalculator(WormsFromAvailableHelpings)

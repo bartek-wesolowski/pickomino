@@ -1,5 +1,6 @@
 package com.bartoszwesolowski.pickomino.model
 
+import com.bartoszwesolowski.pickomino.valuefunction.WormsFromAvailableHelpings
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
