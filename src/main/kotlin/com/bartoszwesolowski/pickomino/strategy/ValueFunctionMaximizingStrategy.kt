@@ -5,8 +5,8 @@ import com.bartoszwesolowski.pickomino.util.ResultDistributionCalculator
 import com.bartoszwesolowski.pickomino.util.withUsed
 import kotlin.math.max
 
-class OptimalStrategy(
-    valueFunction: ValueFunction = WormsFromAvailableHelpings
+class ValueFunctionMaximizingStrategy(
+    valueFunction: ValueFunction
 ) : Strategy {
     private val resultDistributionCalculator = ResultDistributionCalculator(valueFunction)
 

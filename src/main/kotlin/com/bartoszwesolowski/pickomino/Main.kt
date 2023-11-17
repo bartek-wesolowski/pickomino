@@ -1,7 +1,7 @@
 package com.bartoszwesolowski.pickomino
 
 import com.bartoszwesolowski.pickomino.model.*
-import com.bartoszwesolowski.pickomino.strategy.OptimalStrategy
+import com.bartoszwesolowski.pickomino.strategy.ValueFunctionMaximizingStrategy
 import com.bartoszwesolowski.pickomino.util.ResultDistributionCalculator
 
 fun main() {
@@ -30,7 +30,7 @@ fun main() {
     }
     println()
 
-    val strategy = OptimalStrategy()
+    val strategy = ValueFunctionMaximizingStrategy(WormsFromAvailableHelpings)
     println("Side chosen: ${strategy.chooseSide(gameState, turnState, roll)}")
     println("Should continue: ${strategy.shouldContinue(gameState, turnState)}")
 }
