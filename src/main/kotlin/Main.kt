@@ -24,6 +24,7 @@ fun main() {
     }
     println()
 
-    println("Side chosen: ${OptimalStrategy.chooseSide(gameState, turnState, roll)}")
-    println("Should continue: ${OptimalStrategy.shouldContinue(gameState, turnState)}")
+    val strategy = OptimalStrategy()
+    println("Side chosen: ${strategy.chooseSide(gameState, turnState, roll)}")
+    println("Should continue: ${strategy.shouldContinue(gameState, turnState)}")
 }

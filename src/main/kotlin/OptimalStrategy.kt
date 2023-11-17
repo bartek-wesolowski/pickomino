@@ -1,7 +1,9 @@
 import kotlin.math.max
 
-data object OptimalStrategy : Strategy {
-    private val resultDistributionCalculator = ResultDistributionCalculator(WormsFromAvailableHelpings)
+class OptimalStrategy(
+    valueFunction: ValueFunction = WormsFromAvailableHelpings
+) : Strategy {
+    private val resultDistributionCalculator = ResultDistributionCalculator(valueFunction)
 
     override fun chooseSide(
         gameState: GameState,
