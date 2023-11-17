@@ -1,7 +1,7 @@
 fun main() {
     val resultDistributionCalculator = ResultDistributionCalculator(WormsFromAvailableHelpings)
 
-    val roll = Roll.of(Side.TWO to 3, Side.THREE to 1, Side.FOUR to 1, Side.WORM to 1)
+    val roll = Roll.of(Side.TWO to 3, Side.THREE to 3, Side.FOUR to 1, Side.WORM to 1)
 
     val gameState = GameState(
         availableHelpings = HelpingCollection.all(),
