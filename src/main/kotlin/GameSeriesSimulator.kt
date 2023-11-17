@@ -2,7 +2,7 @@ private const val count = 10
 
 fun main() {
     val player1 = Player("Simple", SimpleStrategy)
-    val player2 = Player("Optimal", OptimalStrategy)
+    val player2 = Player("Optimal", OptimalStrategy())
     val players1 = listOf(player1, player2)
     val players2 = listOf(player2, player1)
 
