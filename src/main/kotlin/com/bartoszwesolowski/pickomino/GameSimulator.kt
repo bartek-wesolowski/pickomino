@@ -3,6 +3,12 @@ package com.bartoszwesolowski.pickomino
 import com.bartoszwesolowski.pickomino.model.*
 import com.bartoszwesolowski.pickomino.util.withUsed
 
+/**
+ * Simulates a game of Pickomino.
+ *
+ * @param players the players in the game
+ * @param verbose whether to print the game state to the console
+ */
 class GameSimulator(
     private val players: List<Player>,
     private val verbose: Boolean,
