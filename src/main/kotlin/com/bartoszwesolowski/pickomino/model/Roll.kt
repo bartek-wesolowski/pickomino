@@ -3,6 +3,7 @@ package com.bartoszwesolowski.pickomino.model
 import kotlin.math.pow
 import kotlin.random.Random
 
+/** A roll of dice. */
 class Roll(
     val dyeCount: Int,
     private val countArray: IntArray
