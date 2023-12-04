@@ -2,6 +2,7 @@ package com.bartoszwesolowski.pickomino.model
 
 import java.util.*
 
+/** The state of a player's turn. */
 data class TurnState(
     val dyeCount: Int,
     val usedSides: EnumSet<Side>,
