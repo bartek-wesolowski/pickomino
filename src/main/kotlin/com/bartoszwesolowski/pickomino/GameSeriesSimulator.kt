@@ -7,9 +7,10 @@ import com.bartoszwesolowski.pickomino.strategy.SimpleStrategy
 
 private const val count = 10
 
+// Simulates a series of games between two players and prints the results.
 fun main() {
-    val player1 = Player("Simple", SimpleStrategy)
-    val player2 = Player("Optimal", ValueFunctionMaximizingStrategy(WormsFromAvailableHelpings))
+    val player1 = Player("Simple player", SimpleStrategy)
+    val player2 = Player("Good player", ValueFunctionMaximizingStrategy(WormsFromAvailableHelpings))
     val players1 = listOf(player1, player2)
     val players2 = listOf(player2, player1)
 
