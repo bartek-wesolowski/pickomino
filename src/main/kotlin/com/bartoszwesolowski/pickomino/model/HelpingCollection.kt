@@ -2,6 +2,7 @@ package com.bartoszwesolowski.pickomino.model
 
 import java.util.*
 
+/** A collection of helpings represented backed a bit set for performance reasons. */
 class HelpingCollection private constructor() {
     private var helpings = BitSet(16)
 
