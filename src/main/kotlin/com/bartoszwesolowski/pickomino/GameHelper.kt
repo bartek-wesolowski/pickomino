@@ -17,10 +17,12 @@ fun main() {
     )
     val turnState = TurnState.initial()
 
+    // Calculate probabilities of all possible results
     println("Result distribution")
     println(resultDistributionCalculator.getResultDistribution(gameState, turnState))
     println()
 
+    // Print expected values of all possible choices
     val advice = resultDistributionCalculator.getResultDistributionsForAllChoices(gameState, turnState, roll)
     println("Advice")
     for ((side, resultDistribution) in advice) {
@@ -31,6 +33,7 @@ fun main() {
     }
     println()
 
+    // Print the choice of the specified strategy
     val strategy = ValueFunctionMaximizingStrategy(WormsFromAvailableHelpings)
     println("Side chosen: ${strategy.chooseSide(gameState, turnState, roll)}")
     println("Should continue: ${strategy.shouldContinue(gameState, turnState)}")
